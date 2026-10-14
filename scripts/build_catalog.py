@@ -1,17 +1,23 @@
 #!/usr/bin/env python3
 """Build Physics Lab catalog from isolated simulation manifests."""
 import json
+import re
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
 ALLOWED={"mechanics","thermal","waves","electromagnetism","optics","modern","experiments"}
 catalog=[]
-for file in sorted((ROOT/"simulations").glob("*/*/manifest.json")):
+for entry in sorted((ROOT/"simulations").glob("*/*/index.html")):
+    if not (entry.parent/"manifest.json").is_file():
+        raise SystemExit(f"Missing manifest.json: {entry.parent}")
+for file in sorted((ROOT/"simulations").rglob("manifest.json")):
     relative=file.relative_to(ROOT)
+    if len(relative.parts) != 4:
+        raise SystemExit(f"Invalid manifest location: {relative}")
     category,slug=relative.parts[1],relative.parts[2]
     if category not in ALLOWED:
         raise SystemExit(f"Invalid category: {relative}")
-    if not slug or not all(c.islower() or c.isdigit() or c=="-" for c in slug) or slug[0]=="-" or slug[-1]=="-":
+    if not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", slug):
         raise SystemExit(f"Invalid slug: {slug}")
     entry=file.parent/"index.html"
     if not entry.is_file():
@@ -28,3 +34,4 @@ for file in sorted((ROOT/"simulations").glob("*/*/manifest.json")):
     catalog.append({**obj,"path":f"simulations/{category}/{slug}/"})
 (ROOT/"simulations.json").write_text(json.dumps(catalog,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
 print(f"Catalog generated: {len(catalog)} animations")
+
