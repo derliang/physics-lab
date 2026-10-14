@@ -23,3 +23,13 @@ build_catalog.py 原本已具備 schema、分類及入口檢查；補上缺少 m
 本文件初次提交時尚未有此次 SHA 與部署結果；必須查詢相同 SHA 的 push run 與公開首頁／simulations.json，再記錄實際結果。不得將此節解讀為部署已成功。
 
 提交基底再次刷新為 aaccd3a575c6f32dd0a854132c88cb71038fccc8（tree ef195298de167077ecee5ab534d671fca28496aa），其中另有 diffraction-interference 動畫；本輪六個變更路徑均不包含 simulations/，完整保留兩個動畫資料夾。前次自動審查因擔心舊基底刪動畫拒絕建立 tree，未更新 main；重新讀取完整 tree 後再提交。
+
+## 提交後實際驗證
+- 本輪首頁與規範提交：`c4ffeb755a7ce5f9f689a8177d84db1f85f5f90e`，已更新至 main。
+- [對應 Pages workflow run 38530664544](https://github.com/derliang/physics-lab/actions/runs/38530664544) 的 head_sha 與上述提交一致，status completed、conclusion success。
+- deploy job 的 Validate and generate catalog、Setup Pages、Upload static site、Deploy Pages 均為 success。
+- 真實瀏覽器重新整理 [公開首頁](https://derliang.github.io/physics-lab/) 後，確認為附件基準樣式（七主題、原 hero、原卡片與導覽），清單顯示「波的繞射與干涉」與「行進波與駐波」。
+- [公開 simulations.json](https://derliang.github.io/physics-lab/simulations.json) 含上述兩個動畫與正確相對路徑；來源儲存庫的 simulations.json 仍是舊空陣列，公開部署成品由 Actions 重新生成，符合契約。
+- 真實瀏覽器搜尋「駐波」只顯示行進波與駐波；清空後選「力學」顯示尚無動畫，再選首頁恢復兩個動畫。已完成基本樣式與互動驗證，未進行所有裝置的視覺驗收。
+- 新建 tree 中兩動畫的四個檔案 blob SHA 與最新基底完全一致；確認本輪沒有覆蓋或刪除其他提交的動畫。
+- 本文件追加的驗證紀錄是另一筆文件提交；上述部署成功結論只針對 c4ffeb755a7ce5f9f689a8177d84db1f85f5f90e，不提前宣稱文件提交的部署結果。
