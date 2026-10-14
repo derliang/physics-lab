@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>波的繞射與干涉｜Physics Lab</title>
+<style>
+:root{font-family:system-ui,"Noto Sans TC","Microsoft JhengHei",sans-serif;color:#e7efff;background:#091527}*{box-sizing:border-box}body{margin:0}header{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:#10233b;border-bottom:1px solid #29415d}header a{color:#9bc5ff;text-decoration:none}h1{font-size:20px;margin:0}.layout{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:14px;padding:14px;max-width:1600px;margin:auto}.view,.controls{border:1px solid #314762;border-radius:16px;background:#11223a;padding:12px}.view canvas{width:100%;aspect-ratio:1.73;display:block;background:#081728;border-radius:10px}.chart{aspect-ratio:5!important;margin-top:10px}h2{font-size:16px;margin:0 0 12px}.field{margin:12px 0}label{display:flex;justify-content:space-between;gap:8px;font-size:13px;margin-bottom:5px}input[type=range]{width:100%;accent-color:#66b9ff;min-height:26px}select,button{width:100%;background:#183654;color:#e7efff;border:1px solid #496687;border-radius:8px;font:inherit;padding:9px}button{cursor:pointer}button:hover{background:#245079}.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}.buttons{display:flex;gap:8px}.buttons button{flex:1}.sub{font-size:12px;color:#bdd0e6;line-height:1.55}.legend{font-size:12px;display:flex;gap:14px;flex-wrap:wrap;margin:8px 0}.orange{color:#ff9e65}.blue{color:#69b5ff}.yellow{color:#ffe18c}strong{color:#fff}small{color:#b5cee6}@media(max-width:850px){.layout{grid-template-columns:1fr}.controls{display:grid;grid-template-columns:1fr 1fr;gap:0 15px}.controls h2,.controls .full{grid-column:1/-1}}@media(max-width:470px){.controls{display:block}.layout{padding:8px}header h1{font-size:15px}}
+</style></head><body>
+<header><h1>🌊 波的繞射與干涉</h1><a href="../../../index.html">← 返回 Physics Lab</a></header>
+<main class="layout"><section class="view"><h2>波動觀測區</h2><canvas id="wave" width="720" height="416" aria-label="波動模擬"></canvas><div class="legend"><span class="orange">● 波峰</span><span class="blue">● 波谷</span><span class="yellow">● 波源</span><span>▌ 障礙物</span></div><h2>觀測屏｜相對時間平均強度</h2><canvas class="chart" id="plot" width="720" height="144" aria-label="相對強度曲線"></canvas><p id="note" class="sub"></p></section>
+<aside class="controls"><h2>實驗控制</h2>
+<div class="field"><label for="mode">實驗模式</label><select id="mode"><option value="single">單狹縫繞射</option><option value="double">雙狹縫干涉</option><option value="obstacle">障礙物繞射</option><option value="none">自由傳播</option></select></div>
+<div class="field"><label for="source">波源</label><select id="source"><option value="plane">直線波源（平面波）</option><option value="point">圓形波源（點波源）</option></select></div>
+<div class="field"><label for="view">顯示方式</label><select id="view"><option value="instant">瞬時波形</option><option value="average">時間平均強度</option></select></div>
+<div class="field"><label for="lambda">波長 λ <output id="lambdaV"></output></label><input id="lambda" type="range" min="12" max="68" value="34"></div>
+<div class="field"><label for="slit">狹縫寬度 a <output id="slitV"></output></label><input id="slit" type="range" min="8" max="145" value="40"></div>
+<div class="field"><label for="gap">雙縫中心距 d <output id="gapV"></output></label><input id="gap" type="range" min="32" max="220" value="105"></div>
+<div class="field"><label for="obstacle">障礙物高度 <output id="obstacleV"></output></label><input id="obstacle" type="range" min="10" max="290" value="112"></div>
+<div class="field"><label for="speed">播放速度 <output id="speedV"></output></label><input id="speed" type="range" min="0.2" max="3" value="1" step="0.1"></div>
+<div class="field"><label for="frequency">振動頻率 <output id="frequencyV"></output></label><input id="frequency" type="range" min="0.5" max="2" value="1" step="0.1"></div>
+<div class="buttons full"><button id="play">⏸ 暫停</button><button id="step">單步</button><button id="reset">↻ 重設</button></div>
+<div class="full"><p class="sub"><strong>教學提醒</strong>：波長、幾何尺寸以畫面相對單位表示。播放速度只影響動畫時間，不改變條紋；頻率改變時假設可獨立調整相速度，以維持設定的波長。</p><p class="sub">模型：二維標量波的惠更斯－菲涅耳數值近似，開口上的次波源相干疊加；障礙物為理想遮擋。不是完整邊界條件求解，近場與障礙邊緣的定量結果僅供示意。</p></div>
+</aside></main>
+<script>
+(()=>{'use strict';
+const el=id=>document.getElementById(id),cv=el('wave'),ctx=cv.getContext('2d'),pc=el('plot'),pctx=pc.getContext('2d');
+const W=360,H=208,wall=145,cy=H/2,srcX=20,buffer=document.createElement('canvas');buffer.width=W;buffer.height=H;
+const bc=buffer.getContext('2d'),im=bc.createImageData(W,H),px=im.data;
+let time=0,playing=true,last=0,changed=true,cache=null,lastRender=0;
+const keys=['lambda','slit','gap','obstacle','speed','frequency'];
+let s={};
+function setup(){for(const k of keys){s[k]=+el(k).value;el(k+'V').textContent=s[k]+(k==='speed'||k==='frequency'?'×':'');}
+for(const k of ['mode','source','view'])s[k]=el(k).value;
+el('slit').disabled=!['single','double'].includes(s.mode);el('gap').disabled=s.mode!=='double';el('obstacle').disabled=s.mode!=='obstacle';
+el('note').textContent=({single:'縫寬與波長相近時繞射顯著；改變縫寬比較波前擴散。',double:'觀察雙縫相干疊加的明暗分布，縫寬也會影響繞射包絡。',obstacle:'波繞過障礙物上下兩緣進入幾何陰影區。',none:'比較平面波與點波源產生的同心圓波前。'})[s.mode];cache=null;changed=true}
+function apertures(){let a=s.slit/2,d=s.gap/2,b=s.obstacle/2;switch(s.mode){case 'single':return [[cy-a,cy+a]];case 'double':return [[cy-d-a,cy-d+a],[cy+d-a,cy+d+a]];case 'obstacle':return [[0,cy-b],[cy+b,H]];default:return [[0,H]]}}
+function build(){
+const aps=apertures(),k=4*Math.PI/s.lambda,n=W*H;let re=new Float32Array(n),imPart=new Float32Array(n),incPhase=new Float32Array(n),amp=new Float32Array(n);
+let samples=[];if(s.mode!=='none')for(const [a,b] of aps){const lo=Math.max(0,a),hi=Math.min(H,b);for(let y=lo+1;y<hi;y+=2.3){let incoming=s.source==='plane'?wall-srcX:Math.hypot(wall-srcX,y-cy);samples.push([y,k*incoming]);}}
+for(let y=0;y<H;y++)for(let x=0;x<W;x++){
+let i=y*W+x,dist=Math.hypot(x-srcX,y-cy);
+if(s.mode==='none'||x<wall){let r=s.source==='plane'?x-srcX:dist;incPhase[i]=k*r; amp[i]=x>=srcX?(s.source==='plane'?1:Math.min(1,Math.sqrt(45/Math.max(45,r)))):0;continue;}
+let rsum=0,isum=0;
+for(let j=0;j<samples.length;j++){let sy=samples[j][0],dx=x-wall+0.5,r=Math.hypot(dx,y-sy),weight=2.3*Math.sqrt(Math.max(.01,dx/r))/Math.sqrt(Math.max(1,r)),angle=k*r+samples[j][1];rsum+=Math.cos(angle)*weight;isum+=Math.sin(angle)*weight;}
+re[i]=rsum*.27;imPart[i]=isum*.27;
+}
+cache={re,imPart,incPhase,amp,aps};renderPlot();
+}
+function intensity(i){if(s.mode==='none'||i%W<wall)return cache.amp[i]*cache.amp[i];return cache.re[i]**2+cache.imPart[i]**2}
+function renderPlot(){
+const w=pc.width,h=pc.height,p=pctx;p.fillStyle='#081728';p.fillRect(0,0,w,h);
+const x=W-29,values=[];let max=.00001;for(let y=0;y<H;y++){let v=intensity(y*W+x);values.push(v);max=Math.max(max,v);}
+p.strokeStyle='#425b79';p.beginPath();p.moveTo(34,10);p.lineTo(34,h-22);p.lineTo(w-9,h-22);p.stroke();
+p.strokeStyle='#ffe092';p.lineWidth=2;p.beginPath();for(let y=0;y<H;y++){const xx=34+(w-45)*y/(H-1),yy=h-22-(h-33)*Math.min(1,values[y]/max);if(y===0)p.moveTo(xx,yy);else p.lineTo(xx,yy)}p.stroke();
+p.fillStyle='#c4d6ef';p.font='12px sans-serif';p.fillText('相對強度',38,15);p.fillText('觀測屏位置（上 → 下）',w/2-80,h-4);
+}
+function draw(){
+if(!cache)build();const k=4*Math.PI/s.lambda,q=time*7;
+for(let i=0;i<W*H;i++){
+let x=i%W,y=(i/W)|0,b=i*4;
+let blocked=s.mode!=='none'&&Math.abs(x-wall)<2&&!cache.aps.some(([a,z])=>y>=a&&y<=z);
+if(blocked){px[b]=151;px[b+1]=167;px[b+2]=188;px[b+3]=255;continue}
+let real=s.mode==='none'||x<wall?cache.amp[i]*Math.sin(cache.incPhase[i]-q):cache.re[i]*Math.sin(q)-cache.imPart[i]*Math.cos(q);
+if(s.view==='instant'){
+let z=Math.tanh(real*.95);
+if(z>=0){px[b]=Math.round(14+240*z);px[b+1]=Math.round(31+95*z);px[b+2]=Math.round(52+36*z)}
+else{z=-z;px[b]=Math.round(14+27*z);px[b+1]=Math.round(31+125*z);px[b+2]=Math.round(52+201*z)}
+}else{let z=Math.min(1,Math.sqrt(intensity(i))*.78);px[b]=Math.round(12+238*z);px[b+1]=Math.round(27+202*z);px[b+2]=Math.round(49+110*z)}
+px[b+3]=255;
+}
+bc.putImageData(im,0,0);ctx.drawImage(buffer,0,0,cv.width,cv.height);
+const scale=cv.width/W;ctx.save();ctx.scale(scale,cv.height/H);ctx.fillStyle='#ffe08b';ctx.strokeStyle='#ffe08b';ctx.lineWidth=2;
+if(s.source==='plane'){ctx.beginPath();ctx.moveTo(srcX,4);ctx.lineTo(srcX,H-4);ctx.stroke()}else{ctx.beginPath();ctx.arc(srcX,cy,3,0,Math.PI*2);ctx.fill()}
+ctx.strokeStyle='#d5e6ff88';ctx.setLineDash([2,3]);ctx.beginPath();ctx.moveTo(W-29,0);ctx.lineTo(W-29,H);ctx.stroke();ctx.restore();changed=false;
+}
+function tick(now){let dt=Math.min(.07,(now-last)/1000||0);last=now;if(playing){time+=dt*s.speed*s.frequency;changed=true}if(changed&&now-lastRender>45){lastRender=now;draw()}requestAnimationFrame(tick)}
+for(const k of [...keys,'mode','source','view'])el(k).addEventListener(k==='mode'||k==='source'||k==='view'?'change':'input',setup);
+el('play').onclick=()=>{playing=!playing;el('play').textContent=playing?'⏸ 暫停':'▶ 播放'};
+el('step').onclick=()=>{playing=false;el('play').textContent='▶ 播放';time+=.10;changed=true};
+el('reset').onclick=()=>{time=0;changed=true};setup();draw();requestAnimationFrame(tick);
+})();
+</script></body></html>
