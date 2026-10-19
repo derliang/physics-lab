@@ -115,7 +115,6 @@ el('save').onclick=()=>{let name=el('saveName').value.trim();if(!name){el('messa
 el('saved').onchange=e=>{if(!e.target.value)return;try{let all=JSON.parse(localStorage.getItem('physics-superposition-v1')||'{}'),o=all[e.target.value];if(!valid(o))throw Error('Invalid settings');s=Object.assign({},o);playing=false;dirty=true;selected=8;updateInputs();renderButtons();paint();el('message').textContent='已載入：'+e.target.value}catch(err){el('message').textContent='儲存的參數無法辨識。'}};
 el('share').onclick=async()=>{const payload={version:1,parameters:s};const u=new URL(location.href);u.hash='settings='+encodeURIComponent(JSON.stringify(payload));try{await navigator.clipboard.writeText(u.href);el('message').textContent='已複製完整參數網址。'}catch(e){prompt('請複製分享網址',u.href);el('message').textContent='請手動複製上方網址。'}};
 function fromUrl(){if(!location.hash.startsWith('#settings='))return;try{const p=JSON.parse(decodeURIComponent(location.hash.slice(10)));if(p.version!==1||!valid(p.parameters))throw Error('invalid');s=Object.assign({},p.parameters);playing=false;dirty=true;el('message').textContent='已套用網址分享的參數。'}catch(e){el('message').textContent='網址參數無效，已保留預設情境。'}}
-}
 window.addEventListener('resize',paint);document.addEventListener('visibilitychange',()=>{last=0});
 choose('full-constructive');fromUrl();updateInputs();renderButtons();loadSaved();paint();requestAnimationFrame(tick);
 })();
