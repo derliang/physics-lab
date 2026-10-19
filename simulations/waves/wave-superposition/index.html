@@ -90,7 +90,7 @@ canvas{height:clamp(285px,calc(100dvh - 305px),590px)}
 <div class="legend"><span><i class="swatch" style="background:var(--a)"></i>波 A（向右）</span><span><i class="swatch" style="background:var(--b)"></i>波 B（向左）</span><span><i class="swatch" style="background:var(--sum)"></i>合成波 y = y₁ + y₂</span></div>
 <div class="explain" aria-live="polite"><div class="values"><div class="value" style="color:var(--a)">波 A 位移<b id="ya"></b></div><div class="value" style="color:var(--b)">波 B 位移<b id="yb"></b></div><div class="value" style="color:var(--sum)">合成位移<b id="ys"></b></div></div><div class="analysis-line"><div class="math" id="formula"></div><div id="reason" class="muted"></div><div class="note" id="coords"></div></div></div>
 <div class="canvaswrap"><canvas id="wave" role="img" aria-label="波A、波B以及合成波隨時間變化的共用座標軸；點擊水平位置查看位移"></canvas></div>
-<div class="note">點一下共用座標圖上的任一水平位置：畫面會標出兩個分波位移及合成位移。也可拖曳選點位置。橫軸 x 單位 m，縱軸 y 單位 cm。</div>
+<div class="note">未重疊時，合成波與單一原波重合，圖中優先顯示原波顏色，避免遮蓋；重疊區以金色顯示合成波。隱藏 A、B 可單獨看完整合成波。點選任一水平位置檢查位移相加。</div>
 
 </section>
 <aside>
@@ -139,8 +139,16 @@ const L=52,R=17,T=24,B=30,PW=Math.max(1,w-L-R),PH=Math.max(1,h-T-B),px=x=>L+x/XM
 if(s.grid){ctx.lineWidth=.7;ctx.strokeStyle='#294055';for(let x=0;x<=16;x+=2){ctx.beginPath();ctx.moveTo(px(x),T);ctx.lineTo(px(x),h-B);ctx.stroke();ctx.fillStyle='#aabed5';ctx.font='11px system-ui';ctx.fillText(String(x),px(x)-5,h-B+16)}for(let y=-6;y<=6;y+=2){ctx.beginPath();ctx.moveTo(L,py(y));ctx.lineTo(w-R,py(y));ctx.stroke();ctx.fillStyle='#aabed5';ctx.fillText(String(y),L-26,py(y)+4)}}
 ctx.lineWidth=1.2;ctx.strokeStyle='#8299b4';ctx.beginPath();ctx.moveTo(L,T);ctx.lineTo(L,h-B);ctx.moveTo(L,py(0));ctx.lineTo(w-R,py(0));ctx.stroke();
 ctx.font='12px system-ui';ctx.fillStyle='#cad9e9';ctx.fillText('y (cm)',6,T+8);ctx.fillText('x (m)',w-47,h-8);
-function wave(fn,color,width,dash){ctx.strokeStyle=color;ctx.lineWidth=width;ctx.setLineDash(dash);ctx.beginPath();for(let j=0;j<=PW;j+=2){const x=XMAX*j/PW;if(j===0)ctx.moveTo(px(x),py(fn(x)));else ctx.lineTo(px(x),py(fn(x)))}ctx.stroke();ctx.setLineDash([])}
-if(s.showA)wave(yA,'#49d8b5',2.7,[8,4]);if(s.showB)wave(yB,'#bb9dff',2.7,[3,4]);if(s.showSum)wave(ySum,'#ffca68',3.5,[]);
+function wave(fn,color,width,visible){ctx.strokeStyle=color;ctx.lineWidth=width;ctx.setLineDash([]);ctx.beginPath();let drawing=false;
+for(let j=0;j<=Math.ceil(PW);j++){const x=XMAX*j/PW; if(!visible(x)){if(drawing){ctx.stroke();ctx.beginPath();drawing=false;}continue;}
+if(!drawing){ctx.moveTo(px(x),py(fn(x)));drawing=true;}else{ctx.lineTo(px(x),py(fn(x)));}}
+if(drawing)ctx.stroke();}
+const activeA=x=>Math.abs(yA(x))>0.00001;
+const activeB=x=>Math.abs(yB(x))>0.00001;
+function showResultAt(x){if(!s.showA&&!s.showB)return true;if(s.showA&&s.showB)return activeA(x)&&activeB(x);if(s.showA)return activeB(x);return activeA(x);}
+if(s.showSum)wave(ySum,'#ffca68',3.6,showResultAt);
+if(s.showA)wave(yA,'#49d8b5',3.2,activeA);
+if(s.showB)wave(yB,'#bb9dff',3.2,activeB);
 const x=Math.max(0,Math.min(16,selected)),cx=px(x),a=yA(x),b=yB(x),sum=a+b;
 ctx.strokeStyle='#dbe5f4';ctx.lineWidth=1;ctx.setLineDash([4,5]);ctx.beginPath();ctx.moveTo(cx,T);ctx.lineTo(cx,h-B);ctx.stroke();ctx.setLineDash([]);
 function dot(y,color){ctx.fillStyle=color;ctx.strokeStyle='#fff';ctx.lineWidth=1;ctx.beginPath();ctx.arc(cx,py(y),5,0,Math.PI*2);ctx.fill();ctx.stroke()}
