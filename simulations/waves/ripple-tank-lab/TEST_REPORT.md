@@ -6,3 +6,6 @@
 - **通過**：內嵌 JavaScript 語法編譯；確認含 `updateLegend`（避免原有初始化 ReferenceError）、`drawIntensity`、切換及數據讀值控制。
 - **待驗證**：真實瀏覽器全模式實機操作、定量物理案例、30 分鐘效能、iPad 投影與手機觸控。不得以語法檢查宣稱三級驗收完成。
 - 本次提交 SHA 及 Actions 結果以推送後實際查核為準。
+
+## 2026-10-19 原版復原
+原始水波槽動畫意外被試作版取代；此次恢復覆蓋前原始入口及 manifest，原版 blob SHA：2c222027a9e95368a4c8ad6b64563340f7c8b5b7。新版另存於 `../ripple-wave-superposition/`，兩者分別列入目錄，原始網址維持不變。驗證部署與公開頁面另核對。
