@@ -31,8 +31,8 @@ label{display:flex;justify-content:space-between;gap:8px;margin-top:12px;font-si
 <div id="scenario" class="muted" aria-live="polite"></div>
 <div class="controls"><button id="play">⏸ 暫停</button><button id="step" class="secondary">⏭ 單格步進</button><button id="zero" class="secondary">↤ 時間歸零</button><button id="restart" class="secondary">↻ 重新開始</button></div>
 <div class="legend"><span><i class="swatch" style="background:var(--a)"></i>波 A（向右）</span><span><i class="swatch" style="background:var(--b)"></i>波 B（向左）</span><span><i class="swatch" style="background:var(--sum)"></i>合成波 y = y₁ + y₂</span></div>
-<div class="canvaswrap"><canvas id="wave" role="img" aria-label="波A、波B以及合成波隨時間變化的三列波形；點擊合成波選擇位置"></canvas></div>
-<div class="note">點一下最下方「合成波」上的任一水平位置：畫面會標出兩個分波位移及合成位移。也可拖曳選點位置。橫軸 x 單位 m，縱軸 y 單位 cm。</div>
+<div class="canvaswrap"><canvas id="wave" role="img" aria-label="波A、波B以及合成波隨時間變化的共用座標軸；點擊水平位置查看位移"></canvas></div>
+<div class="note">點一下共用座標圖上的任一水平位置：畫面會標出兩個分波位移及合成位移。也可拖曳選點位置。橫軸 x 單位 m，縱軸 y 單位 cm。</div>
 <div class="explain" aria-live="polite"><strong>② 合成波選點的逐點位移分析</strong><div class="values"><div class="value" style="color:var(--a)">波 A 位移<b id="ya"></b></div><div class="value" style="color:var(--b)">波 B 位移<b id="yb"></b></div><div class="value" style="color:var(--sum)">合成位移<b id="ys"></b></div></div><div class="math" id="formula"></div><div id="reason" class="muted"></div><div class="note" id="coords"></div></div>
 </section>
 <aside>
@@ -43,7 +43,7 @@ label{display:flex;justify-content:space-between;gap:8px;margin-top:12px;font-si
 <div class="setting"><label for="velocity">波速（兩波速率相同）<output id="velocityv"></output></label><input id="velocity" type="range" min="0.5" max="5" step="0.1"></div>
 <div class="setting"><label for="speed">播放速度 <output id="speedv"></output></label><input id="speed" type="range" min="0.1" max="3" step="0.1"></div>
 <div class="setting"><label for="time">模擬時間 <output id="timev"></output></label><input id="time" type="range" min="0" max="10" step="0.01"></div>
-<label class="check"><input type="checkbox" id="grid" checked> 顯示格線與刻度</label>
+<h3>顯示波形</h3><label class="check"><input type="checkbox" id="showA" checked> 顯示波 A</label><label class="check"><input type="checkbox" id="showB" checked> 顯示波 B</label><label class="check"><input type="checkbox" id="showSum" checked> 顯示合成波</label><label class="check"><input type="checkbox" id="grid" checked> 顯示格線與刻度</label>
 <label class="check"><input type="checkbox" id="guides" checked> 顯示選點分解箭頭</label>
 <button id="reset" class="secondary" style="width:100%;margin-top:12px">恢復此情境預設參數</button></div>
 <div class="card"><h2>④ 教師自訂情境</h2><label for="saveName">自訂情境名稱</label><input id="saveName" maxlength="35" placeholder="例如：兩脈衝位移相加" style="width:100%;padding:10px;border-radius:8px;background:#10263d;color:white;border:1px solid #45617d">
@@ -60,7 +60,7 @@ const presets=[
 {id:'destructive',name:'破壞性干涉',a:2,b:-1.2,w:2.5,v:2,t:1.55,info:'反向位移且部分重疊，重疊區位移有抵銷現象。'},
 {id:'full-destructive',name:'完全破壞性干涉',a:2,b:-2,w:2.5,v:2,t:2,info:'等振幅、反向脈衝完全重合；整段合成位移瞬間皆為 0。'}
 ];
-const defaults={a:2,b:2,w:2.5,v:2,t:2,speed:1,grid:true,guides:true};
+const defaults={a:2,b:2,w:2.5,v:2,t:2,speed:1,grid:true,guides:true,showA:true,showB:true,showSum:true};
 let s=Object.assign({},defaults),selected=8,playing=false,last=0,scenario='full-constructive',dirty=false;
 const left0=4,right0=12,XMAX=16;
 function pulse(x,c,w,amp){const d=(x-c)/(w/2);return Math.abs(d)<1?amp*.5*(1+Math.cos(Math.PI*d)):0;}
@@ -68,34 +68,27 @@ function yA(x){return pulse(x,left0+s.v*s.t,s.w,s.a)}
 function yB(x){return pulse(x,right0-s.v*s.t,s.w,s.b)}
 function ySum(x){return yA(x)+yB(x)}
 function fmt(x){return (Math.abs(x)<.0005?0:x).toFixed(2)}
-function valid(o){return o&&Object.keys(o).every(k=>['a','b','w','v','t','speed','grid','guides'].includes(k))&&['a','b','w','v','t','speed'].every(k=>Number.isFinite(o[k]))&&o.a>=.5&&o.a<=3&&o.b>=-3&&o.b<=3&&o.w>=1&&o.w<=4&&o.v>=.5&&o.v<=5&&o.t>=0&&o.t<=10&&o.speed>=.1&&o.speed<=3&&typeof o.grid==='boolean'&&typeof o.guides==='boolean'}
-function updateInputs(){[['ampA','a','cm'],['ampB','b','cm'],['width','w','m'],['velocity','v','m/s'],['speed','speed','×'],['time','t','s']].forEach(([id,key,unit])=>{el(id).value=s[key];el(id+'v').textContent=s[key].toFixed(key==='t'?2:1)+' '+unit});el('grid').checked=s.grid;el('guides').checked=s.guides}
+function valid(o){return o&&Object.keys(o).every(k=>['a','b','w','v','t','speed','grid','guides','showA','showB','showSum'].includes(k))&&['a','b','w','v','t','speed'].every(k=>Number.isFinite(o[k]))&&o.a>=.5&&o.a<=3&&o.b>=-3&&o.b<=3&&o.w>=1&&o.w<=4&&o.v>=.5&&o.v<=5&&o.t>=0&&o.t<=10&&o.speed>=.1&&o.speed<=3&&typeof o.grid==='boolean'&&typeof o.guides==='boolean'&&['showA','showB','showSum'].every(k=>o[k]===undefined||typeof o[k]==='boolean')}
+function updateInputs(){[['ampA','a','cm'],['ampB','b','cm'],['width','w','m'],['velocity','v','m/s'],['speed','speed','×'],['time','t','s']].forEach(([id,key,unit])=>{el(id).value=s[key];el(id+'v').textContent=s[key].toFixed(key==='t'?2:1)+' '+unit});el('grid').checked=s.grid;el('guides').checked=s.guides;['showA','showB','showSum'].forEach(k=>{el(k).checked=s[k]})}
 function choose(id){const p=presets.find(q=>q.id===id);if(!p)return;scenario=id;dirty=false;s=Object.assign({},defaults,{a:p.a,b:p.b,w:p.w,v:p.v,t:p.t});selected=8;playing=false;renderButtons();updateInputs();paint();}
 function renderButtons(){const host=el('presets');host.innerHTML='';presets.forEach(p=>{const b=document.createElement('button');b.textContent=p.name;b.className=(!dirty&&scenario===p.id?'active':'');b.setAttribute('aria-pressed',String(!dirty&&scenario===p.id));b.addEventListener('click',()=>choose(p.id));host.appendChild(b)});el('scenario').textContent=dirty?'自訂參數：目前已離開快選的原始條件。':presets.find(p=>p.id===scenario).info;el('play').textContent=playing?'⏸ 暫停':'▶ 播放'}
 function markChanged(){dirty=true;renderButtons();paint()}
 function setTime(t){s.t=Math.min(10,Math.max(0,t));el('time').value=s.t;el('timev').textContent=s.t.toFixed(2)+' s';paint()}
 function resize(){let dpr=Math.min(2.5,window.devicePixelRatio||1);let w=canvas.clientWidth,h=canvas.clientHeight;if(canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr)){canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr)}ctx.setTransform(dpr,0,0,dpr,0,0);return{w,h}}
-function paint(){let {w,h}=resize();ctx.clearRect(0,0,w,h);ctx.fillStyle='#091a2c';ctx.fillRect(0,0,w,h);
-const padL=49,padR=13,top=28,bottom=20,plotW=w-padL-padR,plotH=h-top-bottom,cell=plotH/3,scale=Math.min(cell*.095,11);
-const px=x=>padL+x/XMAX*plotW;const py=(value,k)=>top+cell*(k+.5)-value*scale;
-for(let k=0;k<3;k++){
-let mid=top+cell*(k+.5);
-if(s.grid){ctx.strokeStyle='#1f3950';ctx.lineWidth=.7;for(let x=0;x<=16;x+=2){let X=px(x);ctx.beginPath();ctx.moveTo(X,top+cell*k+8);ctx.lineTo(X,top+cell*(k+1)-5);ctx.stroke();ctx.fillStyle='#92a9c1';ctx.font='10px system-ui';ctx.fillText(String(x),X-5,top+cell*(k+1)-6)}
-for(let y=-4;y<=4;y+=2){const Y=py(y,k);ctx.beginPath();ctx.moveTo(padL,Y);ctx.lineTo(w-padR,Y);ctx.stroke();if(y!==0){ctx.fillStyle='#9eb4ca';ctx.fillText(String(y),padL-24,Y+3)}}}
-ctx.strokeStyle='#65829e';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(padL,mid);ctx.lineTo(w-padR,mid);ctx.stroke();ctx.beginPath();ctx.moveTo(padL,top+cell*k+5);ctx.lineTo(padL,top+cell*(k+1)-8);ctx.stroke();
-ctx.fillStyle='#d1e1f2';ctx.font='bold 12px system-ui';ctx.fillText(['A →','← B','合成波'][k],padL+6,top+cell*k+17);
-ctx.fillStyle='#9bb2cb';ctx.font='10px system-ui';ctx.fillText('y (cm)',3,top+cell*k+17);ctx.fillText('x (m)',w-40,top+cell*(k+1)-6);
-}
-function stroke(f,k,color,dash){ctx.beginPath();ctx.lineWidth=k===2?3:2.3;ctx.strokeStyle=color;ctx.setLineDash(dash||[]);for(let j=0;j<=plotW;j+=2){const x=XMAX*j/plotW,y=py(f(x),k);if(j===0)ctx.moveTo(px(x),y);else ctx.lineTo(px(x),y)}ctx.stroke();ctx.setLineDash([])}
-stroke(yA,0,'#49d8b5');stroke(yB,1,'#bb9dff');stroke(ySum,2,'#ffca68');
-let x=Math.max(0,Math.min(16,selected)),cx=px(x),a=yA(x),b=yB(x),sum=a+b;
-ctx.strokeStyle='#b5d6ec';ctx.lineWidth=1;ctx.setLineDash([4,5]);ctx.beginPath();ctx.moveTo(cx,top+7);ctx.lineTo(cx,h-bottom-9);ctx.stroke();ctx.setLineDash([]);
-for(let k=0;k<3;k++){const value=[a,b,sum][k],color=['#49d8b5','#bb9dff','#ffca68'][k];ctx.fillStyle=color;ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(cx,py(value,k),5,0,Math.PI*2);ctx.fill();ctx.stroke()}
-if(s.guides){const y0=py(0,2),y1=py(a,2),y2=py(sum,2);function arrow(from,to,color,x0){ctx.strokeStyle=color;ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(x0,from);ctx.lineTo(x0,to);ctx.stroke();const dir=to<from?-1:1;if(Math.abs(to-from)>3){ctx.fillStyle=color;ctx.beginPath();ctx.moveTo(x0,to);ctx.lineTo(x0-5,to-dir*8);ctx.lineTo(x0+5,to-dir*8);ctx.fill()}}
-arrow(y0,y1,'#49d8b5',cx-13);arrow(y1,y2,'#bb9dff',cx+13);
-}
-el('ya').textContent=fmt(a)+' cm';el('yb').textContent=fmt(b)+' cm';el('ys').textContent=fmt(sum)+' cm';
-el('formula').textContent=fmt(a)+' + ('+fmt(b)+') = '+fmt(sum)+' cm';
+function paint(){
+const {w,h}=resize();ctx.clearRect(0,0,w,h);ctx.fillStyle='#091a2c';ctx.fillRect(0,0,w,h);
+const L=52,R=17,T=24,B=30,PW=Math.max(1,w-L-R),PH=Math.max(1,h-T-B),px=x=>L+x/XMAX*PW,py=y=>T+PH/2-y*PH/12;
+if(s.grid){ctx.lineWidth=.7;ctx.strokeStyle='#294055';for(let x=0;x<=16;x+=2){ctx.beginPath();ctx.moveTo(px(x),T);ctx.lineTo(px(x),h-B);ctx.stroke();ctx.fillStyle='#aabed5';ctx.font='11px system-ui';ctx.fillText(String(x),px(x)-5,h-B+16)}for(let y=-6;y<=6;y+=2){ctx.beginPath();ctx.moveTo(L,py(y));ctx.lineTo(w-R,py(y));ctx.stroke();ctx.fillStyle='#aabed5';ctx.fillText(String(y),L-26,py(y)+4)}}
+ctx.lineWidth=1.2;ctx.strokeStyle='#8299b4';ctx.beginPath();ctx.moveTo(L,T);ctx.lineTo(L,h-B);ctx.moveTo(L,py(0));ctx.lineTo(w-R,py(0));ctx.stroke();
+ctx.font='12px system-ui';ctx.fillStyle='#cad9e9';ctx.fillText('y (cm)',6,T+8);ctx.fillText('x (m)',w-47,h-8);
+function wave(fn,color,width,dash){ctx.strokeStyle=color;ctx.lineWidth=width;ctx.setLineDash(dash);ctx.beginPath();for(let j=0;j<=PW;j+=2){const x=XMAX*j/PW;if(j===0)ctx.moveTo(px(x),py(fn(x)));else ctx.lineTo(px(x),py(fn(x)))}ctx.stroke();ctx.setLineDash([])}
+if(s.showA)wave(yA,'#49d8b5',2.7,[8,4]);if(s.showB)wave(yB,'#bb9dff',2.7,[3,4]);if(s.showSum)wave(ySum,'#ffca68',3.5,[]);
+const x=Math.max(0,Math.min(16,selected)),cx=px(x),a=yA(x),b=yB(x),sum=a+b;
+ctx.strokeStyle='#dbe5f4';ctx.lineWidth=1;ctx.setLineDash([4,5]);ctx.beginPath();ctx.moveTo(cx,T);ctx.lineTo(cx,h-B);ctx.stroke();ctx.setLineDash([]);
+function dot(y,color){ctx.fillStyle=color;ctx.strokeStyle='#fff';ctx.lineWidth=1;ctx.beginPath();ctx.arc(cx,py(y),5,0,Math.PI*2);ctx.fill();ctx.stroke()}
+if(s.showA)dot(a,'#49d8b5');if(s.showB)dot(b,'#bb9dff');if(s.showSum)dot(sum,'#ffca68');
+if(s.guides){function arrow(y0,y1,color,dx){const p0=py(y0),p1=py(y1);if(Math.abs(p1-p0)<2)return;const at=cx+dx,dir=Math.sign(p1-p0);ctx.lineWidth=3;ctx.strokeStyle=color;ctx.beginPath();ctx.moveTo(at,p0);ctx.lineTo(at,p1);ctx.stroke();ctx.fillStyle=color;ctx.beginPath();ctx.moveTo(at,p1);ctx.lineTo(at-5,p1-dir*8);ctx.lineTo(at+5,p1-dir*8);ctx.fill()}arrow(0,a,'#49d8b5',-14);arrow(a,sum,'#bb9dff',14)}
+el('ya').textContent=fmt(a)+' cm';el('yb').textContent=fmt(b)+' cm';el('ys').textContent=fmt(sum)+' cm';el('formula').textContent=fmt(a)+' + ('+fmt(b)+') = '+fmt(sum)+' cm';
 el('coords').textContent='選取 x = '+x.toFixed(2)+' m；時間 t = '+s.t.toFixed(2)+' s；各位移由同一位置、同一時間求得。';
 el('reason').textContent=Math.abs(a)<.001&&Math.abs(b)<.001?'此處兩波位移均為零，合成位移為零。':Math.abs(a+b)<.001?'兩個相反方向位移大小相等，互相抵銷，所以此點合成位移為零。':a*b<0?'兩波在此點的位移方向相反，因此代數相加後會部分抵銷。':a*b>0?'兩波在此點的位移方向相同，合成位移的絕對值增加。':'此點只有其中一波造成非零位移，所以合成位移與該波相同。';
 }
@@ -107,14 +100,14 @@ el('restart').onclick=()=>{playing=true;setTime(0);last=0;renderButtons()};
 el('reset').onclick=()=>choose(scenario);
 [['ampA','a'],['ampB','b'],['width','w'],['velocity','v'],['speed','speed']].forEach(([id,k])=>{el(id).addEventListener('input',e=>{s[k]=Number(e.target.value);updateInputs();markChanged()})});
 el('time').addEventListener('input',e=>{playing=false;setTime(Number(e.target.value));renderButtons()});
-['grid','guides'].forEach(id=>el(id).addEventListener('change',e=>{s[id]=e.target.checked;updateInputs();markChanged()}));
-function choosePoint(e){const rect=canvas.getBoundingClientRect(),x=(e.clientX-rect.left-49)/(rect.width-49-13)*16;selected=Math.max(0,Math.min(16,x));paint()}
+['grid','guides','showA','showB','showSum'].forEach(id=>el(id).addEventListener('change',e=>{s[id]=e.target.checked;updateInputs();markChanged()}));
+function choosePoint(e){const rect=canvas.getBoundingClientRect(),x=(e.clientX-rect.left-52)/(rect.width-52-17)*16;selected=Math.max(0,Math.min(16,x));paint()}
 canvas.addEventListener('pointerdown',e=>{canvas.setPointerCapture(e.pointerId);choosePoint(e)});canvas.addEventListener('pointermove',e=>{if(e.buttons)choosePoint(e)});
 function loadSaved(){const list=el('saved');list.innerHTML='<option value="">選擇自訂情境</option>';try{const all=JSON.parse(localStorage.getItem('physics-superposition-v1')||'{}');Object.keys(all).forEach(name=>{let o=document.createElement('option');o.value=name;o.textContent=name;list.appendChild(o)})}catch(e){el('message').textContent='此瀏覽器無法讀取本機儲存。'}}
 el('save').onclick=()=>{let name=el('saveName').value.trim();if(!name){el('message').textContent='請先輸入名稱。';return}try{const all=JSON.parse(localStorage.getItem('physics-superposition-v1')||'{}');all[name]=Object.assign({},s);localStorage.setItem('physics-superposition-v1',JSON.stringify(all));loadSaved();el('saved').value=name;el('message').textContent='已儲存：'+name}catch(e){el('message').textContent='儲存失敗：可能是瀏覽器隱私設定或容量限制。'}};
-el('saved').onchange=e=>{if(!e.target.value)return;try{let all=JSON.parse(localStorage.getItem('physics-superposition-v1')||'{}'),o=all[e.target.value];if(!valid(o))throw Error('Invalid settings');s=Object.assign({},o);playing=false;dirty=true;selected=8;updateInputs();renderButtons();paint();el('message').textContent='已載入：'+e.target.value}catch(err){el('message').textContent='儲存的參數無法辨識。'}};
+el('saved').onchange=e=>{if(!e.target.value)return;try{let all=JSON.parse(localStorage.getItem('physics-superposition-v1')||'{}'),o=all[e.target.value];if(!valid(o))throw Error('Invalid settings');s=Object.assign({},defaults,o);playing=false;dirty=true;selected=8;updateInputs();renderButtons();paint();el('message').textContent='已載入：'+e.target.value}catch(err){el('message').textContent='儲存的參數無法辨識。'}};
 el('share').onclick=async()=>{const payload={version:1,parameters:s};const u=new URL(location.href);u.hash='settings='+encodeURIComponent(JSON.stringify(payload));try{await navigator.clipboard.writeText(u.href);el('message').textContent='已複製完整參數網址。'}catch(e){prompt('請複製分享網址',u.href);el('message').textContent='請手動複製上方網址。'}};
-function fromUrl(){if(!location.hash.startsWith('#settings='))return;try{const p=JSON.parse(decodeURIComponent(location.hash.slice(10)));if(p.version!==1||!valid(p.parameters))throw Error('invalid');s=Object.assign({},p.parameters);playing=false;dirty=true;el('message').textContent='已套用網址分享的參數。'}catch(e){el('message').textContent='網址參數無效，已保留預設情境。'}}
+function fromUrl(){if(!location.hash.startsWith('#settings='))return;try{const p=JSON.parse(decodeURIComponent(location.hash.slice(10)));if(p.version!==1||!valid(p.parameters))throw Error('invalid');s=Object.assign({},defaults,p.parameters);playing=false;dirty=true;el('message').textContent='已套用網址分享的參數。'}catch(e){el('message').textContent='網址參數無效，已保留預設情境。'}}
 window.addEventListener('resize',paint);document.addEventListener('visibilitychange',()=>{last=0});
 choose('full-constructive');fromUrl();updateInputs();renderButtons();loadSaved();paint();requestAnimationFrame(tick);
 })();
