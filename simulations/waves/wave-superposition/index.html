@@ -170,7 +170,7 @@ el('play').onclick=()=>{playing=!playing;last=0;renderButtons()};
 el('step').onclick=()=>{playing=false;setTime(s.t+.05);renderButtons()};
 el('back').onclick=()=>{playing=false;setTime(s.t-.05);renderButtons()};
 el('zero').onclick=()=>{playing=false;setTime(0);renderButtons()};
-el('restart').onclick=()=>{playing=true;setTime(0);last=0;renderButtons()};
+el('restart').onclick=()=>{playing=true;selected=XMAX/2;setTime(0);last=0;renderButtons()};
 el('reset').onclick=()=>choose(scenario);
 [['ampA','a'],['ampB','b'],['width','w'],['velocity','v'],['speed','speed']].forEach(([id,k])=>{el(id).addEventListener('input',e=>{s[k]=Number(e.target.value);updateInputs();markChanged()})});
 el('time').addEventListener('input',e=>{playing=false;setTime(Number(e.target.value));renderButtons()});
