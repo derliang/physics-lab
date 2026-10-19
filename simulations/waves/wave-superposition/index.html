@@ -84,7 +84,7 @@ canvas{height:clamp(285px,calc(100dvh - 305px),590px)}
 <header><div class="header-line"><h1>波的疊加原理 <small>｜可點選的位移分解</small></h1><span class="header-meta">Physics Lab · 波動 1-4 · 教學互動實驗</span></div><a href="../../../" style="color:#a6e4ff">返回實驗室</a></header>
 <main>
 <section class="card">
-<h2>① 選擇教學情境</h2><div class="presets" id="presets"></div>
+<h2>選擇教學情境</h2><div class="presets" id="presets"></div>
 <div id="scenario" class="muted" aria-live="polite"></div>
 <div class="controls"><button id="play">⏸ 暫停</button><button id="back" class="secondary">⏮ 逐格後退</button><button id="step" class="secondary">⏭ 單格前進</button><button id="zero" class="secondary">↤ 時間歸零</button><button id="restart" class="secondary">↻ 重新開始</button></div>
 <div class="legend"><span><i class="swatch" style="background:var(--a)"></i>波 A（向右）</span><span><i class="swatch" style="background:var(--b)"></i>波 B（向左）</span><span><i class="swatch" style="background:var(--sum)"></i>合成波 y = y₁ + y₂</span></div>
@@ -94,9 +94,9 @@ canvas{height:clamp(285px,calc(100dvh - 305px),590px)}
 
 </section>
 <aside>
-<div class="card"><h2>③ 自由調整參數</h2>
-<div class="setting"><label for="ampA">波 A 振幅 <output id="ampAv"></output></label><input id="ampA" type="range" min="0.5" max="3" step="0.1"></div>
-<div class="setting"><label for="ampB">波 B 振幅（含正負方向）<output id="ampBv"></output></label><input id="ampB" type="range" min="-3" max="3" step="0.1"></div>
+<div class="card"><h2>自由調整參數</h2>
+<div class="setting"><label for="ampA">波 A 振幅（正負表示方向）<output id="ampAv"></output></label><input id="ampA" type="range" min="-3" max="3" step="0.1"></div>
+<div class="setting"><label for="ampB">波 B 振幅（正負表示方向）<output id="ampBv"></output></label><input id="ampB" type="range" min="-3" max="3" step="0.1"></div>
 <details class="advanced"><summary>進階波形設定：脈衝寬度與波速</summary><div class="setting"><label for="width">脈衝寬度 <output id="widthv"></output></label><input id="width" type="range" min="1" max="4" step="0.1"></div>
 <div class="setting"><label for="velocity">波速（兩波速率相同）<output id="velocityv"></output></label><input id="velocity" type="range" min="0.5" max="5" step="0.1"></div>
 </details><div class="setting"><label for="speed">播放速度 <output id="speedv"></output></label><input id="speed" type="range" min="0.1" max="3" step="0.1"></div>
@@ -104,7 +104,7 @@ canvas{height:clamp(285px,calc(100dvh - 305px),590px)}
 <h3>顯示波形</h3><label class="check"><input type="checkbox" id="showA" checked> 顯示波 A</label><label class="check"><input type="checkbox" id="showB" checked> 顯示波 B</label><label class="check"><input type="checkbox" id="showSum" checked> 顯示合成波</label><label class="check"><input type="checkbox" id="grid" checked> 顯示格線與刻度</label>
 <label class="check"><input type="checkbox" id="guides" checked> 顯示選點分解箭頭</label>
 <button id="reset" class="secondary" style="width:100%;margin-top:12px">恢復此情境預設參數</button></div>
-<details class="card advancedPanel"><summary>④ 教師自訂情境與分享</summary><label for="saveName">自訂情境名稱</label><input id="saveName" maxlength="35" placeholder="例如：兩脈衝位移相加" style="width:100%;padding:10px;border-radius:8px;background:#10263d;color:white;border:1px solid #45617d">
+<details class="card advancedPanel"><summary>教師自訂情境與分享</summary><label for="saveName">自訂情境名稱</label><input id="saveName" maxlength="35" placeholder="例如：兩脈衝位移相加" style="width:100%;padding:10px;border-radius:8px;background:#10263d;color:white;border:1px solid #45617d">
 <div class="controls"><button id="save" class="secondary">儲存本機</button><button id="share" class="secondary">複製分享網址</button></div><label for="saved">載入已儲存情境</label><select id="saved" style="width:100%;padding:10px;color:white;background:#10263d;border:1px solid #45617d;border-radius:8px"><option value="">選擇自訂情境</option></select><div id="message" aria-live="polite"></div></details>
 <details class="card advancedPanel"><summary>物理模型與課本重點</summary><p>小振幅、線性介質近似下，同一位置的合成位移為 <b>y(x,t) = y₁(x,t) + y₂(x,t)</b>。</p><p>兩個有限寬度脈衝相向傳播，重疊時逐點相加；分開後維持各自波形與行進方向，呈現<strong>波的獨立性</strong>。</p><p>此處「完全」是指兩脈衝完全重合（峰值位置及波形對齊），並非指任一瞬間局部位移變大或變小。完全破壞性干涉另須等振幅、反向位移。</p><p class="note">使用餘弦平滑脈衝作為教學模型；非課本圖的精確幾何重建。忽略反射、色散、非線性及能量耗散。波的疊加不等同能量相加；兩波完全抵銷的瞬間也不代表能量消失。</p></details>
 </aside></main>
@@ -113,22 +113,22 @@ canvas{height:clamp(285px,calc(100dvh - 305px),590px)}
 'use strict';
 const el=id=>document.getElementById(id), canvas=el('wave'),ctx=canvas.getContext('2d');
 const presets=[
-{id:'constructive',name:'建設性干涉',a:2,b:1.2,w:2.5,v:2,t:1.55,info:'同向位移，兩波部分重疊；觀察重疊區域合成位移增加。'},
-{id:'full-constructive',name:'完全建設性干涉',a:2,b:2,w:2.5,v:2,t:2,info:'兩列同向脈衝完全重合；峰值合成位移為 2 + 2 = 4 cm。'},
-{id:'destructive',name:'破壞性干涉',a:2,b:-1.2,w:2.5,v:2,t:1.55,info:'反向位移且部分重疊，重疊區位移有抵銷現象。'},
-{id:'full-destructive',name:'完全破壞性干涉',a:2,b:-2,w:2.5,v:2,t:2,info:'等振幅、反向脈衝完全重合；整段合成位移瞬間皆為 0。'}
+{id:'constructive',name:'建設性干涉',a:2,b:1.2,w:2.5,v:2,t:1.55,info:'起始兩脈衝分居左右；按播放後相向行進，在部分重疊時觀察建設性干涉。'},
+{id:'full-constructive',name:'完全建設性干涉',a:2,b:2,w:2.5,v:2,t:2,info:'起始兩脈衝分居左右；按播放後在完全重合時，峰值為 2 + 2 = 4 cm。'},
+{id:'destructive',name:'破壞性干涉',a:2,b:-1.2,w:2.5,v:2,t:1.55,info:'起始兩脈衝分居左右；按播放後部分重疊，觀察位移互相抵銷。'},
+{id:'full-destructive',name:'完全破壞性干涉',a:2,b:-2,w:2.5,v:2,t:2,info:'起始兩脈衝分居左右；按播放後完全重合時，整段合成位移瞬間為零。'}
 ];
-const defaults={a:2,b:2,w:2.5,v:2,t:2,speed:1,grid:true,guides:true,showA:true,showB:true,showSum:true};
-let s=Object.assign({},defaults),selected=8,playing=false,last=0,scenario='full-constructive',dirty=false;
+const defaults={a:2,b:2,w:2.5,v:2,t:0,speed:1,grid:true,guides:true,showA:true,showB:true,showSum:true};
+let s=Object.assign({},defaults,{t:0}),selected=8,playing=false,last=0,scenario='full-constructive',dirty=false;
 const left0=4,right0=12,XMAX=16;
 function pulse(x,c,w,amp){const d=(x-c)/(w/2);return Math.abs(d)<1?amp*.5*(1+Math.cos(Math.PI*d)):0;}
 function yA(x){return pulse(x,left0+s.v*s.t,s.w,s.a)}
 function yB(x){return pulse(x,right0-s.v*s.t,s.w,s.b)}
 function ySum(x){return yA(x)+yB(x)}
 function fmt(x){return (Math.abs(x)<.0005?0:x).toFixed(2)}
-function valid(o){return o&&Object.keys(o).every(k=>['a','b','w','v','t','speed','grid','guides','showA','showB','showSum'].includes(k))&&['a','b','w','v','t','speed'].every(k=>Number.isFinite(o[k]))&&o.a>=.5&&o.a<=3&&o.b>=-3&&o.b<=3&&o.w>=1&&o.w<=4&&o.v>=.5&&o.v<=5&&o.t>=0&&o.t<=10&&o.speed>=.1&&o.speed<=3&&typeof o.grid==='boolean'&&typeof o.guides==='boolean'&&['showA','showB','showSum'].every(k=>o[k]===undefined||typeof o[k]==='boolean')}
+function valid(o){return o&&Object.keys(o).every(k=>['a','b','w','v','t','speed','grid','guides','showA','showB','showSum'].includes(k))&&['a','b','w','v','t','speed'].every(k=>Number.isFinite(o[k]))&&o.a>=-3&&o.a<=3&&o.b>=-3&&o.b<=3&&o.w>=1&&o.w<=4&&o.v>=.5&&o.v<=5&&o.t>=0&&o.t<=10&&o.speed>=.1&&o.speed<=3&&typeof o.grid==='boolean'&&typeof o.guides==='boolean'&&['showA','showB','showSum'].every(k=>o[k]===undefined||typeof o[k]==='boolean')}
 function updateInputs(){[['ampA','a','cm'],['ampB','b','cm'],['width','w','m'],['velocity','v','m/s'],['speed','speed','×'],['time','t','s']].forEach(([id,key,unit])=>{el(id).value=s[key];el(id+'v').textContent=s[key].toFixed(key==='t'?2:1)+' '+unit});el('grid').checked=s.grid;el('guides').checked=s.guides;['showA','showB','showSum'].forEach(k=>{el(k).checked=s[k]})}
-function choose(id){const p=presets.find(q=>q.id===id);if(!p)return;scenario=id;dirty=false;s=Object.assign({},defaults,{a:p.a,b:p.b,w:p.w,v:p.v,t:p.t});selected=8;playing=false;renderButtons();updateInputs();paint();}
+function choose(id){const p=presets.find(q=>q.id===id);if(!p)return;scenario=id;dirty=false;s=Object.assign({},defaults,{a:p.a,b:p.b,w:p.w,v:p.v,t:0});selected=8;playing=false;renderButtons();updateInputs();paint();}
 function renderButtons(){const host=el('presets');host.innerHTML='';presets.forEach(p=>{const b=document.createElement('button');b.textContent=p.name;b.className=(!dirty&&scenario===p.id?'active':'');b.setAttribute('aria-pressed',String(!dirty&&scenario===p.id));b.addEventListener('click',()=>choose(p.id));host.appendChild(b)});el('scenario').textContent=dirty?'自訂參數：目前已離開快選的原始條件。':presets.find(p=>p.id===scenario).info;el('play').textContent=playing?'⏸ 暫停':'▶ 播放'}
 function markChanged(){dirty=true;renderButtons();paint()}
 function setTime(t){s.t=Math.min(10,Math.max(0,t));el('time').value=s.t;el('timev').textContent=s.t.toFixed(2)+' s';paint()}
