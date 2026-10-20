@@ -1,42 +1,188 @@
 <!doctype html>
-<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>行進波與駐波｜Physics Lab</title>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>行進波與駐波｜雙波源疊加實驗室</title>
 <style>
-:root{color-scheme:light;--blue:#2672dc;--green:#0b9c87;--pink:#ed486a;--amber:#d69b1b;--ink:#132341;--muted:#596981;--line:#dfe7f2;--panel:#fff;--bg:#f3f7fd}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Noto Sans TC",sans-serif;font-size:14px}button,input{font:inherit}button{cursor:pointer}a{color:#255ad5;text-decoration:none}.app{height:100dvh;min-height:450px;display:grid;grid-template-rows:auto minmax(0,1fr);padding:10px;gap:10px;max-width:1800px;margin:auto}header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:3px 5px}h1{font-size:clamp(17px,2.1vw,24px);margin:0}small,.muted{color:var(--muted)}.shell{min-height:0;display:grid;grid-template-columns:minmax(0,1.75fr) minmax(285px,.78fr);gap:10px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px;min-height:0}.visual{display:flex;flex-direction:column;gap:8px}#plot{display:block;width:100%;flex:1;min-height:175px;touch-action:pan-y}.legend{display:flex;flex-wrap:wrap;gap:7px 16px;font-size:12px}.legend i{display:inline-block;width:15px;height:4px;border-radius:4px;vertical-align:middle;margin-right:5px}.toolbar,.toggles,.sources{display:flex;gap:7px;flex-wrap:wrap}.toolbar button{border:1px solid var(--line);border-radius:9px;background:#f2f6ff;padding:10px 12px;font-weight:700;min-height:42px}.toolbar .primary{background:#e1ebff;border-color:#91aff3}.options{display:flex;flex-direction:column;min-height:0;overflow:auto;gap:11px;overscroll-behavior:contain}.source{flex:1;min-width:120px;border:1px solid var(--line);border-radius:11px;padding:9px;background:#f8fbff}.source strong{display:block;margin-bottom:7px}.check{display:inline-flex;gap:5px;align-items:center;margin-right:12px;min-height:30px;white-space:nowrap}.check input{width:18px;height:18px;accent-color:#2866d9}.control{display:grid;grid-template-columns:77px minmax(0,1fr) 65px;align-items:center;gap:8px;margin:9px 0}.control input{width:100%;accent-color:#285fda;min-height:30px}.control output{text-align:right;font-size:12px;font-weight:700;font-variant-numeric:tabular-nums}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}.metric{text-align:center;background:#f0f5fc;border-radius:8px;padding:8px 3px;font-size:12px}.metric b{display:block;font-size:14px}.metric small{font-size:10px}.equation{text-align:center;font-size:15px;padding:7px;background:#f9fbff;border-radius:8px}.status{font-size:12px;line-height:1.5;background:#edf6ff;border-radius:8px;padding:9px}.subheading{font-weight:750;font-size:13px;margin-bottom:4px}.hints{font-size:11px;color:var(--muted)}@media(max-width:800px) and (orientation:portrait){.app{height:auto;min-height:100dvh}.shell{display:flex;flex-direction:column}.visual{min-height:48vh}#plot{min-height:220px}.options{overflow:visible}.metrics{grid-template-columns:repeat(2,1fr)}}@media(max-height:600px) and (orientation:landscape){.app{padding:5px;gap:5px}.panel{padding:8px}.options{gap:5px}.control{margin:1px 0}.control input{min-height:25px}.metric{padding:4px}.toolbar button{padding:5px 10px;min-height:35px}#plot{min-height:100px}.subheading{font-size:12px}.status{padding:4px}.hints{display:none}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
-</style><style>.title-physical-icon{display:inline-flex;vertical-align:middle;width:46px;height:46px;margin-right:10px;padding:5px;border-radius:11px;background:var(--title-tint);border:1px solid var(--title-accent);flex:none}.title-physical-icon svg{width:100%;height:100%}.title-heading{display:flex;align-items:center;line-height:1.25}@media(max-width:480px){.title-physical-icon{width:38px;height:38px}}</style></head><body>
-<div class="app"><header><div><h1 class="title-heading"><span class="title-physical-icon" style="--title-accent:#a15c20;--title-tint:#fff1dd" aria-hidden="true"><svg viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 36H65" stroke="#bdc2cf" stroke-width="2" stroke-dasharray="3 5"/><path d="M7 36Q17 9 27 36T47 36T67 36" stroke="#ec9730" stroke-width="4"/><path d="M7 36Q17 63 27 36T47 36T67 36" stroke="#8668d2" stroke-width="3.5"/><circle cx="7" cy="36" r="3.5" fill="#9b6b3b"/><circle cx="27" cy="36" r="3.5" fill="#9b6b3b"/><circle cx="47" cy="36" r="3.5" fill="#9b6b3b"/></svg></span><span>行進波與駐波｜疊加實驗室</span></h1><small>Physics Lab · 同一座標系 · 實際波形疊加</small></div><a href="../../../">← 返回首頁</a></header>
-<div class="shell">
-<section class="panel visual" aria-label="即時模擬波形"><div style="display:flex;justify-content:space-between;gap:10px"><strong>波形動態</strong><span id="clock" class="muted">t = 0.000 s</span></div>
-<canvas id="plot" aria-label="向右行進波、向左行進波及合成波動態圖"></canvas>
-<div class="legend"><span><i style="background:var(--blue)"></i>右行波 →</span><span><i style="background:var(--green)"></i>左行波 ←</span><span><i style="background:var(--pink)"></i>合成波</span><span><i style="background:var(--amber)"></i>波節</span></div>
-<div class="toolbar"><button id="play" class="primary">⏸ 暫停</button><button id="step">單步 T/16</button><button id="reset">↺ 重設時間</button></div>
-<div class="toggles"><label class="check"><input id="nodes" type="checkbox" checked>波節／波腹</label><label class="check"><input id="env" type="checkbox" checked>包絡線</label><label class="check"><input id="particles" type="checkbox" checked>介質質點</label><label class="check"><input id="crests" type="checkbox" checked>追蹤波峰</label></div>
-</section>
-<aside class="panel options"><div><div class="subheading">波源開關</div><div class="sources"><div class="source"><strong style="color:var(--blue)">→ 行進波 1</strong><label class="check"><input id="er" type="checkbox" checked>存在</label><label class="check"><input id="vr" type="checkbox" checked>顯示</label></div><div class="source"><strong style="color:var(--green)">← 行進波 2</strong><label class="check"><input id="el" type="checkbox" checked>存在</label><label class="check"><input id="vl" type="checkbox" checked>顯示</label></div></div></div>
-<div id="status" class="status" aria-live="polite"></div><div><div class="subheading">物理參數</div>
-<div class="control"><label for="n">階數 n</label><input id="n" type="range" min="1" max="6" value="3" step="1"><output id="nv">3</output></div>
-<div class="control"><label for="a">振幅 A</label><input id="a" type="range" min=".2" max="2" value="1" step=".1"><output id="av">1.0 cm</output></div>
-<div class="control"><label for="f">頻率 f</label><input id="f" type="range" min=".2" max="4" value="1" step=".1"><output id="fv">1.0 Hz</output></div>
-<div class="control"><label for="len">弦長 L</label><input id="len" type="range" min="1" max="5" value="3" step=".5"><output id="lenv">3.0 m</output></div>
-<div class="control"><label for="speed">播放速度</label><input id="speed" type="range" min=".05" max="3" value=".5" step=".05"><output id="speedv">0.50×</output></div></div>
-<div class="metrics"><div class="metric"><small>波長 λ</small><b id="lambda"></b></div><div class="metric"><small>波速 v</small><b id="velocity"></b></div><div class="metric"><small>週期 T</small><b id="period"></b></div><div class="metric"><small>合成最大振幅</small><b id="maximum"></b></div></div>
-<div class="equation" id="equation">y = 2A sin(kx) cos(ωt)</div><div class="hints">「存在」決定是否參與疊加；「顯示」只決定是否畫出。此為理想反向行進波疊加模型；單波情況不施加固定端反射條件。</div>
-</aside></div></div>
+:root{color-scheme:light;--blue:#2672dc;--green:#0b9c87;--pink:#ed486a;--amber:#d69b1b;--ink:#132341;--muted:#596981;--line:#dfe7f2;--panel:#fff;--bg:#f3f7fd}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Noto Sans TC",sans-serif;font-size:14px}button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible{outline:3px solid #e9a23b;outline-offset:2px}a{color:#255ad5;text-decoration:none}.app{min-height:100dvh;max-width:1800px;margin:auto;padding:12px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px}h1{font-size:clamp(19px,2.2vw,26px);margin:0}.muted{color:var(--muted)}.shell{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(300px,.85fr);gap:12px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px;min-width:0}.visual{display:flex;flex-direction:column;gap:10px}.stagehead,.toolbar,.legend,.checks{display:flex;align-items:center;flex-wrap:wrap;gap:8px 15px}.stagehead{justify-content:space-between}.stagehead strong{font-size:15px}.readouts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}.readout{background:#f1f6fd;border:1px solid #e3ebf7;border-radius:9px;padding:9px 7px;min-width:0}.readout small{display:block;color:var(--muted);font-size:11px}.readout strong{display:block;font-size:14px;margin-top:3px;white-space:nowrap;font-variant-numeric:tabular-nums}.readout .blue{color:var(--blue)}.readout .green{color:var(--green)}.readout .pink{color:var(--pink)}.canvasbox{min-height:360px;height:min(50vh,530px);position:relative;background:#fff;border:1px solid #e6ebf4;border-radius:12px;overflow:hidden}canvas{width:100%;height:100%;display:block;touch-action:pan-y}.legend{font-size:12px}.legend i{width:18px;height:4px;display:inline-block;vertical-align:middle;margin-right:5px;border-radius:3px}.toolbar button,.preset button{border:1px solid #cbd9ee;background:#f2f6ff;color:#173258;border-radius:9px;padding:9px 12px;font-weight:650;min-height:42px}.toolbar .main{background:#e4edff;border-color:#9bbaeb}.toolbar .ghost{background:#fff}.checks label{font-size:12px;white-space:nowrap}.checks input{accent-color:#235cd6}.status{background:#edf6ff;border-radius:9px;padding:11px;line-height:1.65;font-size:13px;min-height:60px}.trackinfo{background:#fff5e5;border:1px solid #f0d29d;color:#6b4b09;border-radius:9px;padding:9px 11px;line-height:1.6;font-size:13px}.formula{padding:9px;background:#f8faff;border-radius:9px;line-height:1.7;font-size:12px;overflow-wrap:anywhere}.side{display:flex;flex-direction:column;gap:11px}.sourcetitle{display:flex;align-items:center;justify-content:space-between;gap:10px}.source{border:1px solid var(--line);border-radius:11px;padding:12px}.source.one{background:#f0f5ff;border-color:#cadaff}.source.two{background:#e9faf6;border-color:#b4e9df}.source h2{font-size:15px;margin:0 0 9px}.control{display:grid;grid-template-columns:87px minmax(0,1fr) 70px;gap:8px;align-items:center;margin:9px 0;font-size:12px}.control input{width:100%;accent-color:#285fda;min-height:29px}.source.two .control input{accent-color:#008b7c}.control output{text-align:right;font-weight:700;font-size:12px;font-variant-numeric:tabular-nums}.btnwide{width:100%;border:1px solid #a4b9db;background:#e7efff;color:#143b75;border-radius:9px;min-height:42px;font-weight:700}.asidehint{font-size:12px;line-height:1.6;color:#52657b}.badge{font-size:11px;font-weight:750;background:#dde9ff;color:#234d93;border-radius:100px;padding:4px 9px}.preset{display:flex;gap:6px;flex-wrap:wrap}.preset button{font-size:12px;flex:1;min-width:105px}.timecontrol{display:flex;align-items:center;gap:10px;font-size:12px}.timecontrol input{flex:1}.screen-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}.title-icon{display:inline-flex;width:41px;height:41px;background:#fff1dd;border-radius:11px;vertical-align:middle;padding:6px;margin-right:9px}.title-icon svg{width:100%;height:100%}@media(max-width:980px){.shell{grid-template-columns:1fr}.canvasbox{height:42vh;min-height:290px}.side{display:grid;grid-template-columns:1fr 1fr}.side>.panel:last-child{grid-column:1/-1}}@media(max-width:620px){.side{display:flex}.readouts{grid-template-columns:1fr 1fr}.canvasbox{height:320px;min-height:280px}.top h1{font-size:18px}.app{padding:8px}.control{grid-template-columns:72px 1fr 63px}}@media(max-height:650px) and (orientation:landscape){.canvasbox{min-height:220px;height:48vh}.app{padding:7px}.panel{padding:9px}}
+</style></head><body><main class="app"><header class="top"><div><h1><span class="title-icon" aria-hidden="true"><svg viewBox="0 0 72 72" fill="none"><path d="M7 36H65" stroke="#aab5c3" stroke-dasharray="3 4"/><path d="M7 36Q17 9 27 36T47 36T67 36" stroke="#ed9730" stroke-width="4"/><path d="M7 36Q17 63 27 36T47 36T67 36" stroke="#8668d2" stroke-width="3.5"/><circle cx="7" cy="36" r="3" fill="#a15c20"/><circle cx="27" cy="36" r="3" fill="#a15c20"/><circle cx="47" cy="36" r="3" fill="#a15c20"/></svg></span>行進波與駐波｜雙波源疊加實驗室 </h1><div class="muted" style="font-size:12px;margin-top:5px">保留原本的疊加教學架構，兩列波可各自調整 A、f、λ</div></div></header>
+<div class="shell"><section class="panel visual"><div class="stagehead"><strong>波形動態｜向右行進波 + 向左行進波</strong><span id="clock" class="muted">t = 0.000 s</span></div>
+<div class="readouts"><div class="readout"><small>波 1 位移（選點 P）</small><strong class="blue" id="y1">0.00 cm</strong></div><div class="readout"><small>波 2 位移（選點 P）</small><strong class="green" id="y2">0.00 cm</strong></div><div class="readout"><small>合成位移 y = y₁ + y₂</small><strong class="pink" id="ysum">0.00 cm</strong></div><div class="readout"><small>觀察位置</small><strong id="pointLabel">x = 1.50 m</strong></div></div>
+<div class="canvasbox"><canvas id="plot" aria-label="兩個相反方向行進波，以及逐點位移相加的合成波；可在波形圖上點選觀察位置"></canvas></div>
+<div class="legend"><span><i style="background:var(--blue)"></i>右行波 1（藍色虛線）</span><span><i style="background:var(--green)"></i>左行波 2（綠色虛線）</span><span><i style="background:var(--pink)"></i>合成波（桃紅實線）</span><span><i style="background:var(--amber)"></i>固定波節（符合條件時）</span><span><i style="background:#b78214"></i>參考點 T：固定波腹／合成波局部波峰</span></div>
+<div class="toolbar"><button id="play" class="main">⏸ 暫停</button><button id="back" class="ghost">⏮ 單步後退</button><button id="step">⏭ 單步前進</button><button id="reset">↺ 重設時間</button></div>
+<div class="checks"><label><input type="checkbox" id="nodes" checked> 標示固定波節／波腹</label><label><input type="checkbox" id="env" checked> 駐波包絡線</label><label><input type="checkbox" id="particles" checked> 介質質點</label><label><input type="checkbox" id="crests" checked> 合成波追蹤參考點</label></div>
+<div class="status" id="status" aria-live="polite"></div><div class="trackinfo" id="trackInfo">追蹤參考點 T：理想駐波追蹤固定波腹；振幅不同追蹤移動波峰；頻率或波長不同時追蹤局部正波峰，波峰消失則中斷並重新選取。</div><div class="formula" id="equation"></div>
+<div class="screen-bottom"><span class="asidehint">點擊／拖曳圖面，選擇觀察點 P。座標 x 是位置，不是波的位移。</span><span class="asidehint" id="comparison"></span></div></section>
+<aside class="side"><section class="panel"><div class="sourcetitle"><strong>兩波獨立參數</strong><span class="badge">預設完全一致</span></div><div class="source one"><h2 style="color:var(--blue)">→ 行進波 1</h2><div class="checks"><label><input id="er" type="checkbox" checked>存在</label><label><input id="vr" type="checkbox" checked>顯示</label></div>
+<div class="control"><label for="a1">振幅 A₁</label><input id="a1" type="range" min="0" max="2" value="1" step="0.1"><output id="a1v">1.0 cm</output></div>
+<div class="control"><label for="f1">頻率 f₁</label><input id="f1" type="range" min="0.2" max="4" value="1" step="0.1"><output id="f1v">1.0 Hz</output></div>
+<div class="control"><label for="l1">波長 λ₁</label><input id="l1" type="range" min="0.4" max="6" value="2" step="0.1"><output id="l1v">2.0 m</output></div>
+<div class="asidehint" id="v1">波速 v₁ = 2.0 m/s</div></div>
+<div class="source two" style="margin-top:10px"><h2 style="color:var(--green)">← 行進波 2</h2><div class="checks"><label><input id="el" type="checkbox" checked>存在</label><label><input id="vl" type="checkbox" checked>顯示</label></div>
+<div class="control"><label for="a2">振幅 A₂</label><input id="a2" type="range" min="0" max="2" value="1" step="0.1"><output id="a2v">1.0 cm</output></div>
+<div class="control"><label for="f2">頻率 f₂</label><input id="f2" type="range" min="0.2" max="4" value="1" step="0.1"><output id="f2v">1.0 Hz</output></div>
+<div class="control"><label for="l2">波長 λ₂</label><input id="l2" type="range" min="0.4" max="6" value="2" step="0.1"><output id="l2v">2.0 m</output></div>
+<div class="asidehint" id="v2">波速 v₂ = 2.0 m/s</div></div>
+<div style="margin-top:10px"><button id="match" class="btnwide">↔ 讓兩波完全一致</button></div></section>
+<section class="panel"><strong>教學快速情境</strong><div class="preset" style="margin-top:9px"><button data-preset="equal">① 理想駐波</button><button data-preset="amp">② 振幅不同</button><button data-preset="freq">③ 頻率不同</button><button data-preset="wavelength">④ 波長不同</button><button data-preset="single">⑤ 單向行進波</button></div>
+<div class="control" style="margin-top:13px"><label for="len">觀察區長 L</label><input id="len" type="range" min="2" max="8" value="3" step="0.5"><output id="lenv">3.0 m</output></div>
+<div class="control"><label for="speed">播放速度</label><input id="speed" type="range" min="0.05" max="3" value="0.5" step="0.05"><output id="speedv">0.50×</output></div>
+<p class="asidehint">這是兩列行進波的線性疊加模型。個別設定的波速為 vᵢ = fᵢλᵢ；若兩個頻率或波長不同，其波速也可能不同。若要模擬同一均勻介質中同波速的情形，須讓 f₁λ₁ = f₂λ₂。</p>
+<p class="asidehint">只有兩波方向相反、頻率及波長相同且振幅相同時，才標示為理想駐波。振幅不同但頻率與波長相同時，呈現部分駐波特徵，不會誤標為固定零位移波節。</p></section></aside></div></main>
 <script>
-(()=>{"use strict";const $=id=>document.getElementById(id),canvas=$("plot"),ctx=canvas.getContext("2d");let time=0,playing=true,last=null;
-function state(){return {n:+$("n").value,A:+$("a").value,f:+$("f").value,L:+$("len").value,speed:+$("speed").value,er:$("er").checked,el:$("el").checked,vr:$("vr").checked,vl:$("vl").checked}}
-function update(){const s=state();for(const [id,val] of Object.entries({nv:s.n,av:s.A.toFixed(1)+" cm",fv:s.f.toFixed(1)+" Hz",lenv:s.L.toFixed(1)+" m",speedv:s.speed.toFixed(2)+"×",lambda:(2*s.L/s.n).toFixed(2)+" m",velocity:(2*s.L*s.f/s.n).toFixed(2)+" m/s",period:(1/s.f).toFixed(2)+" s",maximum:(s.er&&s.el?2*s.A:s.er||s.el?s.A:0).toFixed(2)+" cm"}))$(id).textContent=val;$("vr").disabled=!s.er;$("vl").disabled=!s.el;
-$("status").textContent=s.er&&s.el?"兩列行進波均存在：合成形成具有固定波節的駐波。":s.er?"只有向右行進波：合成波向右傳播，不存在固定波節。":s.el?"只有向左行進波：合成波向左傳播，不存在固定波節。":"兩列波均不存在：合成位移為零。";$("equation").textContent=s.er&&s.el?"y = 2A sin(kx) cos(ωt)":s.er?"y = A sin(kx − ωt)":s.el?"y = A sin(kx + ωt)":"y = 0";}
-function draw(){const box=canvas.getBoundingClientRect(),W=Math.max(290,box.width),H=Math.max(100,box.height),dpr=Math.min(2,window.devicePixelRatio||1),pw=Math.round(W*dpr),ph=Math.round(H*dpr);if(canvas.width!==pw||canvas.height!==ph){canvas.width=pw;canvas.height=ph}ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,W,H);
-const s=state(),x0=33,x1=W-18,w=x1-x0,cy=H/2,k=s.n*Math.PI,wt=2*Math.PI*s.f*time,unit=Math.min(58,Math.max(19,(H-55)/4)/Math.max(1,s.A));const right=u=>s.A*Math.sin(k*u-wt),left=u=>s.A*Math.sin(k*u+wt),sum=u=>(s.er?right(u):0)+(s.el?left(u):0);
-ctx.strokeStyle="#dfe7f2";ctx.lineWidth=1;for(let j=-2;j<=2;j++){let y=cy+j*unit*s.A;ctx.beginPath();ctx.moveTo(x0,y);ctx.lineTo(x1,y);ctx.stroke()}ctx.strokeStyle="#8090a8";ctx.beginPath();ctx.moveTo(x0,cy);ctx.lineTo(x1,cy);ctx.stroke();ctx.fillStyle="#617187";ctx.font="11px system-ui";ctx.textAlign="center";ctx.fillText("0",x0,H-5);ctx.fillText("L = "+s.L+" m",x1-25,H-5);
-function curve(fn,color,width,dash=[]){ctx.beginPath();ctx.lineWidth=width;ctx.strokeStyle=color;ctx.setLineDash(dash);for(let i=0;i<=500;i++){const u=i/500,x=x0+w*u,y=cy-unit*fn(u);if(!i)ctx.moveTo(x,y);else ctx.lineTo(x,y)}ctx.stroke();ctx.setLineDash([])}
-if(s.er&&s.el&&$("env").checked){curve(u=>2*s.A*Math.abs(Math.sin(k*u)),"#df8da0",1.3,[5,5]);curve(u=>-2*s.A*Math.abs(Math.sin(k*u)),"#df8da0",1.3,[5,5])}
-if(s.er&&s.vr)curve(right,"#2672dc",2,[8,5]);if(s.el&&s.vl)curve(left,"#0b9c87",2,[8,5]);curve(sum,"#ed486a",3);
-if($("particles").checked)for(let i=0;i<=35;i++){let u=i/35;ctx.beginPath();ctx.arc(x0+w*u,cy-unit*sum(u),2.5,0,2*Math.PI);ctx.fillStyle="#ed486a";ctx.fill()}
-if(s.er&&s.el&&$("nodes").checked){for(let j=0;j<=s.n;j++){let x=x0+w*j/s.n;ctx.beginPath();ctx.arc(x,cy,4.2,0,2*Math.PI);ctx.fillStyle="#d69b1b";ctx.fill();ctx.fillStyle="#68748b";ctx.fillText("N",x,cy+17)}for(let j=0;j<s.n;j++){let x=x0+w*(j+.5)/s.n;ctx.beginPath();ctx.arc(x,cy,3,0,2*Math.PI);ctx.fillStyle="#9b65bb";ctx.fill()}}
-if($("crests").checked){function crest(phase,sign,color){for(let j=-30;j<=30;j++){let u=(Math.PI/2+2*Math.PI*j+phase)/k;if(u>.035&&u<.965){let x=x0+w*u,y=cy-unit*s.A;ctx.beginPath();ctx.arc(x,y,4,0,2*Math.PI);ctx.fillStyle=color;ctx.fill();ctx.strokeStyle=color;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(x+sign*5,y-9);ctx.lineTo(x+sign*20,y-9);ctx.lineTo(x+sign*16,y-12);ctx.moveTo(x+sign*20,y-9);ctx.lineTo(x+sign*16,y-6);ctx.stroke()}}}if(s.er&&s.vr)crest(wt,1,"#2672dc");if(s.el&&s.vl)crest(-wt,-1,"#0b9c87")}
-$("clock").textContent="t = "+time.toFixed(3)+" s";}
-document.querySelectorAll("input").forEach(x=>x.addEventListener("input",()=>{update();draw()}));$("play").onclick=()=>{playing=!playing;$("play").textContent=playing?"⏸ 暫停":"▶ 播放"};$("step").onclick=()=>{playing=false;$("play").textContent="▶ 播放";time+=1/state().f/16;draw()};$("reset").onclick=()=>{time=0;draw()};
-function tick(now){if(!document.body.isConnected)return;if(last!==null&&playing)time+=Math.min((now-last)/1000,.06)*state().speed;last=now;draw();requestAnimationFrame(tick)}update();requestAnimationFrame(tick);if("ResizeObserver"in window)new ResizeObserver(draw).observe(canvas);
+(()=>{'use strict';const $=id=>document.getElementById(id),canvas=$('plot'),ctx=canvas.getContext('2d');let time=0,playing=true,last=null,pU=.5;
+const rangeIds=['a1','f1','l1','a2','f2','l2','len','speed'];
+const state=()=>({A1:+$('a1').value,A2:+$('a2').value,f1:+$('f1').value,f2:+$('f2').value,l1:+$('l1').value,l2:+$('l2').value,L:+$('len').value,speed:+$('speed').value,er:$('er').checked,el:$('el').checked,vr:$('vr').checked,vl:$('vl').checked});
+const almost=(a,b)=>Math.abs(a-b)<1e-7;
+function waves(s,u,tt=time){const x=u*s.L,y1=s.er?s.A1*Math.sin(2*Math.PI*(x/s.l1-s.f1*tt)):0,y2=s.el?s.A2*Math.sin(2*Math.PI*(x/s.l2+s.f2*tt)):0;return{y1,y2,sum:y1+y2}}
+function trackingData(s){
+ const A1=s.er?s.A1:0,A2=s.el?s.A2:0;
+ const compatible=almost(s.f1,s.f2)&&almost(s.l1,s.l2);
+ const ideal=compatible&&A1>0&&A2>0&&almost(A1,A2);
+ const k=2*Math.PI/s.l1,omega=2*Math.PI*s.f1;
+ const first=s.l1/4;
+ if(A1===0&&A2===0)return{kind:'none'};
+ if(!compatible&&(A1>0||A2>0))return varyingTrackingData(s);
+ if(ideal){
+   // 固定的正波腹：上下振動且波峰/波谷交替；不尋找每一幀的最高正波峰。
+   const x=first;
+   return{kind:'antinode',x,y:waves(s,x/s.L).sum,dx:0,x0:x};
+ }
+ // 相同 k、omega，合成式為 C sin(kx) + D cos(kx)。
+ // 振幅不等時 C、D 不會同時為零，因此正極大值可以連續追蹤。
+ const C=(A1+A2)*Math.cos(omega*time);
+ const D=(A2-A1)*Math.sin(omega*time);
+ const phi=Math.atan2(D,C);
+ const direction=A1>A2?1:-1;
+ const target=-direction*omega*time;
+ const continuousPhi=phi+2*Math.PI*Math.round((target-phi)/(2*Math.PI));
+ const x0=direction>0?first:first+Math.max(0,Math.floor((s.L-first)/s.l1))*s.l1;
+ const x=x0-continuousPhi/k;
+ return{kind:'moving',x,x0,y:Math.hypot(C,D),dx:x-x0,direction};
+}
+
+// 頻率或波長不同：正波峰可能出現、合併、消失。
+// 只把 T 放在連續可辨識的局部正極大值上，不聲稱它是同一個介質質點。
+let localTracker=null, localCache=null;
+function resetLocalTracker(){localTracker=null;localCache=null;}
+function localPeaks(s,tt){
+  const N=600, peaks=[];
+  const minHeight=Math.max(.012,.018*((s.er?s.A1:0)+(s.el?s.A2:0)));
+  let prev=waves(s,0,tt).sum, curr=waves(s,1/N,tt).sum;
+  for(let i=1;i<N;i++){
+    const next=waves(s,(i+1)/N,tt).sum;
+    if(curr>=prev&&curr>=next&&curr>minHeight){
+      const divisor=prev-2*curr+next;
+      const off=Math.abs(divisor)>1e-10?Math.max(-1,Math.min(1,.5*(prev-next)/divisor)):0;
+      const x=(i+off)*s.L/N;
+      peaks.push({x,y:waves(s,x/s.L,tt).sum});
+    }
+    prev=curr;curr=next;
+  }
+  return peaks;
+}
+function nearestPeak(peaks,target){
+  return peaks.reduce((best,p)=>!best||Math.abs(p.x-target)<Math.abs(best.x-target)?p:best,null);
+}
+function followLocalPeak(s,tt,dt){
+  const peaks=localPeaks(s,tt),vMax=Math.max(s.f1*s.l1,s.f2*s.l2);
+  if(!localTracker){
+    const p=nearestPeak(peaks,s.L/2);
+    if(!p)return{kind:'lost',x:null,reason:'此刻沒有明顯的正波峰，等待新的局部極大值。'};
+    localTracker={x:p.x,origin:p.x,v:0,lastT:tt,lostAt:null,reselectedAt:null};
+    return{kind:'local',x:p.x,x0:p.x,y:p.y,dx:0,reselected:false};
+  }
+  let tr=localTracker, predicted=tr.x+tr.v*dt;
+  const p=nearestPeak(peaks,predicted);
+  // 單步限制避免突然跳去鄰近的另一個波峰。
+  const maxJump=Math.max(.04,Math.min(.2*s.L,1.35*vMax*Math.abs(dt)+.025));
+  const continuous=p&&Math.abs(p.x-predicted)<=maxJump;
+  if(continuous){
+    const v=dt!==0?(p.x-tr.x)/dt:tr.v;
+    tr.v=tr.lostAt===null?Math.max(-2*vMax,Math.min(2*vMax,.6*v+.4*tr.v)):0;
+    tr.x=p.x;tr.lastT=tt;tr.lostAt=null;
+    return{kind:'local',x:p.x,x0:tr.origin,y:p.y,dx:p.x-tr.origin,reselected:tr.reselectedAt!==null&&Math.abs(tt-tr.reselectedAt)<.45};
+  }
+  if(tr.lostAt===null)tr.lostAt=tt;
+  tr.lastT=tt;
+  // 波峰消失後才允許新波峰被選取，並同步更新參考線。
+  if(Math.abs(tt-tr.lostAt)>=.14&&peaks.length){
+    const newPeak=nearestPeak(peaks,tr.x);
+    tr.x=newPeak.x;tr.origin=newPeak.x;tr.v=0;tr.lostAt=null;tr.reselectedAt=tt;
+    return{kind:'local',x:newPeak.x,x0:newPeak.x,y:newPeak.y,dx:0,reselected:true};
+  }
+  return{kind:'lost',x:tr.x,x0:tr.origin,reason:'先前的局部波峰已消失或無法連續辨認；T 停止代表波峰，改以灰色位置參考顯示，重新鎖定時會更新 R。'};
+}
+function varyingTrackingData(s){
+  const key=JSON.stringify([s.A1,s.A2,s.f1,s.f2,s.l1,s.l2,s.L,s.er,s.el]);
+  if(localCache&&localCache.key===key&&Math.abs(localCache.t-time)<1e-10)return localCache.data;
+  if(!localCache||localCache.key!==key||Math.abs(time-(localTracker?.lastT??time))>.9){
+    localTracker=null;
+  }
+  const previous=localTracker?.lastT??time;
+  const span=time-previous;
+  const steps=Math.max(1,Math.min(80,Math.ceil(Math.abs(span)*Math.max(80,35*Math.max(s.f1,s.f2)))));
+  let data=null;
+  for(let j=1;j<=steps;j++){
+    const next=previous+span*j/steps;
+    const dt=next-(localTracker?.lastT??next);
+    data=followLocalPeak(s,next,dt);
+  }
+  localCache={key,t:time,data};
+  return data;
+}
+function label(s){if(!s.er&&!s.el)return'兩波皆關閉：合成位移恆為零。';if(!s.er||!s.el)return'目前只有單向行進波：波形沿波的傳播方向移動，不會形成駐波。';if(almost(s.f1,s.f2)&&almost(s.l1,s.l2)&&almost(s.A1,s.A2))return'理想駐波：兩列波振幅、頻率、波長相同，傳播方向相反。可觀察固定波節、波腹與駐波包絡線。';if(almost(s.f1,s.f2)&&almost(s.l1,s.l2))return'同頻率、同波長但振幅不等：出現部分駐波特徵，合成波仍有行進成分，沒有永久零位移的波節。';if(almost(s.f1,s.f2))return'兩波頻率相同、波長不同：波數不同，疊加圖樣隨時間改變；不適用固定波節標示。';if(almost(s.l1,s.l2))return'兩波波長相同、頻率不同：可觀察隨時間改變的干涉與拍動特徵，不是理想駐波。';return'頻率與波長均不同：逐點相加後的合成圖樣通常隨時間變化，不會形成固定的理想駐波。'}
+function update(){const s=state();for(const id of rangeIds){const isS=id==='speed';$(id+'v').textContent=Number($(id).value).toFixed(isS?2:1)+(id[0]==='a'?' cm':id[0]==='f'?' Hz':id[0]==='l'?' m':isS?'×':'')}
+$('v1').textContent='波速 v₁ = f₁λ₁ = '+(s.f1*s.l1).toFixed(2)+' m/s';$('v2').textContent='波速 v₂ = f₂λ₂ = '+(s.f2*s.l2).toFixed(2)+' m/s';$('vr').disabled=!s.er;$('vl').disabled=!s.el;
+const {y1,y2,sum}=waves(s,pU);$('y1').textContent=y1.toFixed(2)+' cm';$('y2').textContent=y2.toFixed(2)+' cm';$('ysum').textContent=sum.toFixed(2)+' cm';$('pointLabel').textContent='x = '+(pU*s.L).toFixed(2)+' m';$('status').textContent=label(s);$('comparison').textContent=(s.er&&s.el?'波速比 v₁/v₂ = '+(s.f1*s.l1/(s.f2*s.l2)).toFixed(2):'單波觀察');
+if($('crests').checked){
+  const tr=trackingData(s);
+  if(tr.kind==='antinode'){
+    $('trackInfo').textContent=`固定波腹 T：x = ${tr.x.toFixed(2)} m（不移動），此處位移 y = ${tr.y.toFixed(2)} cm。它會由波峰變為波谷，不能把每一刻的正波峰視為同一個點。`;
+  }else if(tr.kind==='moving'){
+    const visible=tr.x>=0&&tr.x<=s.L;
+    $('trackInfo').textContent=`移動的正波峰 T：x = ${tr.x.toFixed(2)} m，水平位移 Δx = ${tr.dx.toFixed(2)} m（${tr.direction>0?'向右':'向左'}）。${visible?'黃點沿合成波的正極大值前進；灰色 R 線是固定參考位置。':'此波峰已走出可見範圍；按「重設時間」可重新追蹤。'}`;
+  }else if(tr.kind==='local'){
+    $('trackInfo').textContent=`局部正波峰 T：x = ${tr.x.toFixed(2)} m，y = ${tr.y.toFixed(2)} cm，從參考線 R 移動 Δx = ${tr.dx.toFixed(2)} m。${tr.reselected?'前一個波峰已無法追蹤，現在已重新選取另一個波峰，R 已重設。':'標記隨附近的正極大值移動，不代表同一個介質質點。'}`;
+  }else if(tr.kind==='lost'){
+    $('trackInfo').textContent=`追蹤暫時中斷：${tr.reason}圖上的灰色 T? 僅保留在原 x 位置作參考，不是當下波峰；新峰出現後會重新鎖定。`;
+  }else{
+    $('trackInfo').textContent='兩波振幅皆為零，沒有可追蹤的波峰。';
+  }
+}else{$('trackInfo').textContent='勾選「合成波追蹤參考點」可比較固定波腹與移動的合成波波峰。';}
+$('equation').textContent=`y₁ = ${s.A1.toFixed(1)} sin[2π(x/${s.l1.toFixed(1)} − ${s.f1.toFixed(1)}t)]　；　y₂ = ${s.A2.toFixed(1)} sin[2π(x/${s.l2.toFixed(1)} + ${s.f2.toFixed(1)}t)]　；　y = y₁ + y₂　（x：m、t：s、y：cm）`;}
+function draw(){const box=canvas.getBoundingClientRect(),W=Math.max(290,box.width),H=Math.max(200,box.height),dpr=Math.min(2,window.devicePixelRatio||1),pw=Math.round(W*dpr),ph=Math.round(H*dpr);if(canvas.width!==pw||canvas.height!==ph){canvas.width=pw;canvas.height=ph}ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,W,H);
+const s=state(),x0=43,x1=W-23,w=x1-x0,cy=H/2,k=2*Math.PI/s.l1,unit=Math.min(60,Math.max(24,(H-75)/5)/Math.max(1,s.A1,s.A2));const sample=u=>waves(s,u);
+ctx.strokeStyle='#dfe7f2';ctx.lineWidth=1;for(let j=-2;j<=2;j++){const yy=cy+j*unit;ctx.beginPath();ctx.moveTo(x0,yy);ctx.lineTo(x1,yy);ctx.stroke()}ctx.strokeStyle='#8496aa';ctx.beginPath();ctx.moveTo(x0,cy);ctx.lineTo(x1,cy);ctx.stroke();ctx.fillStyle='#647489';ctx.font='12px system-ui';ctx.textAlign='center';ctx.fillText('x = 0',x0,H-11);ctx.fillText('x = '+s.L.toFixed(1)+' m',x1-28,H-11);ctx.textAlign='left';ctx.fillText('位移 y (cm)',7,18);
+function curve(fn,color,width,dash=[]){ctx.beginPath();ctx.strokeStyle=color;ctx.lineWidth=width;ctx.setLineDash(dash);for(let i=0;i<=550;i++){const u=i/550,x=x0+w*u,y=cy-unit*fn(u);if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)}ctx.stroke();ctx.setLineDash([])}
+const ideal=s.er&&s.el&&almost(s.f1,s.f2)&&almost(s.l1,s.l2)&&almost(s.A1,s.A2)&&s.A1>0;
+if(ideal&&$('env').checked){curve(u=>2*s.A1*Math.abs(Math.sin(k*s.L*u)),'#e0a4b6',1.5,[5,5]);curve(u=>-2*s.A1*Math.abs(Math.sin(k*s.L*u)),'#e0a4b6',1.5,[5,5])}
+if(s.er&&s.vr)curve(u=>sample(u).y1,'#2672dc',2.2,[8,5]);if(s.el&&s.vl)curve(u=>sample(u).y2,'#0b9c87',2.2,[3,5]);curve(u=>sample(u).sum,'#ed486a',3.3);
+if($('particles').checked){for(let i=0;i<=45;i++){const u=i/45;ctx.beginPath();ctx.arc(x0+w*u,cy-unit*sample(u).sum,2.7,0,Math.PI*2);ctx.fillStyle='#ed486a';ctx.fill()}}
+if($('crests').checked){
+  const tr=trackingData(s);
+  if(tr.kind==='antinode'||tr.kind==='moving'||tr.kind==='local'||tr.kind==='lost'){
+    const refX=x0+w*((tr.x0??tr.x??0)/s.L);
+    ctx.setLineDash([4,5]);ctx.strokeStyle='#8c98ad';ctx.lineWidth=1.3;ctx.beginPath();ctx.moveTo(refX,21);ctx.lineTo(refX,H-28);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='#64748b';ctx.font='12px system-ui';ctx.textAlign='left';ctx.fillText('R',Math.min(x1-10,refX+5),H-34);
+    if(tr.x!==null&&tr.x>=0&&tr.x<=s.L){
+      const isLost=tr.kind==='lost';
+      const tx=x0+w*(tr.x/s.L),ty=cy-unit*(isLost?sample(tr.x/s.L).sum:tr.y);
+      ctx.setLineDash([5,5]);ctx.strokeStyle=isLost?'#8d99ac':'#bd810b';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(tx,21);ctx.lineTo(tx,H-28);ctx.stroke();ctx.setLineDash([]);
+      ctx.beginPath();ctx.arc(tx,ty,6.2,0,Math.PI*2);ctx.fillStyle=isLost?'#f8fafc':'#ffd666';ctx.fill();ctx.lineWidth=2;ctx.strokeStyle=isLost?'#73819a':'#895b09';ctx.stroke();
+      ctx.fillStyle=isLost?'#64748b':'#885700';ctx.font='bold 12px system-ui';ctx.textAlign='left';ctx.fillText(isLost?'T?':'T',Math.min(x1-22,tx+8),Math.max(21,ty-10));
+    }
+  }
+}
+if(ideal&&$('nodes').checked){const nMax=Math.floor(s.L/s.l1*2+1e-7);for(let j=0;j<=nMax;j++){const nodeX=j*s.l1/2;if(nodeX>s.L+1e-9)break;const X=x0+w*(nodeX/s.L);ctx.beginPath();ctx.arc(X,cy,4.1,0,2*Math.PI);ctx.fillStyle='#d69b1b';ctx.fill();ctx.fillStyle='#876218';ctx.textAlign='center';ctx.fillText('N',X,cy+19)}for(let j=0;j<Math.floor(s.L/s.l1*2+.5);j++){const xa=(j+.5)*s.l1/2;if(xa>s.L)break;const X=x0+w*(xa/s.L);ctx.beginPath();ctx.arc(X,cy,3,0,2*Math.PI);ctx.fillStyle='#9865bc';ctx.fill()}}
+if($('crests').checked){function crest(A,l,f,direction,color){for(let j=-30;j<40;j++){const x=(.25+j+direction*f*time)*l;if(x<0||x>s.L)continue;const X=x0+w*(x/s.L),Y=cy-unit*A;ctx.beginPath();ctx.arc(X,Y,3.7,0,2*Math.PI);ctx.fillStyle=color;ctx.fill();ctx.strokeStyle=color;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(X+direction*4,Y-10);ctx.lineTo(X+direction*20,Y-10);ctx.lineTo(X+direction*16,Y-14);ctx.moveTo(X+direction*20,Y-10);ctx.lineTo(X+direction*16,Y-6);ctx.stroke()}}if(s.er&&s.vr)crest(s.A1,s.l1,s.f1,1,'#2672dc');if(s.el&&s.vl)crest(s.A2,s.l2,s.f2,-1,'#0b9c87')}
+const px=x0+w*pU;ctx.setLineDash([5,4]);ctx.strokeStyle='#7186a7';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(px,20);ctx.lineTo(px,H-28);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#425b7b';ctx.textAlign='left';ctx.fillText('P',Math.min(x1-14,px+5),30);$('clock').textContent='t = '+time.toFixed(3)+' s';}
+function refresh(){update();draw()};function preset(kind){resetLocalTracker();$('a1').value='1';$('a2').value='1';$('f1').value='1';$('f2').value='1';$('l1').value='2';$('l2').value='2';$('er').checked=true;$('el').checked=true;$('vr').checked=true;$('vl').checked=true;if(kind==='amp')$('a2').value='.5';if(kind==='freq')$('f2').value='1.5';if(kind==='wavelength')$('l2').value='2.8';if(kind==='single')$('el').checked=false;time=0;playing=false;$('play').textContent='▶ 播放';refresh()}
+for(const id of [...rangeIds,'er','el','vr','vl','nodes','env','particles','crests'])$(id).addEventListener('input',()=>{if(!['vr','vl','nodes','env','particles','crests','speed'].includes(id))resetLocalTracker();refresh()});
+$('match').onclick=()=>{resetLocalTracker();$('a2').value=$('a1').value;$('f2').value=$('f1').value;$('l2').value=$('l1').value;$('el').checked=true;refresh()};document.querySelectorAll('[data-preset]').forEach(b=>b.onclick=()=>preset(b.dataset.preset));
+$('play').onclick=()=>{playing=!playing;$('play').textContent=playing?'⏸ 暫停':'▶ 播放';last=null};$('step').onclick=()=>{playing=false;$('play').textContent='▶ 播放';time+=1/Math.max(state().f1,state().f2)/16;refresh()};$('back').onclick=()=>{playing=false;$('play').textContent='▶ 播放';time=Math.max(0,time-1/Math.max(state().f1,state().f2)/16);refresh()};$('reset').onclick=()=>{resetLocalTracker();time=0;playing=false;$('play').textContent='▶ 播放';refresh()};
+function selectPoint(e){const rect=canvas.getBoundingClientRect(),x0=43,x1=rect.width-23;pU=Math.min(1,Math.max(0,(e.clientX-rect.left-x0)/(x1-x0)));refresh()}
+canvas.addEventListener('pointerdown',e=>{canvas.setPointerCapture(e.pointerId);selectPoint(e)});
+canvas.addEventListener('pointermove',e=>{if(e.buttons&1)selectPoint(e)});
+function tick(now){if(last!==null&&playing)time+=Math.min((now-last)/1000,.06)*state().speed;last=now;if(playing){refresh()}requestAnimationFrame(tick)}
+if('ResizeObserver'in window)new ResizeObserver(draw).observe(canvas);preset('equal');requestAnimationFrame(tick);
 })();
 </script></body></html>
