@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b1930">
+<title>司乃耳定律｜惠更斯原理幾何證明｜Physics Lab</title>
+<style>
+:root{font-family:system-ui,-apple-system,"Noto Sans TC","Microsoft JhengHei",sans-serif; color:#edf4ff;background:#0b1930;--ink:#edf4ff;--muted:#adc2df;--border:#3a5573;--panel:#132741;--orange:#ffbb6e;--teal:#63e3d3;--blue:#7fc8ff;--violet:#d0b4ff;--warn:#ffe3a3}
+*{box-sizing:border-box}body{margin:0}button,input{font:inherit}button{cursor:pointer;color:var(--ink);background:#1d3855;border:1px solid #46678a;border-radius:10px;min-height:42px;padding:8px 12px}button:hover{background:#2a4b70}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #ffd36f;outline-offset:2px}button.active{background:#2366a8;border-color:#94cfff}button.primary{background:#2774c1;border-color:#8bc5ff}button:disabled{opacity:.45;cursor:not-allowed}a{color:#9ad7ff;text-decoration:none}
+.app{max-width:1740px;margin:auto;padding:12px 16px 18px}.top{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:11px}.identity{display:flex;align-items:center;gap:12px}.logo{width:50px;height:50px;border-radius:13px;background:#173d62;border:1px solid #537da1;display:grid;place-items:center;flex:none}.logo svg{width:40px;height:40px}h1{font-size:clamp(22px,2.15vw,29px);margin:0 0 3px;font-weight:800;letter-spacing:.02em}.subtitle{font-size:13px;color:#b6cee5}.home{font-size:14px;font-weight:700;border:1px solid #426182;border-radius:10px;padding:10px 13px;white-space:nowrap}
+.modebar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:9px 0}.modes,.presets{display:flex;gap:7px;flex-wrap:wrap}.modes button{min-width:110px;font-weight:750}.presets button{font-size:13px;min-height:38px}.stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:10px 0}.stat{min-width:0;background:#132c47;border:1px solid #355372;border-radius:12px;padding:9px 12px}.stat-label{font-size:12px;color:#b3c8df;font-weight:650}.stat-value{font-size:clamp(19px,2vw,26px);line-height:1.25;font-weight:800;margin-top:3px;font-variant-numeric:tabular-nums;white-space:nowrap}.stat-note{color:#afc9e2;font-size:11px;margin-top:1px;white-space:nowrap}.stat .accent{color:#a5e1ff}.stat .gold{color:#ffce85}.stat .mint{color:#8be4d5}
+.workspace{display:grid;grid-template-columns:minmax(0,1.95fr) minmax(335px,.85fr);gap:11px;align-items:start}.panel{background:var(--panel);border:1px solid #34506d;border-radius:14px;padding:12px;min-width:0}.visual{display:flex;flex-direction:column;gap:9px}.visualhead{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.visualhead strong{font-size:16px}.visualhint{color:#b9d2e8;font-size:12px}.canvaswrap{height:clamp(330px,45vh,500px);border-radius:12px;overflow:hidden;background:#081d32;border:1px solid #405b7a;position:relative}.canvaswrap canvas{display:block;width:100%;height:100%;touch-action:pan-y}.canvasnote{position:absolute;top:10px;right:10px;background:#071727c9;border:1px solid #54708b;border-radius:9px;padding:6px 10px;color:#d6eaff;font-size:12px;pointer-events:none}.legend{display:flex;gap:9px 16px;flex-wrap:wrap;font-size:12px;color:#c6d9ec}.legend b{font-size:16px;vertical-align:-1px}.playrow{display:grid;grid-template-columns:1.1fr 1fr 1fr 1fr;gap:7px}.playrow button{min-width:0;font-weight:700;padding:7px 5px;font-size:13px}.progress{display:grid;grid-template-columns:auto minmax(60px,1fr) auto;align-items:center;gap:10px;color:#d4e7f9;font-size:12px}.progress input{width:100%;accent-color:#75c9ff;min-height:28px}.stepbar{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}.stepbar button{font-size:12px;padding:6px 4px;min-height:40px;white-space:nowrap}.stepbar button.active{background:#2f628e;border-color:#9bd8ff}.explain{border-left:4px solid #ffbe79;background:#1b3550;border-radius:7px;padding:9px 13px;font-size:13px;line-height:1.65;min-height:50px}.explain strong{color:#ffcf8b}
+.side{display:flex;flex-direction:column;gap:10px}.side h2{font-size:16px;margin:0 0 8px}.controlrow{display:grid;grid-template-columns:103px minmax(40px,1fr) 77px;gap:8px;align-items:center;margin:10px 0 12px;font-size:13px}.controlrow output{text-align:right;color:#fff;font-weight:800;font-variant-numeric:tabular-nums}.controlrow input{width:100%;accent-color:#75caff;min-height:28px}.controlrow label{font-weight:650}.ctrlhead{display:flex;align-items:center;justify-content:space-between}.badge{color:#cbe7ff;border:1px solid #395f80;border-radius:40px;padding:3px 8px;font-size:11px}.hint{color:#b5cee5;font-size:12px;line-height:1.55}.sensitivity{display:grid;grid-template-columns:1fr 1fr;gap:9px}.smallmetric{background:#0b223c;border-radius:10px;border:1px solid #365574;padding:7px 9px}.smallmetric span{display:block;color:#aac7e2;font-size:12px}.smallmetric strong{display:block;font-size:17px;color:#b6eaff;font-variant-numeric:tabular-nums}.proof{border-color:#537a92}.proof h2{display:flex;align-items:center;gap:7px}.eq{font-size:clamp(15px,1.3vw,19px);background:#0b2139;border:1px solid #375975;border-radius:10px;padding:10px;line-height:1.72;margin:7px 0;letter-spacing:0;white-space:normal}.eq span{white-space:nowrap}.eq .hot{color:#ffce7e;font-weight:800}.eq .cool{color:#8be7da;font-weight:800}.eq .purple{color:#d4bdff;font-weight:800}.eq.disabled{opacity:.33}.eqlead{color:#acc4db;font-size:12px;margin-top:8px}.proof-foot{font-size:12px;line-height:1.6;color:#c9deef}.alert{display:none;background:#4b3029;color:#ffebc9;border:1px solid #be8552;border-radius:9px;padding:8px 10px;font-size:13px;line-height:1.5}.alert.show{display:block}.displaytoggles{display:flex;flex-wrap:wrap;gap:8px 13px}.displaytoggles label{display:flex;align-items:center;gap:5px;font-size:12px;white-space:nowrap}.displaytoggles input{width:17px;height:17px;accent-color:#75caff}
+.footer{font-size:11px;color:#adc6df;line-height:1.5;margin-top:9px}
+@media(max-width:1100px){.workspace{grid-template-columns:minmax(0,1fr) 320px}.stats{grid-template-columns:repeat(5,minmax(0,1fr))}.stat-value{font-size:19px}.controlrow{grid-template-columns:95px minmax(30px,1fr) 68px}.canvaswrap{height:clamp(310px,44vh,480px)}}
+@media(max-width:810px){.workspace{grid-template-columns:1fr}.side{display:grid;grid-template-columns:1fr 1fr}.side .proof{grid-column:1/-1}.canvaswrap{height:45vh;min-height:330px}.stats{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:520px){.app{padding:9px}.top{align-items:flex-start}.logo{width:38px;height:38px}.logo svg{width:32px;height:32px}h1{font-size:18px}.subtitle{font-size:11px}.home{font-size:11px;padding:8px;max-width:100px;white-space:normal}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.side{display:flex}.canvaswrap{height:310px;min-height:0}.playrow{grid-template-columns:1fr 1fr}.stepbar{grid-template-columns:repeat(3,1fr)}.visual{gap:8px}.modes button{min-width:90px}.presets button{min-height:36px}.legend{font-size:11px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+/* 五階段的公式與幾何同頁、同欄；長式子會折行而不溢出畫布。 */
+.formula-ribbon{background:linear-gradient(105deg,#102d4c,#15395a);border:1px solid #587b9a;border-radius:12px;padding:10px 14px 10px;min-height:124px;display:flex;flex-direction:column;justify-content:center;gap:7px}
+.formula-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;line-height:1.35}
+.formula-top strong{font-size:clamp(16px,1.35vw,19px);color:#f5f9ff}
+.formula-step{background:#316087;border:1px solid #77abd2;border-radius:7px;padding:3px 9px;font-size:12px;font-weight:800;white-space:nowrap}
+.formula-status{margin-left:auto;color:#b7d1ec;font-size:12px}
+.formula-main{font-size:clamp(20px,2vw,29px);font-weight:750;line-height:1.5;min-height:39px;display:flex;align-items:center;gap:8px 17px;flex-wrap:wrap;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.formula-main .frow{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.formula-main .hue1{color:#ffc47e}.formula-main .hue2{color:#76e9d5}.formula-main .hue3{color:#b8d9ff}
+.formula-main .fraction{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.12;font-size:.88em;min-width:32px;white-space:nowrap}
+.formula-main .fraction .num{border-bottom:2px solid currentColor;padding:0 5px 3px;text-align:center}.formula-main .fraction .den{padding:3px 5px 0;text-align:center}
+.formula-main .join{font-size:.85em;color:#c5d7eb}
+.formula-hint{font-size:clamp(12px,1.03vw,14px);color:#d1e4f4;line-height:1.55}
+.formula-main .math-notice{font-size:clamp(16px,1.5vw,20px);font-weight:600;color:#ffe1a5}
+.formula-main .light-add{font-size:.75em;padding:3px 10px;border:1px solid #668ba9;border-radius:8px}
+.canvaswrap{height:clamp(290px,39vh,420px)}
+.explain{min-height:0;padding:6px 10px;font-size:12px;line-height:1.45}
+.visual{gap:7px}.stats{margin:6px 0 9px}
+@media(max-width:1100px){.formula-ribbon{padding:9px 12px}.formula-main{font-size:20px}.canvaswrap{height:clamp(290px,38vh,410px)}}
+@media(max-width:810px){.formula-ribbon{min-height:124px}.formula-status{display:none}}
+@media(max-width:520px){.formula-ribbon{padding:9px;min-height:132px}.formula-main{font-size:19px;gap:6px}.formula-top{gap:6px}.formula-top strong{font-size:15px}.canvaswrap{height:300px}.visual{gap:6px}.stepbar button{font-size:11px}}
+@media(min-width:1100px) and (max-height:800px){.canvaswrap{height:clamp(280px,37vh,380px)}.formula-ribbon{min-height:112px}.stat{padding:7px 9px}}
+
+/* 改良：教室投影可直接對照的完整列式（不省略共同因子） */
+.formula-ribbon{min-height:122px;gap:6px;transition:none}
+.formula-ribbon.expanded{min-height:214px;justify-content:flex-start}
+.proof-sequence{display:flex;flex-direction:column;gap:5px;width:100%}
+.derive-row{display:grid;grid-template-columns:105px minmax(0,1fr);align-items:center;gap:10px;padding:5px 9px;border:1px solid #406382;border-radius:9px;background:#08233c80}
+.derive-row .derive-label{font-weight:800;color:#9bd7fc;font-size:12px;white-space:nowrap}
+.derive-row .derive-math{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;font-size:clamp(16px,1.45vw,21px);font-weight:740;line-height:1.35}
+.derive-row .fraction{font-size:.89em}
+.derive-row .fraction .num{border-bottom-width:1.8px}
+.derive-row .cancel{color:#ffe5a3;text-decoration:line-through;text-decoration-color:#ff7a73;text-decoration-thickness:2px}
+.derive-row .accent-a{color:#ffc681}.derive-row .accent-b{color:#80ebd9}
+.derive-row.final{background:#144463;border-color:#6db7df}
+.formula-ribbon.expanded .formula-hint{font-size:12px}
+@media(max-width:1200px){.derive-row{grid-template-columns:88px minmax(0,1fr);padding:4px 7px;gap:7px}.derive-row .derive-math{font-size:16px;gap:5px 8px}}
+@media(max-width:680px){.derive-row{grid-template-columns:1fr;gap:2px}.derive-row .derive-label{font-size:11px}.formula-ribbon.expanded{min-height:250px}.derive-row .derive-math{font-size:16px}}
+/* 完整推導為一條連續等式；在窄螢幕允許水平捲動，不拆成三列。 */
+.formula-ribbon.expanded{min-height:133px}
+.formula-ribbon.expanded .formula-main{display:block;min-height:52px;overflow:hidden}
+.proof-chain-scroll{width:100%;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;padding:3px 1px 7px}
+.proof-chain{display:flex;align-items:center;gap:clamp(3px,.35vw,7px);width:max-content;min-width:0;max-width:none;white-space:nowrap;font-size:clamp(16px,1.55vw,23px);line-height:1.08;font-weight:760}
+.proof-chain>span{flex:none;white-space:nowrap}
+.proof-chain .fraction{display:inline-flex;flex-direction:column;align-items:center;min-width:0;font-size:1em;line-height:1.04}
+.proof-chain .fraction .num{border-bottom:1.8px solid currentColor;padding:0 2px 2px}
+.proof-chain .fraction .den{padding:2px 2px 0}
+.proof-chain .cancel{color:#ffe5a3;text-decoration:line-through;text-decoration-color:#ff7777;text-decoration-thickness:2px}
+.proof-chain .equals{color:#e9f6ff;font-size:.98em}
+.proof-chain .hue1{color:#ffc47e}.proof-chain .hue2{color:#80e9d8}
+.proof-chain .origin-fraction{color:#ffd18c}
+.formula-main .light-add{font-size:.78em;padding:3px 6px}
+@media(min-width:1100px) and (max-height:800px){.formula-ribbon.expanded{min-height:141px}.canvaswrap{height:clamp(265px,37vh,365px)}}
+@media(max-width:680px){.formula-ribbon.expanded{min-height:140px}.proof-chain{font-size:15px}}
+</style>
+</head>
+<body><div class="app">
+<header class="top"><div class="identity"><div class="logo" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none"><path d="M3 24h42" stroke="#87d4ff" stroke-width="2" stroke-dasharray="4 4"/><path d="M15 8v32" stroke="#a6beef" stroke-width="3"/><path d="m19 10 20 17" stroke="#ffc777" stroke-width="3"/><path d="m19 37 20-12" stroke="#7ae9d7" stroke-width="3"/><circle cx="19" cy="24" r="5" fill="#ffc777"/></svg></div><div><h1>司乃耳定律｜惠更斯原理幾何證明</h1><div class="subtitle">同一個 AC，兩個直角三角形：從波前、波長推導折射定律</div></div></div><a class="home" href="../../../index.html">← Physics Lab 首頁</a></header>
+<div class="modebar"><div class="modes"><button id="waterMode" class="active" aria-pressed="true">🌊 水波</button><button id="lightMode" aria-pressed="false">☀️ 光波</button></div><div class="presets"><button id="presetSlow">慢速介質（偏法線）</button><button id="presetFast">快速介質（偏離法線）</button><button id="presetCrit">臨界角／全反射</button><button id="project">⛶ 投影放大</button></div></div>
+<div class="stats" aria-live="polite"><div class="stat"><div class="stat-label">入射角 θ₁</div><div class="stat-value gold" id="ang1">30.0°</div><div class="stat-note">相對界面法線</div></div><div class="stat"><div class="stat-label">折射角 θ₂</div><div class="stat-value accent" id="ang2">18.2°</div><div class="stat-note">相對界面法線</div></div><div class="stat"><div class="stat-label">波速比 v₁ / v₂</div><div class="stat-value" id="ratioV">1.60</div><div class="stat-note">兩介質波速</div></div><div class="stat"><div class="stat-label">波長比 λ₁ / λ₂</div><div class="stat-value mint" id="ratioL">1.60</div><div class="stat-note">跨界面頻率不變</div></div><div class="stat"><div class="stat-label">正弦比 sinθ₁ / sinθ₂</div><div class="stat-value gold" id="ratioSin">1.60</div><div class="stat-note">由直角三角形求得</div></div></div>
+<div class="workspace"><section class="panel visual"><div class="visualhead"><strong>幾何作圖｜A、B、C、D 四點證明</strong><span class="visualhint" id="geomStatus">介質交界面為水平線 · 波線垂直波前</span></div>
+<div class="formula-ribbon" id="formulaRibbon" role="region" aria-label="與幾何作圖同步的公式推導">
+ <div class="formula-top"><span class="formula-step" id="proofStep">步驟 5／5</span><strong id="proofStageTitle">消去共同邊 AC，得到司乃耳定律</strong><span class="formula-status" id="formulaStatus">幾何與公式同步</span></div>
+ <div class="formula-main" id="proofFormula" aria-live="polite"></div>
+ <div class="formula-hint" id="proofHint">透過兩個直角三角形與同一段時間 Δt 推導正弦比。</div>
+</div>
+<div class="canvaswrap"><canvas id="diagram" role="img" aria-label="兩介質交界面，入射與折射波前，惠更斯次波及 ABC 和 ACD 三角形"></canvas><div class="canvasnote" id="canvasClock">Δt 進度 100%</div></div><div class="legend"><span><b style="color:var(--orange)">━━</b> 入射波前 AB</span><span><b style="color:var(--teal)">━━</b> 折射波前 DC</span><span><b style="color:var(--blue)">◯</b> 介質 1 子波（B 點）</span><span><b style="color:var(--violet)">◯</b> 介質 2 子波（A 點）</span><span><b style="color:var(--blue)">┄┄</b> BC＝v₁Δt</span><span><b style="color:var(--orange)">┄┄</b> AD＝v₂Δt</span><span>AC＝共用斜邊</span></div><div class="stepbar" aria-label="證明步驟"><button data-stage="0">① 入射波前</button><button data-stage="1">② 次波與時間</button><button data-stage="2">③ 新的波前</button><button data-stage="3">④ 直角三角形</button><button data-stage="4" class="active">⑤ 完整列式與約分</button></div><div class="explain" id="explanation">利用兩個直角三角形，找出角度正弦與波行進距離的關係。</div><div class="playrow"><button id="play" class="primary">▶ 播放作圖</button><button id="back">⏮ 逐格後退</button><button id="next">逐格前進 ⏭</button><button id="reset">↺ 重設</button></div><div class="progress"><span>作圖進度</span><input type="range" id="progress" min="0" max="1000" value="1000"><output id="progressOut">100%</output></div></section>
+<aside class="side"><section class="panel"><div class="ctrlhead"><h2>物理參數</h2><span class="badge" id="mediumLabel">水波｜深水 → 淺水</span></div><div class="controlrow"><label for="theta1">入射角 θ₁</label><input id="theta1" type="range" min="5" max="75" step="1" value="35"><output id="theta1Out">35°</output></div><div id="waterCtrls"><div class="controlrow"><label for="v1w">介質 1 波速</label><input id="v1w" type="range" min="0.2" max="2" step="0.05" value="0.8"><output id="v1wOut">0.80 m/s</output></div><div class="controlrow"><label for="v2w">介質 2 波速</label><input id="v2w" type="range" min="0.2" max="2" step="0.05" value="0.5"><output id="v2wOut">0.50 m/s</output></div><div class="controlrow"><label for="lambdaW">波長 λ₁</label><input id="lambdaW" type="range" min="4" max="25" step="1" value="12"><output id="lambdaWOut">12 cm</output></div></div><div id="lightCtrls" hidden><div class="controlrow"><label for="n1">介質 1 折射率</label><input id="n1" type="range" min="1" max="2.4" step="0.01" value="1"><output id="n1Out">1.00</output></div><div class="controlrow"><label for="n2">介質 2 折射率</label><input id="n2" type="range" min="1" max="2.4" step="0.01" value="1.6"><output id="n2Out">1.60</output></div><div class="controlrow"><label for="lambdaLight">介質 1 λ₁</label><input id="lambdaLight" type="range" min="380" max="750" step="10" value="550"><output id="lambdaLightOut">550 nm</output></div></div><div class="sensitivity"><div class="smallmetric"><span id="velocityLabel1">介質 1 波速</span><strong id="vel1">0.80 m/s</strong></div><div class="smallmetric"><span id="velocityLabel2">介質 2 波速</span><strong id="vel2">0.50 m/s</strong></div><div class="smallmetric"><span>介質 1 波長 λ₁</span><strong id="wave1">12.0 cm</strong></div><div class="smallmetric"><span>介質 2 波長 λ₂</span><strong id="wave2">7.5 cm</strong></div><div class="smallmetric"><span>波的頻率 f（固定）</span><strong id="frequency">6.67 Hz</strong></div><div class="smallmetric"><span>選定時間 Δt</span><strong id="deltaT">0.43 s</strong></div></div><div class="alert" id="tirWarn" role="status"></div><div class="hint" style="margin-top:9px">波長改變時，波前間距同步更新；速度改變時，折射角、次波半徑與新波長同步更新。圖中的波長與速度標註均依模式換算。</div></section>
+<section class="panel"><h2>顯示選項</h2><div class="displaytoggles"><label><input id="showFronts" type="checkbox" checked>連續波前</label><label><input id="showWavelet" type="checkbox" checked>惠更斯子波</label><label><input id="showTriangles" type="checkbox" checked>直角三角形</label><label><input id="showNormal" type="checkbox" checked>法線與傳播方向</label></div><div class="hint" style="margin-top:8px">可先隱藏三角形，只讓學生猜想折射角；再依序按 ①～⑤ 展開完整推導。</div></section></aside></div><div class="footer">教學模型：平面界面、各介質均勻且各向同性；以惠更斯波前幾何與幾何光學／水波近似作圖。為了教學，波長在畫面中按比例放大；水波不考慮完整色散與反射振幅，光波不計算偏振、菲涅耳反射係數、色散或倏逝波。全反射狀態不畫虛構的傳播折射波。</div></div>
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id),cv=$('diagram'),c=cv.getContext('2d');
+const PI=Math.PI,C0=299792458,deg=a=>a*180/PI,rad=a=>a*PI/180;
+let medium='water',stage=4,progress=1,playing=false,last=0,story=1;
+const controls=['theta1','v1w','v2w','lambdaW','n1','n2','lambdaLight'];
+const show=id=>$(id).checked;
+function data(){
+ const water=medium==='water',theta=rad(+$('theta1').value);
+ const v1=water?+$('v1w').value:C0/(+$('n1').value),v2=water?+$('v2w').value:C0/(+$('n2').value);
+ const l1=water?+$('lambdaW').value/100:+$('lambdaLight').value*1e-9;
+ const l2=l1*v2/v1,f=v1/l1,ratio=v2/v1,arg=ratio*Math.sin(theta),tir=arg>1+1e-9;
+ const theta2=tir?NaN:Math.asin(Math.min(1,arg));
+ const physAC=water?.60:3e-6,bc=physAC*Math.sin(theta),ad=bc*ratio,dt=bc/v1;
+ return {water,v1,v2,l1,l2,f,theta,theta2,tir,ratio,physAC,bc,ad,dt,angle:+$('theta1').value,sn1:+$('n1').value,sn2:+$('n2').value};
+}
+function nfmt(x,d=2){return Number(x).toFixed(d)}
+function textMeters(x,water){return water?(x*100).toFixed(1)+' cm':(x*1e9).toFixed(0)+' nm'}
+function frac(top,bottom){return `<span class="fraction"><span class="num">${top}</span><span class="den">${bottom}</span></span>`}
+function renderProof(d){
+ const titles=['標出 A、C：先確立介面上的共同邊','同一段時間 Δt：B、A 同時發出次波','從 C 作切線：產生折射波前','辨認兩個直角三角形的對邊與斜邊','完整列式、逐項約分，得到司乃耳定律'];
+ const top=$('proofStageTitle'),area=$('proofFormula'),hint=$('proofHint'),ribbon=$('formulaRibbon');
+ $('proofStep').textContent=`步驟 ${stage+1}／5`;
+ top.textContent=titles[stage];
+ ribbon.classList.toggle('expanded',stage===4&&!d.tir);
+ let formula='',message='';
+ const ratio=(a,b)=>frac(a,b);
+ if(stage===0){
+  formula='<span class="hue1">A、C 在界面上</span><span class="join">·</span><span class="hue3">AC 為共同邊</span><span class="join">·</span><span>θ₁ = ∠BAC</span>';
+  message='先指出 A、B、C 三點的位置：AB 是入射波前；B 點將沿垂直 AB 的方向前進至 C。第一步便標出 C，供後面作圖對照。';
+ }else if(stage===1){
+  formula='<span class="frow hue3">B 點子波半徑：BC = v₁Δt</span><span class="join">、</span><span class="frow hue2">A 點子波半徑：AD = v₂Δt</span>';
+  message=`同樣經過 Δt：藍色虛線圓是 B 點在介質 1 發出的次波，紫色半圓是 A 點在介質 2 發出的次波；目前都擴張到 ${(progress*100).toFixed(0)}%。進度 100% 時 B 點次波通過 C，BC=${textMeters(d.bc,d.water)}，A 點子波半徑=${textMeters(d.ad,d.water)}。`;
+ }else if(stage===2){
+  if(d.tir){formula='<span class="math-notice">子波半徑大於 AC，無法從 C 作折射波前的實切線 DC。</span>';
+    message='此參數超過臨界角，不能強行作出折射波前。';}
+  else{formula='<span class="hue2">DC ⟂ AD</span><span class="join">·</span><span class="hue3">D 為切點，AD = v₂Δt</span>';
+    message='從 C 作惠更斯子波的切線 CD，切點 D 處半徑 AD 垂直 CD。兩列波前皆與各自傳播方向垂直。';}
+ }else if(stage===3){
+  if(d.tir){formula='<span class="math-notice">無折射三角形 △ACD：全反射時沒有實數折射角。</span>';
+    message='降低入射角或調整波速／折射率，使新波前重新出現，才能繼續推導。';}
+  else{formula=`<span class="frow hue1">sin θ₁ = ${ratio('BC','AC')}</span><span class="join">；</span><span class="frow hue2">sin θ₂ = ${ratio('AD','AC')}</span>`;
+    message=`△ABC 與 △ACD 的斜邊都是 AC=${textMeters(d.physAC,d.water)}。請學生分別指出對邊 BC=${textMeters(d.bc,d.water)} 和 AD=${textMeters(d.ad,d.water)}。`;}
+ }else if(d.tir){
+  formula='<span class="math-notice">sin θ₂ = (v₂/v₁)sin θ₁ > 1，沒有實數解，因此無傳播折射波。</span>';
+  message='全反射時無法建立 △ACD，也就不能使用這組實切線三角形繼續證明。';
+ }else{
+  const nested=ratio(ratio('BC','AC'),ratio('AD','AC'));
+  const join='<span class="equals">=</span>';
+  formula=`<div class="proof-chain-scroll"><div class="proof-chain" aria-label="先列完整正弦分式，再約去 AC、時間 Δt 與頻率 f">
+    <span class="origin-fraction">${ratio('sin θ₁','sin θ₂')}</span>${join}
+    <span class="origin-fraction">${nested}</span>${join}
+    <span class="hue1">${ratio(ratio('BC','<span class="cancel">AC</span>'),ratio('AD','<span class="cancel">AC</span>'))}</span>${join}
+    <span>${ratio('BC','AD')}</span>${join}
+    <span>${ratio('v₁<span class="cancel">Δt</span>','v₂<span class="cancel">Δt</span>')}</span>${join}
+    <span>${ratio('v₁','v₂')}</span>${join}
+    <span class="hue2">${ratio('<span class="cancel">f</span>λ₁','<span class="cancel">f</span>λ₂')}</span>${join}
+    <span class="hue2">${ratio('λ₁','λ₂')}</span>${d.water?'':`${join}<span class="hue3">${ratio('n₂','n₁')}</span><span class="equals">⇒</span><span class="light-add">n₁ sin θ₁ = n₂ sin θ₂</span>`}
+    </div></div>`;
+  message=`同一行保留完整公式與每一次消去：先約去共同斜邊 AC，再約去相同的 Δt，最後利用兩介質頻率相同約去 f。數值：sinθ₁/sinθ₂=${nfmt(Math.sin(d.theta)/Math.sin(d.theta2),3)}，v₁/v₂=${nfmt(d.v1/d.v2,3)}，λ₁/λ₂=${nfmt(d.l1/d.l2,3)}。${d.water?'':' 光波再代入 v=c/n，得到 n₁sinθ₁=n₂sinθ₂。'}`;
+ }
+ area.innerHTML=formula;hint.textContent=message;
+ $('formulaStatus').textContent=d.tir?'全反射・幾何限制':'由彩色幾何線段推導';
+}
+function update(){const d=data();
+ $('waterMode').classList.toggle('active',d.water);$('lightMode').classList.toggle('active',!d.water);
+ $('waterMode').setAttribute('aria-pressed',String(d.water));$('lightMode').setAttribute('aria-pressed',String(!d.water));
+ $('waterCtrls').hidden=!d.water;$('lightCtrls').hidden=d.water;
+ $('mediumLabel').textContent=d.water?(d.v1>d.v2?'水波｜較快 → 較慢':d.v1<d.v2?'水波｜較慢 → 較快':'水波｜等波速'):(d.sn1<d.sn2?'光波｜低折射率 → 高折射率':d.sn1>d.sn2?'光波｜高折射率 → 低折射率':'光波｜等折射率');
+ for(const id of controls){const el=$(id);if(id==='theta1')$('theta1Out').textContent=el.value+'°';else if(id==='v1w'||id==='v2w')$(id+'Out').textContent=nfmt(el.value)+' m/s';else if(id==='lambdaW')$('lambdaWOut').textContent=el.value+' cm';else if(id==='lambdaLight')$('lambdaLightOut').textContent=el.value+' nm';else $(id+'Out').textContent=nfmt(el.value);}
+ $('ang1').textContent=nfmt(d.angle,1)+'°';$('ang2').textContent=d.tir?'全反射':nfmt(deg(d.theta2),1)+'°';
+ $('ratioV').textContent=nfmt(d.v1/d.v2,3);$('ratioL').textContent=nfmt(d.l1/d.l2,3);$('ratioSin').textContent=d.tir?'—':nfmt(Math.sin(d.theta)/Math.sin(d.theta2),3);
+ $('velocityLabel1').textContent=d.water?'水域 1 波速':'介質 1 光速';$('velocityLabel2').textContent=d.water?'水域 2 波速':'介質 2 光速';
+ $('vel1').textContent=d.water?nfmt(d.v1)+' m/s':nfmt(d.v1/1e8,3)+' × 10⁸ m/s';
+ $('vel2').textContent=d.water?nfmt(d.v2)+' m/s':nfmt(d.v2/1e8,3)+' × 10⁸ m/s';
+ $('wave1').textContent=textMeters(d.l1,d.water);$('wave2').textContent=textMeters(d.l2,d.water);
+ $('frequency').textContent=d.water?nfmt(d.f,2)+' Hz':nfmt(d.f/1e12,1)+' THz';
+ $('deltaT').textContent=d.water?nfmt(d.dt,3)+' s':nfmt(d.dt*1e15,2)+' fs';
+ const warn=$('tirWarn');warn.classList.toggle('show',d.tir);
+ if(d.tir){const critical=deg(Math.asin(Math.min(1,d.v1/d.v2)));warn.textContent=`已超過臨界角 ${nfmt(critical,1)}°：無傳播折射波前，無法作出從 C 到子波圓的實切線 DC。這一套折射三角形證明僅適用於有傳播折射波的情況。`}
+ $('geomStatus').textContent=d.tir?'全反射：無折射波前':stage>=3?'AB ⟂ BC，DC ⟂ AD；AC 為共用斜邊':'交界面為水平線；波線與波前互相垂直';
+ renderProof(d);
+
+ const descriptions=[
+ '① <strong>先標 A、C</strong>：A 與 C 都位於介面，AC 是稍後兩個直角三角形的共同斜邊；AB 為入射波前，θ₁＝∠BAC。',
+ '② <strong>相同時間 Δt</strong>：波前上 B 點前進至 C，BC = v₁Δt；已接觸界面的 A 點在第二介質中發出半徑 v₂Δt 的圓形子波。',
+ d.tir?'③ 次波半徑 AD 超過 AC，<strong>沒有從 C 作出的實切線</strong>；此情況發生全反射。':'③ <strong>折射波前 DC</strong>：從 C 作次波圓的切線，切點為 D；半徑 AD 垂直新波前 DC。',
+ d.tir?'④ 全反射時沒有傳播折射線，也沒有相應的折射三角形 △ADC。':'④ <strong>兩個直角三角形</strong>：△ABC 的直角在 B，△ADC 的直角在 D；它們共用斜邊 AC，且 θ₁ 位於 A、θ₂ 位於 C。',
+ d.tir?'⑤ 超過臨界角時，折射角沒有實數解。請降低入射角或調整兩介質參數後重新證明。':'⑤ <strong>完整證明</strong>：先寫 (BC/AC)/(AD/AC)，消去 AC 後代入 BC=v₁Δt、AD=v₂Δt；再消去 Δt，利用相同頻率 f 與 v=fλ 約分。'+(d.water?'':' 再以 v=c/n 得到光學版司乃耳定律。')
+ ];
+ $('explanation').innerHTML=descriptions[stage];
+ [...document.querySelectorAll('[data-stage]')].forEach(b=>{const on=+b.dataset.stage===stage;b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on))});
+ $('progress').value=Math.round(progress*1000);$('progressOut').textContent=Math.round(progress*100)+'%';$('canvasClock').textContent='Δt 進度 '+Math.round(progress*100)+'%';
+ draw(d);
+}
+function line(x1,y1,x2,y2,color,width=2,dash=[]){c.beginPath();c.moveTo(x1,y1);c.lineTo(x2,y2);c.strokeStyle=color;c.lineWidth=width;c.setLineDash(dash);c.stroke();c.setLineDash([])}
+let canvasTextScale=1;
+function point(x,y,name,color,dx=8,dy=-8){c.beginPath();c.arc(x,y,5.2,0,2*PI);c.fillStyle=color;c.fill();c.lineWidth=2;c.strokeStyle='#071728';c.stroke();c.font=`bold ${Math.round(18*canvasTextScale)}px system-ui`;c.textAlign='left';c.fillStyle='#fff';c.shadowColor='#03111e';c.shadowBlur=4;c.fillText(name,x+dx,y+dy);c.shadowBlur=0}
+function tag(s,x,y,color='#edf4ff'){c.font=`bold ${Math.round(16*canvasTextScale)}px system-ui`;c.textAlign='center';c.fillStyle='#071728c9';const w=c.measureText(s).width+14;c.fillRect(x-w/2,y-18,w,25);c.fillStyle=color;c.fillText(s,x,y)}
+function angleText(s,x,y,color){
+ c.font=`bold ${Math.round(17*canvasTextScale)}px system-ui`;
+ c.textAlign='center';c.textBaseline='middle';
+ c.strokeStyle='#071728';c.lineWidth=4.5;c.lineJoin='round';c.strokeText(s,x,y);
+ c.fillStyle=color;c.fillText(s,x,y);c.textBaseline='alphabetic';
+}
+function arrow(x,y,dx,dy,color,size=10){const t=Math.atan2(dy,dx);c.fillStyle=color;c.beginPath();c.moveTo(x,y);c.lineTo(x-size*Math.cos(t-.42),y-size*Math.sin(t-.42));c.lineTo(x-size*Math.cos(t+.42),y-size*Math.sin(t+.42));c.closePath();c.fill()}
+function angleArc(x,y,ang1,ang2,r,color){c.beginPath();c.arc(x,y,r,ang1,ang2,ang1>ang2);c.strokeStyle=color;c.lineWidth=2.5;c.stroke()}
+function draw(d=data()){
+ const rect=cv.getBoundingClientRect(),W=Math.max(350,rect.width),H=Math.max(260,rect.height),dpi=Math.min(window.devicePixelRatio||1,2);
+ const cw=Math.round(W*dpi),ch=Math.round(H*dpi);if(cv.width!==cw||cv.height!==ch){cv.width=cw;cv.height=ch}c.setTransform(dpi,0,0,dpi,0,0);c.clearRect(0,0,W,H);
+ canvasTextScale=W<600?.78:1;const Y=H*.52,A={x:W*.24,y:Y},S=Math.min(W*.44,H*.9),C={x:A.x+S,y:Y};
+ const th=d.theta,th2=d.theta2,r1=S*Math.sin(th),r2=S*d.ratio*Math.sin(th), B={x:C.x-r1*Math.sin(th),y:Y-r1*Math.cos(th)};
+ const unit1={x:Math.sin(th),y:Math.cos(th)},tan1={x:Math.cos(th),y:-Math.sin(th)};
+ function tangent(Q,R){const vx=Q.x-A.x,vy=Q.y-A.y,dist2=vx*vx+vy*vy;if(R*R>dist2)return null;const k=R*R/dist2,t=R*Math.sqrt(Math.max(0,dist2-R*R))/dist2;return{x:A.x+k*vx-t*vy,y:A.y+k*vy+t*vx}}
+ const Bt={x:B.x+progress*(C.x-B.x),y:B.y+progress*(C.y-B.y)},Dt=tangent(Bt,r2*progress),D=d.tir?null:tangent(C,r2);
+ const bg1=c.createLinearGradient(0,0,0,Y);bg1.addColorStop(0,d.water?'#12375a':'#2a3149');bg1.addColorStop(1,d.water?'#0f3253':'#1d334d');c.fillStyle=bg1;c.fillRect(0,0,W,Y);
+ const bg2=c.createLinearGradient(0,Y,0,H);bg2.addColorStop(0,d.water?'#124562':'#133850');bg2.addColorStop(1,d.water?'#0a283f':'#101e3c');c.fillStyle=bg2;c.fillRect(0,Y,W,H-Y);
+ c.font='600 14px system-ui';c.textAlign='left';c.fillStyle='#c9e4fc';c.fillText(d.water?'水域 1｜速度 v₁':'光學介質 1｜折射率 n₁',14,25);c.fillStyle='#a7dbec';c.fillText(d.water?'水域 2｜速度 v₂':'光學介質 2｜折射率 n₂',14,Y+27);
+ line(0,Y,W,Y,'#c0dcf3',2.3);
+ if(show('showFronts')){
+   const spacing=Math.max(13,Math.min(200,S*d.l1/d.physAC));
+   c.save();c.beginPath();c.rect(0,0,W,Y-2);c.clip();
+   // 入射的平行波前始終向界面傳播，間隔代表 λ₁。
+   const phase=progress*r1; const xp=A.x+phase*unit1.x,yp=A.y+phase*unit1.y;
+   for(let j=-11;j<=4;j++){
+    const ox=xp+j*spacing*unit1.x,oy=yp+j*spacing*unit1.y;
+    line(ox-1200*tan1.x,oy-1200*tan1.y,ox+1200*tan1.x,oy+1200*tan1.y,j===0?'#ffc78882':stage>=3?'#65aac03a':'#65aac077',j===0?2.7:1.25);
+   }c.restore();
+   if(stage>=2&&!d.tir&&D&&progress>.01){
+    const sp2=Math.max(9,Math.min(200,S*d.l2/d.physAC));
+    const u2={x:Math.sin(th2),y:Math.cos(th2)},t2={x:Math.cos(th2),y:-Math.sin(th2)};
+    const ox=A.x+progress*r2*u2.x,oy=A.y+progress*r2*u2.y;
+    c.save();c.beginPath();c.rect(0,Y+2,W,H-Y-2);c.clip();
+    for(let j=-9;j<=4;j++){
+      const xx=ox+j*sp2*u2.x,yy=oy+j*sp2*u2.y;
+      line(xx-1200*t2.x,yy-1200*t2.y,xx+1200*t2.x,yy+1200*t2.y,j===0?'#6ff5df91':stage>=3?'#61b9b73b':'#61b9b77a',j===0?2.8:1.3);
+    }c.restore();
+   }
+ }
+ // B 位於介質 1；B 點的次波半徑 r₁=v₁t。t=Δt 時圓周通過 C，故 BC=v₁Δt。
+ // 只顯示介質 1 範圍，避免藍色子波錯跨另一介質；幾何線段畫在次波上層。
+ if(stage>=1&&show('showWavelet')&&progress>.001){
+   c.save();c.beginPath();c.rect(0,0,W,Math.max(0,Y-.7));c.clip();
+   c.beginPath();c.arc(B.x,B.y,r1*progress,0,2*PI);
+   c.strokeStyle='#a3d9ff';c.lineWidth=2.5;c.setLineDash([6,4]);c.stroke();c.setLineDash([]);c.restore();
+ }
+ // 原始波前、兩點以及步驟建立的幾何圖形
+ line(A.x,A.y,C.x,C.y,'#ffe6a5',2.4);
+ line(A.x,A.y,B.x,B.y,'#ffbc72',4);
+ point(A.x,A.y,'A','#ffbb6e',-16,24);
+ point(B.x,B.y,'B','#ffbb6e',-19,-12);
+ point(C.x,C.y,'C','#92caff',10,-16);
+ if(stage>=1){
+   line(B.x,B.y,C.x,C.y,'#8bc7ff',3,[8,6]);
+   if(show('showWavelet')){
+     c.beginPath();c.arc(A.x,A.y,r2*progress,0,PI);c.strokeStyle='#d0b4ff';c.lineWidth=3;c.stroke();
+     if(stage>=2){c.beginPath();c.arc(A.x,A.y,r2,.02,PI-.02);c.strokeStyle='#a986de80';c.lineWidth=1.4;c.setLineDash([5,5]);c.stroke();c.setLineDash([])}
+   }
+   const px=B.x+(C.x-B.x)*progress,py=B.y+(C.y-B.y)*progress;
+   if(progress>.015&&progress<.99)point(px,py,'B(t)','#94d0ff',7,-10);
+ }
+ if(stage>=2&&!d.tir){
+   if(Dt&&progress>.01){line(Dt.x,Dt.y,Bt.x,Bt.y,'#54e1ce',3.5);}
+   if(D){line(C.x,C.y,D.x,D.y,'#58e9d2',4);point(D.x,D.y,'D','#64e9d0',-23,25);}
+   if(stage>=3&&show('showTriangles')&&D){
+      c.fillStyle='#ffd18a17';c.beginPath();c.moveTo(A.x,A.y);c.lineTo(B.x,B.y);c.lineTo(C.x,C.y);c.closePath();c.fill();
+      c.fillStyle='#67efdb18';c.beginPath();c.moveTo(A.x,A.y);c.lineTo(D.x,D.y);c.lineTo(C.x,C.y);c.closePath();c.fill();
+      line(A.x,A.y,C.x,C.y,'#fff0b0',3);
+      line(A.x,A.y,D.x,D.y,'#ffbd75',3,[5,4]);
+      // right-angle marks, sides are perpendicular by construction
+      const vBA={x:(A.x-B.x),y:(A.y-B.y)},vBC={x:(C.x-B.x),y:(C.y-B.y)};
+      const lBA=Math.hypot(vBA.x,vBA.y),lBC=Math.hypot(vBC.x,vBC.y);
+      if(lBA>1&&lBC>1){const u={x:vBA.x/lBA,y:vBA.y/lBA},v={x:vBC.x/lBC,y:vBC.y/lBC},s=13;c.beginPath();c.moveTo(B.x+s*u.x,B.y+s*u.y);c.lineTo(B.x+s*(u.x+v.x),B.y+s*(u.y+v.y));c.lineTo(B.x+s*v.x,B.y+s*v.y);c.strokeStyle='#e8ecff';c.lineWidth=2;c.stroke()}
+      const vDA={x:A.x-D.x,y:A.y-D.y},vDC={x:C.x-D.x,y:C.y-D.y};const lDA=Math.hypot(vDA.x,vDA.y),lDC=Math.hypot(vDC.x,vDC.y);
+      if(lDA>1&&lDC>1){const u={x:vDA.x/lDA,y:vDA.y/lDA},v={x:vDC.x/lDC,y:vDC.y/lDC},s=13;c.beginPath();c.moveTo(D.x+s*u.x,D.y+s*u.y);c.lineTo(D.x+s*(u.x+v.x),D.y+s*(u.y+v.y));c.lineTo(D.x+s*v.x,D.y+s*v.y);c.strokeStyle='#e8ecff';c.lineWidth=2;c.stroke()}
+   }
+ }
+ if(stage>=3&&!d.tir&&D){
+   // 入射角等於 AB 和水平界面的銳角（波線與法線夾角）
+   angleArc(A.x,A.y,-th,0,43,'#ffdc9b');angleText('θ₁',A.x+66*Math.cos(th*.5),Y-66*Math.sin(th*.5),'#ffcb81');
+   angleArc(C.x,C.y,PI-th2,PI,45,'#95f4d8');angleText('θ₂',C.x-69*Math.cos(th2*.5),Y+69*Math.sin(th2*.5),'#85e9d2');
+ }
+ if(show('showNormal')){
+   const ix=Math.max(44,A.x-Math.min(65,S*.18));
+   line(ix,Y-82,ix,Y+80,'#e4f4ff83',1.5,[5,6]);
+   
+   const end={x:ix+unit1.x*47,y:Y-44+unit1.y*47};
+   line(ix-unit1.x*38,Y-44-unit1.y*38,end.x,end.y,'#ffb674',2.2);arrow(end.x,end.y,unit1.x,unit1.y,'#ffb674');
+   if(!d.tir){const v={x:Math.sin(th2),y:Math.cos(th2)},st={x:ix-v.x*10,y:Y+31-v.y*10},en={x:st.x+v.x*55,y:st.y+v.y*55};line(st.x,st.y,en.x,en.y,'#68e3d2',2.2);arrow(en.x,en.y,v.x,v.y,'#68e3d2')}
+ }
+ if(d.tir&&stage>=2){
+   c.beginPath();c.arc(A.x,Y,r2*progress,0,PI);c.strokeStyle='#ecabffa0';c.lineWidth=3;c.stroke();tag('沒有切線 DC → 全反射',W*.66,Y+65,'#ffd6a5');
+ }
+}
+function atStory(t){
+ story=Math.max(0,Math.min(1,t));
+ if(story<.075){stage=0;progress=0;}
+ else if(story<.57){stage=1;progress=(story-.075)/.495;}
+ else if(story<.72){stage=2;progress=1;}
+ else if(story<.88){stage=3;progress=1;}
+ else{stage=4;progress=1;}
+}
+function stageStory(n){return[0,.075+.495*.55,.645,.8,1][n]}
+function setStage(n){n=Math.max(0,Math.min(4,n));playing=false;$('play').textContent='▶ 播放作圖';atStory(stageStory(n));update()}
+function modeSet(m){medium=m;playing=false;atStory(stageStory(3));$('play').textContent='▶ 播放作圖';update()}
+$('waterMode').onclick=()=>modeSet('water');$('lightMode').onclick=()=>modeSet('light');
+$('presetSlow').onclick=()=>{if(medium==='water'){$('v1w').value='.8';$('v2w').value='.5'}else{$('n1').value='1';$('n2').value='1.6'}$('theta1').value='35';setStage(4)};
+$('presetFast').onclick=()=>{if(medium==='water'){$('v1w').value='.5';$('v2w').value='.8'}else{$('n1').value='1.5';$('n2').value='1'}$('theta1').value='35';setStage(4)};
+$('presetCrit').onclick=()=>{if(medium==='water'){$('v1w').value='.5';$('v2w').value='1'}else{$('n1').value='1.7';$('n2').value='1'}$('theta1').value='50';setStage(4)};
+$('project').onclick=()=>{if(!document.fullscreenElement){document.documentElement.requestFullscreen?.().catch(()=>{})}else document.exitFullscreen?.()};
+controls.forEach(id=>$(id).addEventListener('input',update));
+['showFronts','showWavelet','showTriangles','showNormal'].forEach(id=>$(id).addEventListener('input',update));
+document.querySelectorAll('[data-stage]').forEach(b=>b.onclick=()=>setStage(+b.dataset.stage));
+$('progress').oninput=e=>{playing=false;$('play').textContent='▶ 播放作圖';progress=+e.target.value/1000;story=.075+.495*progress;stage=progress===0?0:1;update()};
+$('play').onclick=()=>{if(story>=1)atStory(0);playing=!playing;$('play').textContent=playing?'⏸ 暫停':'▶ 播放作圖';last=0;update()};
+$('back').onclick=()=>{playing=false;$('play').textContent='▶ 播放作圖';
+ if(stage===4)atStory(stageStory(3));else if(stage===3)atStory(stageStory(2));else if(stage===2){stage=1;progress=1;story=.57-.0001;}
+ else if(stage===1){if(progress<=.001)atStory(0);else atStory(.075+.495*Math.max(0,progress-1/24))}else atStory(0);update()};
+$('next').onclick=()=>{playing=false;$('play').textContent='▶ 播放作圖';
+ if(stage===0){stage=1;progress=0;story=.075;}
+ else if(stage===1){if(progress>=.999)atStory(stageStory(2));else atStory(.075+.495*Math.min(1,progress+1/24))}
+ else if(stage===2)atStory(stageStory(3));else if(stage===3)atStory(stageStory(4));update()};
+$('reset').onclick=()=>setStage(0);
+function loop(now){if(!last)last=now;const dt=Math.min(.07,(now-last)/1000);last=now;
+ if(playing){atStory(story+dt*.20);if(story>=1){playing=false;$('play').textContent='▶ 播放作圖'}update()}
+ requestAnimationFrame(loop)}
+window.addEventListener('resize',update);if('ResizeObserver'in window)new ResizeObserver(()=>draw()).observe(cv);
+update();requestAnimationFrame(loop);
+})();
+</script>
+</body></html>
