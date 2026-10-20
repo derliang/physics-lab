@@ -1,48 +1,253 @@
 <!doctype html>
-<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#081a2a"><title>海更斯原理｜Physics Lab</title>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#081a2a">
+<title>海更斯原理｜連續波前與反射、折射、繞射、干涉｜Physics Lab</title>
 <style>
-:root{font-family:system-ui,-apple-system,"Noto Sans TC",sans-serif;color:#ebf5ff;background:#081a2a}*{box-sizing:border-box}body{margin:0}button,input{font:inherit}button{color:#eef7ff;background:#17334d;border:1px solid #42627d;padding:9px 12px;border-radius:9px;cursor:pointer;min-height:42px}button:focus-visible,input:focus-visible{outline:3px solid #ffc36a;outline-offset:2px}button.active{background:#186ad2;border-color:#5eabff}button.primary{background:#176dd9;border-color:#176dd9}button:hover{filter:brightness(1.17)}input[type=range]{width:100%;accent-color:#54b9ff;min-height:30px}input[type=checkbox]{accent-color:#4bb7ff;width:18px;height:18px}.app{max-width:1500px;margin:auto;padding:14px}.header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}.header h1{font-size:clamp(20px,2.1vw,29px);margin:0}.header p{font-size:13px;color:#afc7dc;margin:4px 0 0}.header a{color:#96caff;text-decoration:none;font-size:13px}.layout{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:13px}.panel{border:1px solid #294f69;border-radius:12px;background:#0e2538;padding:12px}.stage{min-width:0}.modes,.actions{display:flex;gap:7px;flex-wrap:wrap}.modes{margin-bottom:9px}.screen{height:min(54vh,480px);min-height:300px;position:relative;background:#061522;border:1px solid #2b536d;border-radius:9px;overflow:hidden}canvas{display:block;width:100%;height:100%}.overlay{position:absolute;left:10px;top:9px;background:#12324bcf;padding:5px 9px;border-radius:6px;color:#e0f1ff;font-size:12px}.overlay.right{right:10px;left:auto}.legend{display:flex;gap:16px;flex-wrap:wrap;color:#acc7da;font-size:12px;margin:9px 0}.legend b{margin-right:5px}.actions{margin:8px 0}.scrub{display:flex;align-items:center;gap:12px;font-size:13px}.scrub output{width:45px;text-align:right}.side h2,.info h2{font-size:16px;margin:0 0 8px}.row{display:grid;grid-template-columns:88px 1fr 50px;align-items:center;gap:8px;font-size:13px;margin:10px 0}.row output{text-align:right;font-variant-numeric:tabular-nums}.side{display:flex;flex-direction:column;gap:12px}.checks{display:grid;grid-template-columns:1fr;gap:8px}.checks label{font-size:13px;display:flex;align-items:center;gap:9px}.stat{display:flex;justify-content:space-between;font-size:13px;margin:7px 0;color:#b4cadd}.stat strong{color:#fff}.info{margin-top:12px;font-size:13px;line-height:1.65;color:#c1d7ea}.info p{margin:5px 0}.note{color:#8faac0;font-size:12px}.stage-title{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:6px;font-weight:700}.stage-title span{color:#b4cbdc;font-size:12px;font-weight:400}.lesson{color:#ddf0ff;font-size:13px;margin-top:10px;min-height:43px}.stepbox{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.stepbox button{font-size:12px;min-height:38px;padding:6px 9px}@media(max-width:950px){.layout{grid-template-columns:minmax(0,1fr) 265px}.screen{height:51vh}}@media(max-width:680px),(orientation:portrait) and (max-width:850px){.layout{grid-template-columns:1fr}.side{display:grid;grid-template-columns:1fr 1fr}.screen{height:43vh;min-height:275px}}@media(max-width:540px){.side{grid-template-columns:1fr}.header h1{font-size:21px}.app{padding:9px}.panel{padding:9px}}
-</style><style>.title-physical-icon{display:inline-flex;vertical-align:middle;width:46px;height:46px;margin-right:10px;padding:5px;border-radius:11px;background:var(--title-tint);border:1px solid var(--title-accent);flex:none}.title-physical-icon svg{width:100%;height:100%}.title-heading{display:flex;align-items:center;line-height:1.25}@media(max-width:480px){.title-physical-icon{width:38px;height:38px}}</style></head><body><main class="app">
-<header class="header"><div><h1 class="title-heading"><span class="title-physical-icon" style="--title-accent:#6c51bf;--title-tint:#f0ebff" aria-hidden="true"><svg viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 9V63" stroke="#7d62cd" stroke-width="4"/><path d="M16 24A12 12 0 0 1 28 36M16 13A23 23 0 0 1 39 36M16 48A12 12 0 0 0 28 36M16 59A23 23 0 0 0 39 36" stroke="#9e83e5" stroke-width="2.6"/><path d="M51 10V62" stroke="#df954d" stroke-width="4" stroke-dasharray="8 5"/><circle cx="16" cy="36" r="4.5" fill="#ffb566"/></svg></span><span>海更斯原理｜連續波前再生</span></h1><p>每一代新波前上的點，會再次成為次波源，持續形成下一代波前。</p></div><a href="../../../index.html">← Physics Lab 首頁</a></header>
-<div class="layout"><section class="panel stage" aria-label="模擬畫面"><div class="stage-title">互動模擬 <span>連續世代 · 可逐格觀察</span></div>
-<div class="modes"><button id="plane" class="active" aria-pressed="true">平面波</button><button id="round" aria-pressed="false">圓形波</button></div>
-<div class="screen"><canvas id="canvas" role="img" aria-label="目前波前、次波源、次波和下一代包絡線的動畫"></canvas><div class="overlay" id="gen">第 1 代次波</div><div class="overlay right" id="time">t / T = 0.00</div></div>
-<div class="legend"><span><b style="color:#52bfff">━━</b>本代波前</span><span><b style="color:#ffc56a">● ◯</b>波源與次波</span><span><b style="color:#68edac">┄┄</b>下一代波前</span><span><b style="color:#697f9c">━━</b>歷史波前</span></div>
-<div class="actions"><button id="play" class="primary">▶ 播放</button><button id="step">逐格 +</button><button id="next">下一代 →</button><button id="reset">↺ 重置</button></div>
-<div class="scrub"><label for="progress">本代進度</label><input id="progress" type="range" min="0" max="1000" value="0"><output id="pct">0%</output></div>
-<div class="lesson" id="lesson" aria-live="polite">第 1 代：目前波前上的每個點皆可成為向外發出次波的波源。</div></section>
+:root{color-scheme:dark;font-family:system-ui,-apple-system,'Noto Sans TC','Microsoft JhengHei',sans-serif;color:#eaf4ff;background:#081827;--panel:#10283e;--border:#34536c;--muted:#adc7db;--front:#69caff;--secondary:#ffc76a;--envelope:#76f2ba;--reflection:#caacff}
+*{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button,select{background:#183c58;color:#eaf4ff;border:1px solid #4c708b;border-radius:9px;padding:9px 12px;cursor:pointer}button{min-height:43px}button:hover{background:#245778}button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #ffdc73;outline-offset:2px}button.active,button.primary{background:#1668ad;border-color:#7acaff;color:#fff}button:disabled,input:disabled{opacity:.35;cursor:not-allowed}input[type=range]{width:100%;min-height:30px;accent-color:#59b7ff}input[type=checkbox]{accent-color:#55d8af;width:18px;height:18px}a{color:#aedaff;text-decoration:none}
+.app{max-width:1650px;margin:auto;padding:13px}.top{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:12px;flex-wrap:wrap}.branding{display:flex;align-items:center;gap:12px}.branding .icon{width:54px;height:54px;border-radius:13px;padding:6px;background:#25416a;border:1px solid #5274a7;flex:none}.branding .icon svg{width:100%;height:100%}h1{font-size:clamp(20px,2.2vw,26px);margin:0}.subtitle{font-size:12px;color:var(--muted);margin:4px 0 0}.draft{padding:5px 9px;border-radius:30px;background:#28415a;border:1px solid #446887;color:#e5f1ff;font-size:12px}.toplinks{display:flex;align-items:center;flex-wrap:wrap;justify-content:flex-end;gap:11px}.toplinks .home{display:inline-flex;align-items:center;border:1px solid #4c708b;border-radius:9px;padding:11px 13px;color:#bfe8ff;min-height:44px;font-size:13px;font-weight:700;white-space:nowrap}.toplinks .home:hover{background:#284c69}.toplinks .home:focus-visible{outline:3px solid #ffdc73;outline-offset:2px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,318px);gap:12px}.panel{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:12px;min-width:0}.stage{display:flex;flex-direction:column;gap:10px}.modes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.modes button{padding:10px 4px;font-size:13px;line-height:1.3}.modes button.active{box-shadow:inset 0 0 0 1px #8de3ff}.readouts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}.metric{background:#193449;border:1px solid #35566e;border-radius:9px;padding:8px 9px;min-width:0}.metric small{color:#bad0dd;display:block;font-size:11px}.metric strong{font-size:14px;display:block;white-space:normal;overflow-wrap:anywhere;font-variant-numeric:tabular-nums;margin-top:3px}.screen{position:relative;min-height:280px;aspect-ratio:900/500;background:#071522;border:1px solid #32556d;border-radius:10px;overflow:hidden}.screen canvas{width:100%;height:100%;display:block;touch-action:pan-y}.onscreen{position:absolute;left:10px;top:10px;background:#0b243bd9;border:1px solid #315571;border-radius:8px;padding:6px 9px;font-size:12px;color:#edfaff;pointer-events:none}.onscreen.right{right:10px;left:auto}.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:#bdd4e7;align-items:center}.legend span{white-space:nowrap}.swatch{width:18px;height:4px;display:inline-block;vertical-align:middle;border-radius:6px;margin-right:6px}.secondarylegend{padding-top:7px;border-top:1px solid #284862;color:#a9c1d5;font-size:12px}.lesson{min-height:48px;border-radius:10px;background:#17374c;padding:10px 12px;color:#e0f1ff;font-size:13px;line-height:1.7}.lesson strong{color:#fff3a7}
+.actions{display:flex;gap:7px;flex-wrap:wrap;align-items:center}.actions button{flex:1;min-width:145px}
+/* 播放按鈕採四等寬格線，避免按鈕文字造成欄位高低不齊。 */
+.actions.playback-actions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;align-items:stretch}
+.actions.playback-actions button,.frame-actions button{width:100%;min-width:0;min-height:46px;padding:9px 5px;font-size:13px;font-weight:650;line-height:1.3;white-space:nowrap;text-align:center}
+.frame-actions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;align-items:stretch}
+.frame-actions .hint{grid-column:span 2;min-width:0;align-self:center;font-size:11.5px;line-height:1.55}
+@media(max-width:880px){.actions.playback-actions,.frame-actions{grid-template-columns:repeat(2,minmax(0,1fr))}.frame-actions .hint{grid-column:1/-1}.actions.playback-actions button,.frame-actions button{font-size:12.5px}}
+.actions button.main{background:#166bb6;border-color:#85d2ff}.actions button.selected{box-shadow:0 0 0 2px #96dcff inset}.progress{display:flex;align-items:center;gap:10px;font-size:12px;color:#bed3e6}.progress label{white-space:nowrap}.progress input{flex:1}.progress output{width:45px;text-align:right}.hint{font-size:12px;line-height:1.6;color:#a9c1d5}
+.side{display:flex;flex-direction:column;gap:11px}.side h2{font-size:16px;margin:0 0 9px}.ctrl{display:grid;grid-template-columns:94px minmax(0,1fr) 64px;align-items:center;gap:7px;margin:10px 0;font-size:12px}.ctrl output{font-size:12px;text-align:right;font-variant-numeric:tabular-nums;color:#d8f0ff}.check{display:flex;gap:8px;align-items:center;font-size:12px;line-height:1.5;min-height:29px}.stats{font-size:13px;color:#c3d9e9;line-height:1.8;border-top:1px solid #375269;padding-top:8px;margin-top:8px}.stats strong{color:#fff;float:right;font-variant-numeric:tabular-nums}.group{margin-top:11px;padding-top:10px;border-top:1px solid #32536c}.groupheading{font-size:12px;font-weight:750;color:#d1e8ff;margin-bottom:8px}.info{font-size:12px;color:#bcd5e8;line-height:1.7}.info p{margin:5px 0}.screen .overlay-arrow{position:absolute;bottom:9px;left:10px;color:#c3d6e8;font-size:11px;pointer-events:none}.foot{font-size:11px;color:#8fb0c7;margin-top:10px;line-height:1.6}
+@media(max-width:1020px){.layout{grid-template-columns:minmax(0,1fr) minmax(265px,290px)}.readouts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:740px){.layout{grid-template-columns:1fr}.side{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.info{grid-column:1/-1}.screen{min-height:230px}}
+@media(max-width:540px){.app{padding:7px}.panel{padding:9px}.top h1{font-size:19px}.branding .icon{width:44px;height:44px}.modes{grid-template-columns:repeat(2,1fr)}.actions button{min-width:130px}.side{display:block}.side>.panel{margin-bottom:9px}.readouts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+</head>
+<body><main class="app">
+<header class="top"><div class="branding"><div class="icon" aria-hidden="true"><svg viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 7v58" stroke="#70c8ff" stroke-width="4"/><circle cx="14" cy="20" r="4" fill="#ffd27a"/><circle cx="14" cy="36" r="4" fill="#ffd27a"/><circle cx="14" cy="52" r="4" fill="#ffd27a"/><path d="M14 11a12 12 0 0 1 0 18M14 27a12 12 0 0 1 0 18M14 43a12 12 0 0 1 0 18" stroke="#e0baff" stroke-width="2"/><path d="M46 7v58" stroke="#68ecb1" stroke-width="3" stroke-dasharray="6 4"/></svg></div><div><h1>海更斯原理｜連續波前再生</h1><p class="subtitle">保留平面波、圓形波，擴充反射／折射／繞射／雙狹縫干涉</p></div></div><div class="toplinks"><a class="home" href="../../../index.html">← Physics Lab 首頁</a></div></header>
+<div class="layout"><section class="panel stage" aria-label="動畫模擬區">
+<nav class="modes" aria-label="物理現象"><button type="button" data-mode="plane" class="active">直線波前</button><button type="button" data-mode="circle">圓形波前</button><button type="button" data-mode="reflection">反射</button><button type="button" data-mode="refraction">折射</button><button type="button" data-mode="obstacle">障礙物繞射</button><button type="button" data-mode="double">雙狹縫干涉</button></nav>
+<div class="readouts"><div class="metric"><small id="metric1label">波長 λ₁</small><strong id="metric1">72 格</strong></div><div class="metric"><small id="metric2label">波速 v₁</small><strong id="metric2">80 格/s</strong></div><div class="metric"><small id="metric3label">頻率 f</small><strong id="metric3">1.11 Hz</strong></div><div class="metric"><small id="metric4label">本代</small><strong id="metric4">第 1 代</strong></div></div>
+<div class="screen"><canvas id="canvas" role="img" aria-label="惠更斯子波、包絡線與波前傳播動畫"></canvas><div class="onscreen" id="stageBadge">第 1 代次波</div><div class="onscreen right" id="clockBadge">t = 0.00 s</div><div class="overlay-arrow">箭頭指波傳播方向　·　線條為波前／次波，非水面高度曲線</div></div>
+<div class="legend"><span><i class="swatch" style="background:var(--front)"></i>入射／原始波前</span><span><i class="swatch" style="background:var(--secondary)"></i>次波源與子波</span><span><i class="swatch" style="background:var(--envelope)"></i>下一代包絡波前</span><span id="reflectedLegend" hidden><i class="swatch" style="background:var(--reflection)"></i>反射波前</span><span><i class="swatch" style="background:#8fa1b5"></i>障礙物／界面</span></div>
+<div class="secondarylegend" id="legendHint">亮實線：當前波前；虛線：過去或參考波前。黃色圓弧是從波前上的點向外傳播的子波。</div>
+<div class="actions playback-actions"><button id="continuous" class="main">▶ 連續播放</button><button id="segment">▸ 分段播放</button><button id="step">⏭ 下一代波前</button><button id="reset">↺ 重新開始</button></div>
+<div class="frame-actions"><span class="hint">逐格觀察：每按一次，時間前進或後退 <strong>T/24</strong>（T 為目前波的週期）</span><button id="frameBack" type="button">⏮ 逐格後退</button><button id="frameNext" type="button">⏭ 逐格前進</button></div>
+<div class="progress"><label for="progress">本代形成進度</label><input type="range" id="progress" min="0" max="1000" value="0"><output id="pct">0%</output></div>
+<div class="lesson" id="lesson" aria-live="polite">波前上的每一點可視為新波源，子波的前向包絡形成下一代波前。</div>
+<div class="hint">連續播放：持續產生新波前；分段播放：完成下一代波前後自動暫停；逐格播放：每按一次僅推進或倒退 T/24，方便仔細觀察子波與包絡線。</div>
+</section>
 <aside class="side"><section class="panel"><h2>物理參數</h2>
-<div class="row"><label for="velocity">波速 v</label><input id="velocity" type="range" min="20" max="120" step="5" value="60"><output id="vout">60</output></div>
-<div class="row"><label for="wavelength">波長 λ</label><input id="wavelength" type="range" min="40" max="140" step="5" value="75"><output id="lout">75</output></div>
-<div class="row"><label for="sources">次波源數</label><input id="sources" type="range" min="3" max="17" step="2" value="5"><output id="nout">5</output></div>
-<div class="row"><label for="rate">播放速度</label><input id="rate" type="range" min=".1" max="3" step=".1" value=".7"><output id="rout">0.7×</output></div>
-<div class="stat">頻率 f = v/λ <strong id="freq">0.800</strong></div><div class="stat">週期 T = λ/v <strong id="period">1.25</strong></div><div class="stat">目前世代 <strong id="generation">1</strong></div><div class="stat">本代次波半徑 <strong id="radius">0</strong></div></section>
-<section class="panel"><h2>顯示與教學控制</h2><div class="checks">
-<label><input type="checkbox" id="pauseGen" checked>每代完成自動暫停</label>
-<label><input type="checkbox" id="wavelets" checked>顯示向前擴張的次波</label>
-<label><input type="checkbox" id="envelope" checked>顯示新波前包絡線</label>
-<label><input type="checkbox" id="points" checked>顯示當前次波源</label>
-<label><input type="checkbox" id="history" checked>顯示過去波前</label>
-<label><input type="checkbox" id="whole">顯示完整次波圓</label></div>
-<div class="stepbox"><button id="demoStart">① 原始波前</button><button id="demoGrow">② 次波擴張</button><button id="demoNext">③ 波前再生</button></div></section></aside></div>
-<section class="panel info"><h2>物理意義與模型限制</h2><p>各波前點視為次波源；經過時間 Δt，次波半徑 r = vΔt。新波前為連續次波的前向包絡線，接著成為下一代波源所在的波前。平面波保持平面，圓形波的半徑持續增加。</p><p class="note">此圖使用有限個黃色點作視覺取樣，綠色虛線顯示理論上連續無限多波源形成的波前，而非有限幾個次波的精確包絡線。波速、波長採教學示意單位。播放速度只調整動畫時鐘，與介質波速無關；未計算完整波動干涉振幅。切換完整次波圓，可觀察向後傳播的次波部分。</p></section>
-</main><script>
-(()=>{
-const $=id=>document.getElementById(id),cv=$('canvas'),c=cv.getContext('2d');let mode='plane',g=0,p=0,playing=false,v=60,L=75,N=5,rate=.7,last=0;const checked=id=>$(id).checked;
-function pause(){playing=false;$('play').textContent='▶ 播放'}
-function update(){ $('gen').textContent='第 '+(g+1)+' 代次波';$('time').textContent='t / T = '+p.toFixed(2);$('pct').textContent=Math.round(p*100)+'%';$('progress').value=Math.round(p*1000);$('generation').textContent=g+1;$('radius').textContent=(p*L).toFixed(1);$('vout').textContent=v;$('lout').textContent=L;$('nout').textContent=N;$('rout').textContent=rate.toFixed(1)+'×';$('freq').textContent=(v/L).toFixed(3);$('period').textContent=(L/v).toFixed(2);$('lesson').textContent=p>=.999?'第 '+(g+1)+' 代完成。按「下一代」，綠色包絡線將成為藍色波前，重新生成黃色次波源並發出圓形次波。':p<.03?'第 '+(g+1)+' 代：藍色波前上的點是次波源。': '第 '+(g+1)+' 代：黃色次波擴張，綠色包絡線向前移動；完成後將成為新的波源位置。';draw()}
-function advance(){g++;p=0;update()}
-function reset(){pause();g=0;p=0;update()}
-function modeSet(m){mode=m;$('plane').classList.toggle('active',m==='plane');$('round').classList.toggle('active',m==='circle');$('plane').setAttribute('aria-pressed',m==='plane');$('round').setAttribute('aria-pressed',m==='circle');reset()}
-$('plane').onclick=()=>modeSet('plane');$('round').onclick=()=>modeSet('circle');$('play').onclick=()=>{if(p>=1)advance();playing=!playing;$('play').textContent=playing?'❚❚ 暫停':'▶ 播放';last=0};$('step').onclick=()=>{pause();if(p>=1)advance();else p=Math.min(1,p+.05);update()};$('next').onclick=()=>{pause();advance()};$('reset').onclick=reset;
-$('demoStart').onclick=reset;$('demoGrow').onclick=()=>{pause();p=.45;update()};$('demoNext').onclick=()=>{pause();advance()};
-$('progress').oninput=e=>{pause();p=+e.target.value/1000;update()};[['velocity',x=>v=x],['wavelength',x=>L=x],['sources',x=>N=x],['rate',x=>rate=x]].forEach(([id,f])=>$(id).oninput=e=>{f(+e.target.value);update()});['pauseGen','wavelets','envelope','points','history','whole'].forEach(id=>$(id).onchange=draw);
-function stroke(x1,y1,x2,y2,color,w=1,dash=[]){c.beginPath();c.setLineDash(dash);c.moveTo(x1,y1);c.lineTo(x2,y2);c.strokeStyle=color;c.lineWidth=w;c.stroke();c.setLineDash([])}
-function circle(x,y,r,color,w=1,dash=[]){if(r<.1)return;c.beginPath();c.setLineDash(dash);c.arc(x,y,r,0,Math.PI*2);c.strokeStyle=color;c.lineWidth=w;c.stroke();c.setLineDash([])}
-function dot(x,y){c.beginPath();c.arc(x,y,4,0,Math.PI*2);c.fillStyle='#ffc56a';c.fill()}
-function arc(x,y,r,a){if(r<.1)return;c.beginPath();if(checked('whole'))c.arc(x,y,r,0,Math.PI*2);else c.arc(x,y,r,a-Math.PI/2,a+Math.PI/2);c.strokeStyle='rgba(255,197,106,.64)';c.lineWidth=1.55;c.stroke()}
-function draw(){const W=cv.clientWidth,H=cv.clientHeight;if(!W||!H)return;c.fillStyle='#061522';c.fillRect(0,0,W,H);const blue='#52bfff',green='#68edac',past='rgba(135,158,193,.32)';c.save();c.beginPath();c.rect(0,0,W,H);c.clip();if(mode==='plane'){const s=Math.min(1.1,(W*.68)/Math.max(L*3,(g+1.3)*L)),x0=Math.min(78,W*.15),base=x0+g*L*s,r=p*L*s,y0=32,y1=H-32;if(checked('history'))for(let j=0;j<g;j++){let x=x0+j*L*s;stroke(x,y0,x,y1,past,1.2)}stroke(base,y0,base,y1,blue,3);for(let i=0;i<N;i++){let y=y0+(y1-y0)*i/(N-1);if(checked('wavelets'))arc(base,y,r,0);if(checked('points'))dot(base,y)}if(checked('envelope')&&r>0)stroke(base+r,y0,base+r,y1,green,2.8,[8,5])}else{const cx=W*.47,cy=H*.52,R0=Math.min(42,H*.14),s=Math.min(.94,Math.max(.22,(Math.min(W*.42,H*.43)-R0)/Math.max(L,(g+1)*L))),R=R0+g*L*s,r=p*L*s;if(checked('history'))for(let j=0;j<g;j++)circle(cx,cy,R0+j*L*s,past,1.2);circle(cx,cy,R,blue,3);for(let i=0;i<N;i++){let a=2*Math.PI*i/N-Math.PI/2,x=cx+R*Math.cos(a),y=cy+R*Math.sin(a);if(checked('wavelets'))arc(x,y,r,a);if(checked('points'))dot(x,y)}if(checked('envelope')&&r>0)circle(cx,cy,R+r,green,2.8,[8,5])}c.restore()}
-function resize(){let d=Math.min(devicePixelRatio||1,2);cv.width=Math.round(cv.clientWidth*d);cv.height=Math.round(cv.clientHeight*d);c.setTransform(d,0,0,d,0,0);draw()}new ResizeObserver(resize).observe(cv);
-function animate(now){if(!last)last=now;let dt=Math.min(.06,(now-last)/1000);last=now;if(playing){p+=dt*rate*v/L;if(p>=1){if(checked('pauseGen')){p=1;pause()}else{let count=Math.floor(p);g+=count;p-=count}}update()}requestAnimationFrame(animate)}update();resize();requestAnimationFrame(animate);
+<div class="ctrl"><label for="lambda">介質 1 波長 λ₁</label><input id="lambda" type="range" min="35" max="150" step="5" value="75"><output id="lambdaOut">75 格</output></div>
+<div class="ctrl"><label for="v1">介質 1 波速 v₁</label><input id="v1" type="range" min="30" max="180" step="5" value="80"><output id="v1Out">80 格/s</output></div>
+<div class="ctrl"><label for="v2">介質 2 波速 v₂</label><input id="v2" type="range" min="20" max="210" step="5" value="50"><output id="v2Out">50 格/s</output></div>
+<div class="ctrl"><label for="angle">入射角 θ₁</label><input id="angle" type="range" min="0" max="65" step="5" value="30"><output id="angleOut">30°</output></div>
+<div class="ctrl"><label for="obstacle">障礙物高度</label><input id="obstacle" type="range" min="20" max="340" step="10" value="130"><output id="obstacleOut">130 格</output></div>
+<div class="ctrl"><label for="slit">單縫寬 a</label><input id="slit" type="range" min="15" max="105" step="5" value="35"><output id="slitOut">35 格</output></div>
+<div class="ctrl"><label for="gap">雙縫中心距 d</label><input id="gap" type="range" min="60" max="200" step="5" value="115"><output id="gapOut">115 格</output></div>
+<div class="ctrl"><label for="sources">波前次波源數</label><input id="sources" type="range" min="3" max="17" step="2" value="7"><output id="sourcesOut">7</output></div>
+<div class="ctrl"><label for="rate">播放倍率</label><input id="rate" type="range" min="0.2" max="3" step="0.1" value="1"><output id="rateOut">1.0×</output></div>
+<div class="stats"><div>頻率 f = v₁ / λ₁ <strong id="fOut">1.07 Hz</strong></div><div>第二介質波長 λ₂ <strong id="lambda2Out">46.88 格</strong></div><div><span id="ratioLabel">尺寸與波長比</span> <strong id="ratioOut">—</strong></div></div>
+</section><section class="panel"><h2>顯示與教學控制</h2>
+<label class="check"><input type="checkbox" id="wavelets" checked>顯示次波（黃色圓弧）</label>
+<label class="check"><input type="checkbox" id="envelope" checked>強調新波前／包絡線</label>
+<label class="check"><input type="checkbox" id="points" checked>顯示次波源（黃色點）</label>
+<label class="check"><input type="checkbox" id="history" checked>顯示其他已形成波前</label>
+<label class="check"><input type="checkbox" id="whole">顯示完整次波圓（原理模式）</label>
+<label class="check"><input type="checkbox" id="brightness">雙縫：顯示灰階干涉明暗紋</label>
+<div class="group"><div class="groupheading">教學步驟（保留原有操作）</div><div class="actions"><button id="demoStart">① 原始波前</button><button id="demoGrow">② 次波擴張</button><button id="demoNext">③ 波前再生</button></div></div>
+</section><section class="panel info"><h2>物理意義與模型限制</h2><p id="explain">直線波前上的點發出圓形子波，其前向包絡線形成下一代直線波前。</p><p id="caution">畫面使用有限個次波點作視覺取樣；綠色包絡線代表連續波前的理論結果。</p><p>講義依據：《海更斯原理》，第 36–40、51 頁。波速、波長與幾何尺寸採畫面示意單位；此為教學幾何／相干疊加模型，非完整水波流體數值求解。</p></section></aside></div>
+<div class="foot">操作建議：先選「直線波前」並按一次「分段播放」，觀察子波形成；再切換反射、折射、繞射或雙狹縫，使用「連續播放」觀看波前持續傳播。此檔案可離線開啟。</div>
+</main>
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id),canvas=$('canvas'),ctx=canvas.getContext('2d');
+const W=900,H=500,cy=H/2,wall=452,x0=148;
+let mode='plane',t=0,playing=false,playType='none',segmentEnd=0,lastFrame=null;
+const keySliders=['lambda','v1','v2','angle','obstacle','slit','gap','sources','rate'];
+const sliders={lambda:'格',v1:'格/s',v2:'格/s',angle:'°',obstacle:'格',slit:'格',gap:'格',sources:'',rate:'×'};
+function P(){let p={};for(const key of keySliders)p[key]=Number($(key).value);p.f=p.v1/p.lambda;p.T=p.lambda/p.v1;p.lambda2=p.v2/p.f;p.rad=p.angle*Math.PI/180;p.snell=p.v2/p.v1*Math.sin(p.rad);p.critical=Math.abs(p.snell)>1;p.refract=Math.asin(Math.max(-1,Math.min(1,p.snell)));return p}
+const on=id=>$(id).checked;
+function stop(){playing=false;playType='none';$('continuous').textContent='▶ 連續播放';$('segment').textContent='▸ 分段播放';$('continuous').classList.remove('selected');$('segment').classList.remove('selected')}
+function restart(){stop();t=0;render()}
+function generation(p){const gen=Math.floor((t+1e-8)/p.T);const phase=Math.max(0,Math.min(1,(t/p.T-gen)));return{gen,phase}}
+function setText(id,value){$(id).textContent=value}
+function updateUI(p){
+for(const key of keySliders){setText(key+'Out',Number($(key).value).toFixed(key==='rate'?1:0)+(key==='rate'?'×':key==='sources'?'':' '+sliders[key]))}
+setText('fOut',p.f.toFixed(2)+' Hz');setText('lambda2Out',p.lambda2.toFixed(1)+' 格');
+const {gen,phase}=generation(p);
+const labels={plane:['波長 λ₁',p.lambda+' 格','波速 v₁',p.v1+' 格/s','頻率 f',p.f.toFixed(2)+' Hz','目前波前','第 '+(gen+1)+' 代'],circle:['波長 λ₁',p.lambda+' 格','波速 v₁',p.v1+' 格/s','頻率 f',p.f.toFixed(2)+' Hz','目前波前','第 '+(gen+1)+' 代'],reflection:['入射角 θ₁',p.angle+'°','反射角 θr',p.angle+'°','波速 v',p.v1+' 格/s','波前代數','第 '+(gen+1)+' 代'],refraction:['入射角 θ₁',p.angle+'°','折射角 θ₂',p.critical?'全反射條件':(p.refract*180/Math.PI).toFixed(1)+'°','波長 λ₂',p.lambda2.toFixed(1)+' 格','頻率 f',p.f.toFixed(2)+' Hz'],obstacle:['障礙物高度 d',p.obstacle+' 格','波長 λ',p.lambda+' 格','尺寸比 d/λ',(p.obstacle/p.lambda).toFixed(2),'波前代數','第 '+(gen+1)+' 代'],double:['單縫寬 a',p.slit+' 格','雙縫中心距 d',p.gap+' 格','波長 λ',p.lambda+' 格','尺寸比 a/λ',(p.slit/p.lambda).toFixed(2)]};
+const a=labels[mode];for(let i=0;i<4;i++){setText('metric'+(i+1)+'label',a[2*i]);setText('metric'+(i+1),a[2*i+1])}
+setText('stageBadge','第 '+(gen+1)+' 代 · '+(phase*100).toFixed(0)+'%');setText('clockBadge','t = '+t.toFixed(2)+' s');setText('pct',Math.round(phase*100)+'%');$('progress').value=Math.round(phase*1000);
+$('v2').disabled=mode!=='refraction';$('angle').disabled=!['reflection','refraction'].includes(mode);$('obstacle').disabled=mode!=='obstacle';$('slit').disabled=mode!=='double';$('gap').disabled=mode!=='double';$('brightness').disabled=mode!=='double';$('whole').disabled=!['plane','circle'].includes(mode);$('history').disabled=!['plane','circle'].includes(mode);$('sources').disabled=mode==='obstacle';
+$('reflectedLegend').hidden=mode!=='reflection';
+setText('ratioLabel',mode==='obstacle'?'障礙物大小 / λ':mode==='double'?'單縫寬 / λ':mode==='refraction'?'折射波長比 λ₂/λ₁':'波前傳遞');setText('ratioOut',mode==='obstacle'?(p.obstacle/p.lambda).toFixed(2):mode==='double'?(p.slit/p.lambda).toFixed(2):mode==='refraction'?(p.lambda2/p.lambda).toFixed(2):'—');
+const lesson={plane:'波前上的點是新的子波源：各點發出圓形子波，向前的包絡線形成下一代直線波前。',circle:'圓形波前上的每個點發出次波，新波前仍為圓形，半徑向外增加。',reflection:`入射角 = 反射角 = ${p.angle}°。波前遇到直線障礙物，界面上的次波在原介質傳播，反射波前向左傳遞。`,refraction:p.critical?'此組合超過折射臨界角：本幾何模型改顯示全反射示意，沒有折射傳播波。':`頻率不變（${p.f.toFixed(2)} Hz）；v₁ = ${p.v1}、v₂ = ${p.v2} 格/s；λ₁ = ${p.lambda}、λ₂ = ${p.lambda2.toFixed(1)} 格。折射線相對法線${p.v2<p.v1?'偏向':p.v2>p.v1?'偏離':'不偏折'}。`,obstacle:`障礙物尺寸／波長 = ${(p.obstacle/p.lambda).toFixed(2)}。障礙物兩端邊緣的新子波向陰影區傳播；相對尺寸越小，繞射效果越明顯。`,double:`兩狹縫等效為相干次波源；路徑差 Δr = r₁−r₂。相長時 |Δr| = mλ，相消時 |Δr| = (m+½)λ（理想同相近似）。`};
+const warns={plane:'本模式延續原本的點源與波前／包絡線示意；黃色點為有限次波源取樣，綠線為理論連續波前。',circle:'黃色點僅為次波源取樣；連續的圓形波前來自無限密集子波的包絡。',reflection:'幾何反射示意：入射／反射波前與法線角度對應；黃色次波採界面局部取樣，不含真實障礙物表面能量損耗。',refraction:'司乃耳定律 sinθ₁/sinθ₂ = v₁/v₂ = λ₁/λ₂；交界處子波半徑以當地波速計算。若達全反射，動畫顯示幾何反射，不模擬倏逝波。',obstacle:'障礙邊緣以有限個次波源示意繞射；不求解水波完整邊界條件或陰影區的精確振幅。',double:'灰階亮暗是理想同相次波疊加的相對時間平均強弱，不是瞬時波峰或波谷。狹縫寬度以簡化 sinc 包絡表示，不是完整菲涅耳積分。'};
+setText('lesson',lesson[mode]);setText('explain',lesson[mode]);setText('caution',warns[mode]);setText('legendHint',mode==='double'?'藍色波前由左傳入；兩個狹縫上的黃色次波源形成圓形子波。勾選灰階明暗可觀察相干疊加的強弱。':mode==='reflection'?'藍色：入射波前；紫色：反射波前；黃色弧線：界面上次波的傳播；虛線：參考或波谷波前。':'亮實線：波前；虛線：參考／較弱的其他波前。黃色圓弧是從波前上的點發出的子波。');
+}
+function lin(x,y,xx,yy,color='#69caff',w=2,dash=[]){ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(xx,yy);ctx.lineWidth=w;ctx.strokeStyle=color;ctx.setLineDash(dash);ctx.stroke();ctx.setLineDash([])}
+function ring(x,y,r,color='#ffc76a',lw=1.7,dash=[],a0=0,a1=Math.PI*2){if(r<.3)return;ctx.beginPath();ctx.arc(x,y,r,a0,a1);ctx.strokeStyle=color;ctx.lineWidth=lw;ctx.setLineDash(dash);ctx.stroke();ctx.setLineDash([])}
+function dot(x,y,color='#ffd37a',radius=4){ctx.beginPath();ctx.arc(x,y,radius,0,Math.PI*2);ctx.fillStyle=color;ctx.fill()}
+function arrow(x,y,dx,dy,color='#a7e5a6',scale=1){let ex=x+dx*scale,ey=y+dy*scale;lin(x,y,ex,ey,color,2);let len=Math.hypot(dx,dy)||1,ux=dx/len,uy=dy/len;lin(ex,ey,ex-ux*10+uy*4,ey-uy*10-ux*4,color,2);lin(ex,ey,ex-ux*10-uy*4,ey-uy*10+ux*4,color,2)}
+function caption(s,x,y,color='#c2d7e9'){ctx.fillStyle=color;ctx.font='14px system-ui';ctx.fillText(s,x,y)}
+function stageCanvas(){const rect=canvas.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,2);const ww=Math.max(320,Math.round(rect.width*dpr)),hh=Math.max(180,Math.round(rect.height*dpr));if(canvas.width!==ww||canvas.height!==hh){canvas.width=ww;canvas.height=hh}ctx.setTransform(canvas.width/W,0,0,canvas.height/H,0,0);ctx.fillStyle='#071624';ctx.fillRect(0,0,W,H);ctx.save();ctx.beginPath();ctx.rect(0,0,W,H);ctx.clip();ctx.strokeStyle='#193448';ctx.lineWidth=1;for(let x=0;x<W;x+=75)lin(x,0,x,H,'#142b3c',1);for(let y=0;y<H;y+=75)lin(0,y,W,y,'#142b3c',1)}
+function wavefrontHuygens(p){
+ const {gen,phase}=generation(p),N=p.sources,fade='rgba(132,211,244,.48)';
+ if(mode==='plane'){
+   // 新波前在世界座標持續向前推進；超過視窗後，攝影機平滑跟隨，不循環重置波的位置。
+   const baseWorld=x0+gen*p.lambda,r=phase*p.lambda,shift=Math.max(0,baseWorld+r-(W-150));
+   const base=baseWorld-shift,y0=48,y1=H-48;
+   if(on('history'))for(let j=Math.max(0,gen-16);j<=gen;j++){
+     const xx=x0+j*p.lambda-shift;if(xx>15&&xx<W-15&&j!==gen)lin(xx,y0,xx,y1,fade,1.55);
+   }
+   lin(base,y0,base,y1,'#69caff',3.5);
+   for(let i=0;i<N;i++){
+     const yy=y0+(y1-y0)*i/(N-1);
+     if(on('wavelets')&&r>0){ctx.save();if(!on('whole')){ctx.beginPath();ctx.rect(base,0,W-base,H);ctx.clip()}ring(base,yy,r,'rgba(255,199,106,.55)',1.5);ctx.restore()}
+     if(on('points'))dot(base,yy);
+   }
+   if(on('envelope')&&r>0)lin(base+r,y0,base+r,y1,'#76f2ba',3,[8,5]);
+   arrow(Math.max(26,base-100),cy+5,55,0,'#99cfa8');caption('本代波前',Math.max(25,base-42),37,'#91d9ff');
+   if(shift>0)caption('視窗跟隨前進的波前 →',W-236,H-28,'#a8bfcf');
+ }else{
+   // 圓形波前半徑每代增加 λ；超過畫布時逐步縮小顯示比例，避免突然跳回初始半徑。
+   const cx=W*.43,ccy=cy,R0=40,baseWorld=R0+gen*p.lambda,rWorld=phase*p.lambda;
+   const zoom=Math.min(1,(Math.min(W*.4,H*.43)-6)/Math.max(1,baseWorld+rWorld));
+   const base=baseWorld*zoom,r=rWorld*zoom;
+   if(on('history'))for(let j=Math.max(0,gen-14);j<gen;j++){
+      const radius=(R0+j*p.lambda)*zoom;if(radius>3)ring(cx,ccy,radius,fade,1.25);
+   }
+   ring(cx,ccy,base,'#69caff',3.5);
+   for(let i=0;i<N;i++){
+     const a=2*Math.PI*i/N-Math.PI/2,xx=cx+base*Math.cos(a),yy=ccy+base*Math.sin(a);
+     if(on('wavelets')&&r>0){ctx.save();if(!on('whole')){ctx.beginPath();ctx.arc(cx,ccy,base+2*r+2,0,Math.PI*2);ctx.arc(cx,ccy,Math.max(1,base-1),0,Math.PI*2,true);ctx.clip('evenodd')}ring(xx,yy,r,'rgba(255,199,106,.56)',1.55);ctx.restore()}
+     if(on('points'))dot(xx,yy);
+   }
+   if(on('envelope')&&r>0)ring(cx,ccy,base+r,'#76f2ba',3,[8,5]);
+   arrow(cx+base+22,cy,40,0,'#99cfa8');caption('本代波前',cx-41,cy-12,'#91d9ff');
+   if(zoom<.98)caption('擴大波前：示意圖已自動縮放',W-273,H-25,'#a8bfcf');
+ }
+}
+// 繪製指定法線方向（水平 x 正方向）的等相位波前。
+function phaseLines({p,dir,offset=0,spacing,col,clipX0=0,clipX1=W,bright=true,time=t}){
+ const cc=Math.cos(dir),ss=Math.sin(dir);if(Math.abs(cc)<.05)return;
+ const base=p.v1*time;let min=-20,max=35;
+ ctx.save();ctx.beginPath();ctx.rect(clipX0,4,clipX1-clipX0,H-8);ctx.clip();
+ for(let n=min;n<=max;n++){
+  const K=base+n*spacing+offset;
+  const xa=(K-ss*(35-cy))/cc,xb=(K-ss*(H-35-cy))/cc;
+  if((xa<clipX0-600&&xb<clipX0-600)||(xa>clipX1+600&&xb>clipX1+600))continue;
+  lin(xa,35,xb,H-35,col,n%2===0?2.3:1.4,n%2===0?[]:[5,5]);
+ }
+ ctx.restore();}
+function linePhase(p,which,half=false){const theta=p.rad,k1=2*Math.PI/p.lambda;let vx=p.v1,angle=theta,shift=0,side='left',color='#69caff';
+ if(which==='reflection'){angle=Math.PI-theta;shift=2*wall*Math.cos(theta);side='left';color='#d1a8ff'}
+ if(which==='refraction'){if(p.critical){linePhase(p,'reflection');return}angle=p.refract;vx=p.v2;shift=(p.v2/p.v1-1)*wall*Math.cos(theta);side='right';color='#79f3b4'}
+ // φ / k1 = cosθ(x-x0) + sinθ(y-cy) - v₁t；介質 2 使用保相位連續的項。
+ const c1=Math.cos(theta),s1=Math.sin(theta),ca=Math.cos(angle),sa=Math.sin(angle);
+ ctx.save();ctx.beginPath();ctx.rect(which==='incident'?10:which==='refraction'?wall:20,18,which==='incident'?wall-10:which==='refraction'?W-wall:wall-20,H-36);ctx.clip();
+ const arrival=(wall-x0)*c1/p.v1;
+ for(let n=0;n<24;n++){
+   const crest=p.v1*t-n*p.lambda;
+   // x from signed projection, use constant ensuring φ across x=wall.
+   let X;const xy=y=>{
+    if(which==='incident')return x0+(crest-s1*(y-cy))/c1;
+    if(which==='reflection')return wall-(crest-c1*(wall-x0)-s1*(y-cy))/c1;
+    return wall+(p.v2/p.v1)*(crest-c1*(wall-x0)-s1*(y-cy))/Math.cos(p.refract);
+   };
+   const ya=26,yb=H-26;let xa=xy(ya),xb=xy(yb);
+   if(which!=='incident'&&t <arrival-.8*p.T)continue;
+   if((xa<-800&&xb<-800)||(xa>W+800&&xb>W+800))continue;
+   const dash=(n%2)?[7,6]:[];
+   const color=which==='incident'?'#69caff':which==='reflection'?'#c9a8ff':'#80f0b3';
+   lin(xa,ya,xb,yb,color,(n%2)?1.1:2.3,dash);
+ }
+ ctx.restore();
+}
+function interfaceWavelets(p,into){if(!on('wavelets')&&!on('points'))return;const cos=Math.cos(p.rad),sin=Math.sin(p.rad),N=p.sources;const nspan=H-120;ctx.save();ctx.beginPath();ctx.rect(into==='left'?0:wall,10,into==='left'?wall:W-wall,H-20);ctx.clip();
+ for(let i=0;i<N;i++){
+  const yy=60+i*nspan/(N-1);let dist=cos*(wall-x0)+sin*(yy-cy),n=Math.floor((p.v1*t-dist)/p.lambda),age=t-(dist+n*p.lambda)/p.v1;
+  if(n<0||age<0||age>p.T)continue;
+  const rr=(into==='left'?p.v1:p.v2)*age;
+  if(on('wavelets'))ring(wall,yy,rr,'rgba(255,198,97,.43)',1.6);
+  if(on('points'))dot(wall,yy,'#ffd074',3.5);
+ }
+ ctx.restore()}
+function barrier(p,kind){lin(wall,12,wall,H-12,'#8c9caa',kind==='obstacle'||kind==='double'?9:5);if(kind==='refraction'){ctx.fillStyle='rgba(56,115,157,.22)';ctx.fillRect(wall,0,W-wall,H);lin(wall,0,wall,H,'#e1d893',3);caption('介質 1',wall-92,60);caption('介質 2',wall+18,60)}if(kind==='reflection')caption('反射障礙面',wall+12,45,'#e1d893')}
+function drawReflection(p){barrier(p,'reflection');linePhase(p,'incident');if(on('envelope'))linePhase(p,'reflection');interfaceWavelets(p,'left');ctx.setLineDash([5,6]);lin(wall-160,cy,wall+140,cy,'#8f9fb2',1.4,[5,6]);caption('法線',wall+75,cy-9);const dx=90*Math.cos(p.rad),dy=90*Math.sin(p.rad);arrow(wall-160,cy-dy,dx,dy,'#91d1ff');arrow(wall-20,cy,-dx,dy,'#d8b7ff');caption('入射線',wall-212,cy-dy-17,'#9cd8ff');caption('反射線',wall-112,cy+dy+22,'#d5b1ff')}
+function drawRefraction(p){barrier(p,'refraction');linePhase(p,'incident');if(on('envelope'))linePhase(p,'refraction');interfaceWavelets(p,p.critical?'left':'right');lin(wall-95,cy,wall+125,cy,'#859da9',1,[6,5]);caption('法線',wall+70,cy-11);
+ const dx=90*Math.cos(p.rad),dy=90*Math.sin(p.rad);arrow(wall-dx,cy-dy,dx,dy,'#91d1ff');if(p.critical){arrow(wall,cy,-dx,dy,'#d5adff');caption('全反射',wall-140,cy+82,'#d5adff')}else{const rr=100;arrow(wall,cy,rr*Math.cos(p.refract),rr*Math.sin(p.refract),'#80f0b3');caption('折射線',wall+88,cy+75,'#8af4c0')}caption('界面',wall+14,30,'#f4e09b')}
+function incomingStripes(p){
+ // 波源 x0 持續週期性放出波前。不可只畫固定 n=-12..27：播放到第 28 代後入射波會消失。
+ // 每次依當前波速、波長、時間求「實際位於波源與障礙物之間」的波前序號。
+ ctx.save();ctx.beginPath();ctx.rect(x0-2,0,wall-x0-3,H);ctx.clip();
+ const leading=x0+p.v1*t,xLeft=x0-1,xRight=wall-5;
+ const nStart=Math.max(0,Math.ceil((leading-xRight)/p.lambda));
+ const nEnd=Math.floor((leading-xLeft)/p.lambda);
+ for(let n=nStart;n<=nEnd;n++){
+   const xx=leading-n*p.lambda;
+   const faded=n%2;
+   lin(xx,15,xx,H-15,faded?'#376782':'#69caff',faded?1.3:2.4,faded?[6,7]:[]);
+ }
+ ctx.restore();arrow(x0+30,cy,55,0,'#a3d6ae');caption('入射直線波',32,35,'#9cd5ff');
+}
+function obstacleRings(p){const hh=p.obstacle/2;const top=cy-hh,bottom=cy+hh,arr=(wall-x0)/p.v1,age=t-arr;
+ ctx.fillStyle='rgba(87,99,113,.14)';ctx.fillRect(wall+5,top,W-wall-5,p.obstacle);
+ ctx.save();ctx.beginPath();ctx.rect(wall,0,W-wall,H);ctx.clip();
+ if(age>0&&on('envelope')){for(const y of [top,bottom]){
+   for(let n=0;n<20;n++){const r=p.v1*age-n*p.lambda;if(r<=0||r>850)continue;ring(wall,y,r,n%2?'rgba(110,206,185,.42)':'rgba(111,237,179,.9)',n%2?1:2.3,n%2?[5,5]:[])}
+   if(on('wavelets')){const phase=generation(p).phase;ring(wall,y,phase*p.lambda,'rgba(255,198,97,.8)',1.5)}
+  }
+ }
+ ctx.restore();
+ // 未被障礙物遮住的直接通過波前，搭配邊緣子波進入陰影區。
+ ctx.save();ctx.beginPath();ctx.rect(wall,0,W-wall,H);ctx.clip();if(age>0){for(let n=0;n<18;n++){let xx=x0+p.v1*t-n*p.lambda;if(xx<wall||xx>W)continue;lin(xx,10,xx,top-9,'#80ecc4',2,n%2?[5,6]:[]);lin(xx,bottom+9,xx,H-10,'#80ecc4',2,n%2?[5,6]:[])}}ctx.restore();
+ lin(wall,top,wall,bottom,'#99a8b5',11);if(on('points')){dot(wall,top,'#ffcb70',5);dot(wall,bottom,'#ffcb70',5)}caption('障礙物',wall-105,top+18,'#d7e0e9');caption('陰影區',wall+38,cy,'#9caebc');caption('邊緣次波',wall+55,top-24,'#e3b964')}
+let fringeCacheKey='',fringeCanvas=document.createElement('canvas');fringeCanvas.width=420;fringeCanvas.height=235;let fc=fringeCanvas.getContext('2d');
+function doubleIntensity(p){const key=[p.lambda,p.slit,p.gap].join(',');if(key===fringeCacheKey)return;fringeCacheKey=key;const ww=fringeCanvas.width,hh=fringeCanvas.height,im=fc.createImageData(ww,hh),px=im.data;const ks=2*Math.PI/p.lambda;
+for(let py=0;py<hh;py++)for(let pxI=0;pxI<ww;pxI++){
+ const x=wall+(W-wall)*pxI/(ww-1),y=H*py/(hh-1),dx=x-wall,dy=y-cy;
+ const r1=Math.hypot(dx,y-(cy-p.gap/2)),r2=Math.hypot(dx,y-(cy+p.gap/2));
+ const delta=ks*(r1-r2),theta=Math.atan2(dy,Math.max(1,dx)),z=Math.PI*p.slit*Math.sin(theta)/p.lambda,slitFactor=Math.abs(z)<.0001?1:Math.sin(z)/z;
+ const env=slitFactor*slitFactor;
+ const I=Math.max(0,Math.min(1,.5*(1+Math.cos(delta))*env));
+ const rise=Math.sqrt(I), val=Math.round(16+227*rise);
+ const k=4*(py*ww+pxI);px[k]=val;px[k+1]=val;px[k+2]=val;px[k+3]=255;
+}fc.putImageData(im,0,0)}
+function doubleSlit(p){const a=p.slit,ds=p.gap,centers=[cy-ds/2,cy+ds/2],arrival=(wall-x0)/p.v1,age=t-arrival;
+if(on('brightness')&&age>0){doubleIntensity(p);ctx.save();ctx.beginPath();for(const yy of centers){ctx.moveTo(wall+p.v1*age,yy);ctx.arc(wall,yy,p.v1*age,0,Math.PI*2)}ctx.clip();ctx.globalAlpha=.81;ctx.imageSmoothingEnabled=true;ctx.drawImage(fringeCanvas,wall,0,W-wall,H);ctx.restore()}
+ ctx.save();ctx.beginPath();ctx.rect(wall,0,W-wall,H);ctx.clip();
+ if(age>0&&on('envelope')){for(const yy of centers){for(let n=0;n<19;n++){const r=p.v1*age-n*p.lambda;if(r<=0||r>700)continue;ring(wall,yy,r,n%2?'rgba(155,222,188,.34)':'rgba(104,230,181,.90)',n%2?1.2:2.5,n%2?[5,5]:[])}}
+ // 次波源沿兩縫取樣，短時的黃弧線揭示惠更斯機制。
+ if(on('wavelets'))for(const center of centers){for(let j=0;j<p.sources;j++){const y=center+(j/(p.sources-1)-.5)*a;let r=generation(p).phase*p.lambda;ring(wall,y,r,'rgba(255,202,110,.17)',1.0)}}
+ }ctx.restore();
+ // 只畫不透波的擋板段，中間保留兩個狹縫。
+ const gapSegments=[[0,centers[0]-a/2],[centers[0]+a/2,centers[1]-a/2],[centers[1]+a/2,H]];
+ for(const [y1,y2] of gapSegments){if(y2>y1)lin(wall,y1,wall,y2,'#9caab6',11)}
+ if(on('points'))for(const center of centers)for(let j=0;j<p.sources;j++){dot(wall,center+(j/(p.sources-1)-.5)*a,'#ffc76a',2.8)}
+ caption('雙縫',wall-67,cy-18,'#dbe5ef');caption('S₁',wall+10,centers[0]-11,'#ffd27a');caption('S₂',wall+10,centers[1]-11,'#ffd27a');
+ caption('相干子波疊加',W-183,33,'#dff8ed');
+}
+function draw(){const p=P();stageCanvas();if(mode==='plane'||mode==='circle')wavefrontHuygens(p);else if(mode==='reflection')drawReflection(p);else if(mode==='refraction')drawRefraction(p);else{incomingStripes(p);if(mode==='obstacle')obstacleRings(p);else doubleSlit(p)}ctx.restore()}
+function render(){const p=P();updateUI(p);draw()}
+function selectMode(which){mode=which;if(mode==='double')$('brightness').checked=true;document.querySelectorAll('[data-mode]').forEach(btn=>{let active=btn.dataset.mode===mode;btn.classList.toggle('active',active);btn.setAttribute('aria-pressed',active?'true':'false')});restart()}
+document.querySelectorAll('[data-mode]').forEach(btn=>btn.onclick=()=>selectMode(btn.dataset.mode));
+for(const key of keySliders)$(key).addEventListener('input',()=>{
+ if(key==='slit'&&Number($('gap').value)-Number($('slit').value)<15){$('gap').value=Math.min(200,Math.ceil((Number($('slit').value)+15)/5)*5)}
+ if(key==='gap'&&Number($('gap').value)-Number($('slit').value)<15){$('slit').value=Math.max(15,Math.floor((Number($('gap').value)-15)/5)*5)}
+ render();
+});
+for(const key of ['wavelets','envelope','points','history','whole','brightness'])$(key).addEventListener('change',render);
+$('continuous').onclick=()=>{if(playing&&playType==='continuous'){stop();render();return}playing=true;playType='continuous';$('continuous').textContent='⏸ 暫停連續播放';$('segment').textContent='▸ 分段播放';$('continuous').classList.add('selected');$('segment').classList.remove('selected');lastFrame=null};
+$('segment').onclick=()=>{if(playing&&playType==='segment'){stop();render();return}const T=P().T;segmentEnd=(Math.floor(t/T+1e-8)+1)*T;playing=true;playType='segment';$('continuous').textContent='▶ 連續播放';$('segment').textContent='⏸ 暫停分段播放';$('continuous').classList.remove('selected');$('segment').classList.add('selected');lastFrame=null};
+$('step').onclick=()=>{stop();const T=P().T;t=(Math.floor(t/T+1e-8)+1)*T;render()};$('reset').onclick=restart;
+// 逐格前進／後退不改動原本的「下一代」及分段播放功能，且不使 t 小於 0。
+const frameDelta=()=>P().T/24;
+$('frameNext').onclick=()=>{stop();t+=frameDelta();render()};
+$('frameBack').onclick=()=>{stop();t=Math.max(0,t-frameDelta());render()};
+$('progress').oninput=e=>{stop();const p=P(),n=Math.floor(t/p.T);t=(n+Number(e.target.value)/1000)*p.T;render()};
+$('demoStart').onclick=restart;$('demoGrow').onclick=()=>{stop();const p=P(),n=Math.floor(t/p.T);t=(n+.5)*p.T;render()};$('demoNext').onclick=()=>{stop();const p=P(),n=Math.floor(t/p.T);t=(n+1)*p.T;render()};
+function animate(timestamp){if(lastFrame!==null&&playing){const dt=Math.min(.06,Math.max(0,(timestamp-lastFrame)/1000));t+=dt*P().rate;if(playType==='segment'&&t>=segmentEnd-1e-6){t=segmentEnd;stop()}render()}lastFrame=timestamp;requestAnimationFrame(animate)}
+if('ResizeObserver'in window)new ResizeObserver(draw).observe(canvas);selectMode('plane');requestAnimationFrame(animate);
 })();
 </script></body></html>
