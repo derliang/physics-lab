@@ -106,7 +106,7 @@
 </div>
 <section class="panel compare" id="compare"><div class="compareLead"><h2>⑤ 同條件比較不同階數</h2><p>長度、介質不變｜點選任一階，主動畫會同步切換</p></div><div class="compareGrid" id="compareGrid"></div><p class="compareNote" id="compareNote">固定長度與波速時：階數越高，波長越短，頻率越高。比較圖形的波節、波腹數量。</p></section>
 <div class="lower"><section class="panel"><h2 style="font-size:22px;margin:0 0 10px">⑥ 用圖形找規律</h2><div class="pattern" id="patterns"><div class="tile"><strong>λ↓</strong><p>在同一條弦上，階數升高會使波長縮短。</p></div><div class="tile"><strong>f↑</strong><p>波速不變時，波長越短，頻率越高。</p></div><div class="tile"><strong>v = √(F/μ)</strong><p>張力越大波速越快，線密度越大波速越慢。</p></div></div></section><section class="panel"><h2 style="font-size:22px;margin:0 0 9px">本次比較｜當前模式</h2><table class="table"><thead><tr><th>物理量</th><th>目前數值</th></tr></thead><tbody><tr><td>第一諧音（基頻）f₁</td><td id="fBase">65.88 Hz</td></tr><tr><td>本階諧音</td><td id="hNumber">第 1 諧音</td></tr><tr><td>波節數（含端點）</td><td id="nodesCount">2</td></tr><tr><td>波腹數（含端點）</td><td id="antiCount">1</td></tr><tr><td>相鄰波節距離</td><td id="nodeSpacing">λ/2</td></tr></tbody></table></section></div>
-<p class="footer">依據《樂器》講義第 26–29、77–79 頁的弦與開管位移駐波模型。兩端開放為理想開管「空氣質點位移」示意（開口為位移波腹、壓力波節），忽略管口端修正與耗散。張力／線密度只控制弦波速，不控制聲速。圖中位移振幅與動畫播放速度是教學示意，不是實際高頻波形的時間尺度。第一階＝基音；高階為泛音。閉／自由端亦忽略真實支承的偏差。新增的掃頻使用含阻尼的線性受迫振動、固有模態疊加模型；非共振仍有反射干涉與振動，不應誤解為完全沒有駐波成分。只有在固有頻率附近，特定模態才有明顯的共振增幅及穩定的節腹型態。掃頻動畫的振幅視覺縮放、驅動頻譜與播放速度均為教學示意，並非實際量測。</p>
+<p class="footer">依據《樂器》講義第 26–29、77–79 頁的弦與開管位移駐波模型。兩端開放為理想開管「空氣質點位移」示意（開口為位移波腹、壓力波節），忽略管口端修正與耗散。張力／線密度只控制弦波速，不控制聲速。圖中位移振幅與動畫播放速度是教學示意，不是實際高頻波形的時間尺度。第一階＝基音；高階為泛音。閉／自由端亦忽略真實支承的偏差。新增的掃頻使用含阻尼的線性受迫振動、固有模態疊加模型；拖曳時不中途吸附，放開後只在接近共振頻率時平滑定位。接近共振時節腹標記漸顯，掃頻過程使用同一受迫振動波形。非共振仍有反射干涉與振動，不應誤解為完全沒有駐波成分。只有在固有頻率附近，特定模態才有明顯的共振增幅及穩定的節腹型態。掃頻動畫的振幅視覺縮放、驅動頻譜與播放速度均為教學示意，並非實際量測。</p>
 </div>
 <script>
 (()=>{'use strict';
@@ -310,7 +310,9 @@ function drawDrivenWave(canvas){
  g.clearRect(0,0,W,H);
  g.font='14px system-ui';g.textAlign='left';g.fillStyle='#afc8df';
  g.fillText(mode==='oo'?'空氣質點：外加頻率受迫振動':'弦的橫向受迫振動（示意）',15,61);
- g.textAlign='right';g.fillStyle='#ffca81';g.fillText('非共振｜尚未建立固有模態',W-14,30);
+ const resonance=scanResonance();
+ g.textAlign='right';g.fillStyle=resonance.resonant?'#a6f4d1':'#ffca81';
+ g.fillText(resonance.resonant?'共振｜第 '+resonance.h+' 諧音':resonance.close?'逐漸接近第 '+resonance.h+' 諧音':'非共振｜受迫振動',W-14,30);
  if(mode==='oo'){
   g.fillStyle='#124e5b4f';g.fillRect(x0,y0-111,wd,222);g.lineWidth=3;g.strokeStyle='#5a92a4';
   for(const dy of [-1,1]){g.beginPath();g.moveTo(x0+6,y0+dy*111);g.lineTo(x1-6,y0+dy*111);g.stroke()}
@@ -333,12 +335,32 @@ function drawDrivenWave(canvas){
   g.fillStyle=fix?'#ffca81':'#ff93bd';g.beginPath();g.arc(x,y0,5,0,2*Math.PI);g.fill();
   g.textAlign='center';g.font='bold 15px system-ui';g.fillText(fix?'N':'A',x,y0+31);
  }
+ // 以連續透明度呈現共振模態的節／腹參考位置，不在共振點突然換畫面。
+ const f1=physics(1).f1;
+ const reveal=Math.pow(Math.max(0,1-resonance.delta/(.17*f1)),2);
+ if(reveal>.008){
+  const marks=landmarks(resonance.k);
+  g.save();g.globalAlpha=reveal*.90;g.textAlign='center';g.font='bold 14px system-ui';
+  for(const u of marks.nodes){
+   if(u<=.001||u>=.999)continue;
+   const x=x0+wd*u;g.fillStyle='#ffca81';
+   g.beginPath();g.arc(x,y0,4.5,0,2*Math.PI);g.fill();
+   g.fillText('N',x,y0+25);
+  }
+  for(const u of marks.anti){
+   if(u<=.001||u>=.999)continue;
+   const x=x0+wd*u,q=complexAt(u),y=y0-gain*(q[0]*cos-q[1]*sin);
+   g.fillStyle='#ff93bd';g.beginPath();g.arc(x,y,4.5,0,2*Math.PI);g.fill();
+   g.fillText('A',x,y0-27);
+  }
+  g.restore();
+ }
  const yy=H-29;
  stroke(g,'#abcce3',1.7,[],()=>{g.moveTo(x0,yy);g.lineTo(x1,yy);g.moveTo(x0,yy-6);g.lineTo(x0,yy+6);g.moveTo(x1,yy-6);g.lineTo(x1,yy+6)});
  g.fillStyle='#e7f5ff';g.font='bold 17px system-ui';g.textAlign='center';
  g.fillText('L = '+fmt(raw().L,1)+' m',(x0+x1)/2,yy-12);
  g.font='13px system-ui';g.fillStyle='#afc8de';
- g.fillText('虛線：振幅包絡；非共振時不標示固定的內部波節／波腹',(x0+x1)/2,H-6);
+ g.fillText('虛線：振幅包絡；接近共振時節腹標記逐漸浮現',(x0+x1)/2,H-6);
 }
 function renderGrid(){let content='';for(let k=1;k<=6;k++){let p=physics(k),name=harmonicName(k),harm=p.h;content+=`<button class="cmpCard ${isGridSelected(k)?'active':''}" data-n="${k}" aria-pressed="${isGridSelected(k)}"><span class="ch"><span>${mode==='fo'?'m = '+harm:'n = '+k}</span><small>${k===1?'基音':`第 ${k-1} 泛音`}</small></span><canvas id="cmp${k}" aria-label="第 ${harm} 諧音的波形包絡線"></canvas><span class="cf"><span>${fmt(p.f)} Hz</span><span>${harm} f₁</span></span><span class="bar"><span style="width:${100*harm/(mode==='fo'?11:6)}%"></span></span></button>`;}
  $('compareGrid').innerHTML=content;
