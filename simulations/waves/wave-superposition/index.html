@@ -202,7 +202,7 @@ body.periodic-mode .mode-picker.periodic-only{display:flex}
 <details class="advanced pulse-only"><summary>進階脈衝設定：脈衝寬度</summary><div class="setting"><label for="width">脈衝寬度 <output id="widthv"></output></label><input id="width" type="range" min="1" max="4" step="0.1"></div></details>
 <div class="setting"><label for="velocity">波速（兩波速率相同）<output id="velocityv"></output></label><input id="velocity" type="range" min="0.5" max="5" step="0.1"></div>
 <div class="setting periodic-only"><label for="lambda">波長 λ（兩波相同）<output id="lambdav"></output></label><input id="lambda" type="range" min="1" max="8" step="0.25"></div>
-<div class="setting periodic-only phase-setting"><label for="phaseTurns">波源初相差 Δφ₀（以波長 λ 為單位）<output id="phaseTurnsv"></output></label><div class="phase-entry"><input id="phaseSlider" type="range" min="0" max="8" step="0.25" aria-label="波長比例調整"><input id="phaseTurns" type="number" min="0" max="8" step="0.25" inputmode="decimal" aria-label="固定初相差波長倍數"></div><div class="field-tip" id="phaseExplain"></div></div>
+<div class="setting periodic-only phase-setting"><label for="phaseTurns">波源初相差 Δφ₀（以波長 λ 為單位）<output id="phaseTurnsv"></output></label><div class="phase-entry"><input id="phaseSlider" type="range" min="0" max="8" step="0.001" aria-label="波長比例調整"><input id="phaseTurns" type="number" min="0" max="8" step="0.001" inputmode="decimal" aria-label="固定初相差波長倍數"></div><div class="field-tip" id="phaseExplain"></div></div>
 <div class="setting"><label for="speed">播放速度 <output id="speedv"></output></label><input id="speed" type="range" min="0.1" max="3" step="0.1"></div>
 <h3>顯示波形</h3><label class="check"><input type="checkbox" id="showA" checked> 顯示波 A</label><label class="check"><input type="checkbox" id="showB" checked> 顯示波 B</label><label class="check"><input type="checkbox" id="showSum" checked> 顯示合成波</label><label class="check"><input type="checkbox" id="grid" checked> 顯示格線與刻度</label>
 <label class="check"><input type="checkbox" id="guides" checked> 顯示選點分解箭頭</label>
@@ -227,7 +227,7 @@ const presets=[
 {id:'periodic-antiphase',name:'P 點反相',mode:'periodic',a:2,b:2,v:2,lambda:4,phaseTurns:0.5,info:'設定目前 P 點收到的兩列波相位差為 180°（等振幅時為節點）；波源初相差會依 P 點波程差換算。'},
 {id:'periodic-offset',name:'P 點自訂相位差',mode:'periodic',a:2,b:2,v:2,lambda:4,phaseTurns:0.25,info:'用下方 P 點目標相位差選單設定 1/4λ、1/2λ、3/4λ 等；套用後即固定波源初相，移動 P 點只更新觀察結果。'}
 ];
-const defaults={a:2,b:2,w:2.5,v:2,t:0,speed:1,grid:true,guides:true,showA:true,showB:true,showSum:true,mode:'pulse',lambda:4,phaseTurns:0,showEnvelope:false,showNodes:true,periodicView:'formation',showOverlap:true,probeX:8,targetPhaseTurns:0.25};
+const defaults={a:2,b:2,w:2.5,v:2,t:0,speed:1,grid:true,guides:true,showA:true,showB:true,showSum:true,mode:'pulse',lambda:4,phaseTurns:0,showEnvelope:false,showNodes:true,periodicView:'formation',showOverlap:true,probeX:8,targetPhaseTurns:0.25,customPhaseTurns:0.25};
 let s=Object.assign({},defaults,{t:0}),selected=8,playing=false,last=0,scenario='full-constructive',dirty=false,probeMoved=false;
 const left0=4,right0=12,XMAX=16;
 function pulse(x,c,w,amp){const d=(x-c)/(w/2);return Math.abs(d)<1?amp*.5*(1+Math.cos(Math.PI*d)):0;}
@@ -273,16 +273,17 @@ function yB(x){
 function ySum(x){return yA(x)+yB(x)}
 function fmt(x){return (Math.abs(x)<.0005?0:x).toFixed(2)}
 function valid(o){
- const allow=['a','b','w','v','t','speed','grid','guides','showA','showB','showSum','mode','lambda','phaseTurns','showEnvelope','showNodes','periodicView','showOverlap','probeX','targetPhaseTurns'];
+ const allow=['a','b','w','v','t','speed','grid','guides','showA','showB','showSum','mode','lambda','phaseTurns','showEnvelope','showNodes','periodicView','showOverlap','probeX','targetPhaseTurns','customPhaseTurns'];
  if(!o||typeof o!=='object'||Array.isArray(o)||Object.keys(o).some(k=>!allow.includes(k)))return false;
  if(!['a','b','w','v','t','speed'].every(k=>Number.isFinite(o[k])))return false;
  if(o.a< -3||o.a>3||o.b< -3||o.b>3||o.w<1||o.w>4||o.v<.5||o.v>5||o.t<0||o.t>1e10||o.speed<.1||o.speed>3)return false;
  if(o.mode!==undefined&&!['pulse','periodic'].includes(o.mode))return false;
  if(o.periodicView!==undefined&&!['formation','steady'].includes(o.periodicView))return false;
  if(o.lambda!==undefined&&(!Number.isFinite(o.lambda)||o.lambda<1||o.lambda>8))return false;
- if(o.phaseTurns!==undefined&&(!Number.isFinite(o.phaseTurns)||o.phaseTurns<0||o.phaseTurns>8||Math.abs(o.phaseTurns*4-Math.round(o.phaseTurns*4))>1e-6))return false;
+ if(o.phaseTurns!==undefined&&(!Number.isFinite(o.phaseTurns)||o.phaseTurns<0||o.phaseTurns>8))return false;
  if(o.probeX!==undefined&&(!Number.isFinite(o.probeX)||o.probeX<0||o.probeX>XMAX))return false;
  if(o.targetPhaseTurns!==undefined&&(!Number.isFinite(o.targetPhaseTurns)||o.targetPhaseTurns<0||o.targetPhaseTurns>8||Math.abs(o.targetPhaseTurns*4-Math.round(o.targetPhaseTurns*4))>1e-6))return false;
+ if(o.customPhaseTurns!==undefined&&(!Number.isFinite(o.customPhaseTurns)||o.customPhaseTurns<0||o.customPhaseTurns>8||Math.abs(o.customPhaseTurns*4-Math.round(o.customPhaseTurns*4))>1e-6))return false;
  if(typeof o.grid!=='boolean'||typeof o.guides!=='boolean')return false;
  return ['showA','showB','showSum','showEnvelope','showNodes','showOverlap'].every(k=>o[k]===undefined||typeof o[k]==='boolean');
 }
@@ -329,7 +330,7 @@ function updateInputs(){
  el('steadyMode').setAttribute('aria-pressed',String(s.periodicView==='steady'));
  ['showA','showB','showSum','showEnvelope','showNodes','showOverlap'].forEach(k=>{el(k).checked=s[k]});
  el('phaseSlider').value=s.phaseTurns;el('phaseTurns').value=s.phaseTurns;
- el('phaseTurnsv').textContent=phaseLabel(s.phaseTurns);
+ el('phaseTurnsv').textContent=s.phaseTurns.toFixed(3)+'λ';
  const deg=phaseDegrees(s.phaseTurns);
  el('phaseExplain').textContent='波源 S₂ 相對 S₁：'+Math.round(s.phaseTurns*360)+'°，等效 '+deg+'°；P 點另受波程差影響';
  el('probeX').value=selected;
@@ -351,7 +352,7 @@ function choose(id){
   });
   selected=Math.max(0,Math.min(XMAX,selected));
   s.probeX=selected;
-  const target=id==='periodic-inphase'?0:id==='periodic-antiphase'?.5:(s.targetPhaseTurns||.25);
+  const target=id==='periodic-inphase'?0:id==='periodic-antiphase'?.5:s.customPhaseTurns;
   s.targetPhaseTurns=target;
   s.phaseTurns=sourceTurnsForP(selected,target);
  }else{
@@ -548,7 +549,7 @@ el('reset').onclick=()=>choose(scenario);
 [['ampA','a'],['ampB','b'],['width','w'],['velocity','v'],['speed','speed']].forEach(([id,k])=>{el(id).addEventListener('input',e=>{s[k]=Number(e.target.value);updateInputs();markChanged()})});
 ['grid','guides','showA','showB','showSum','showEnvelope','showNodes','showOverlap'].forEach(id=>el(id).addEventListener('change',e=>{s[id]=e.target.checked;updateInputs();markChanged()}));
 el('lambda').addEventListener('input',e=>{s.lambda=Number(e.target.value);updateInputs();markChanged()});
-function setPhase(value){const n=Number(value);if(!Number.isFinite(n))return;s.phaseTurns=Math.max(0,Math.min(8,Math.round(n*4)/4));probeMoved=false;updateInputs();markChanged()}
+function setPhase(value){const n=Number(value);if(!Number.isFinite(n))return;s.phaseTurns=Math.max(0,Math.min(8,Math.round(n*1000)/1000));probeMoved=false;updateInputs();markChanged()}
 el('phaseSlider').addEventListener('input',e=>setPhase(e.target.value));
 el('phaseTurns').addEventListener('change',e=>setPhase(e.target.value));
 function switchPeriodicView(mode){
@@ -577,10 +578,10 @@ function choosePoint(e){
 el('probeX').addEventListener('input',e=>moveProbe(e.target.value));
 el('probeTarget').addEventListener('change',e=>{
  const n=Number(e.target.value);if(!Number.isFinite(n))return;
- s.targetPhaseTurns=n;
+ s.targetPhaseTurns=n;s.customPhaseTurns=n;scenario='periodic-offset';
  applyPPhase(n);
 });
-el('applyProbeTarget').addEventListener('click',()=>applyPPhase(s.targetPhaseTurns));
+el('applyProbeTarget').addEventListener('click',()=>{s.customPhaseTurns=s.targetPhaseTurns;scenario='periodic-offset';applyPPhase(s.targetPhaseTurns)});
 canvas.addEventListener('pointerdown',e=>{canvas.setPointerCapture(e.pointerId);choosePoint(e)});canvas.addEventListener('pointermove',e=>{if(e.buttons)choosePoint(e)});
 function loadSaved(){const list=el('saved');list.innerHTML='<option value="">選擇自訂情境</option>';try{const all=JSON.parse(localStorage.getItem('physics-superposition-v1')||'{}');Object.keys(all).forEach(name=>{let o=document.createElement('option');o.value=name;o.textContent=name;list.appendChild(o)})}catch(e){el('message').textContent='此瀏覽器無法讀取本機儲存。'}}
 el('save').onclick=()=>{let name=el('saveName').value.trim();if(!name){el('message').textContent='請先輸入名稱。';return}try{const all=JSON.parse(localStorage.getItem('physics-superposition-v1')||'{}');all[name]=Object.assign({},s);localStorage.setItem('physics-superposition-v1',JSON.stringify(all));loadSaved();el('saved').value=name;el('message').textContent='已儲存：'+name}catch(e){el('message').textContent='儲存失敗：可能是瀏覽器隱私設定或容量限制。'}};
