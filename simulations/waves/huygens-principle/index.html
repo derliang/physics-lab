@@ -282,11 +282,13 @@ function linePhase(p,which){
  ctx.restore();
 }
 function interfaceWavelets(p,into){if(!on('wavelets')&&!on('points'))return;const cos=Math.cos(p.rad),sin=Math.sin(p.rad),N=p.sources;const nspan=H-120;ctx.save();ctx.beginPath();ctx.rect(into==='left'?0:wall,10,into==='left'?wall:W-wall,H-20);ctx.clip();
+ const a0=into==='left'?Math.PI/2:-Math.PI/2;
+ const a1=into==='left'?3*Math.PI/2:Math.PI/2;
  for(let i=0;i<N;i++){
   const yy=60+i*nspan/(N-1);let dist=cos*(wall-x0)+sin*(yy-cy),n=Math.floor((p.v1*t-dist)/p.lambda),age=t-(dist+n*p.lambda)/p.v1;
   if(n<0||age<0||age>p.T)continue;
   const rr=(into==='left'?p.v1:p.v2)*age;
-  if(on('wavelets'))ring(wall,yy,rr,'rgba(255,198,97,.43)',1.6);
+  if(on('wavelets')&&rr>1e-7)ring(wall,yy,rr,'rgba(255,198,97,.43)',1.6,[],a0,a1);
   if(on('points'))dot(wall,yy,'#ffd074',3.5);
  }
  ctx.restore()}
@@ -376,7 +378,7 @@ function drawReflectionContactWavelets(p){
    const contactTime=(travelToWall+(n+phase.offset)*p.lambda)/p.v1;
    const age=t-contactTime;
    if(age<0||age>=p.T)continue;
-   if(on('wavelets')&&age>1e-7)ring(wall,y,p.v1*age,'rgba(255,198,97,.52)',1.55);
+   if(on('wavelets')&&age>1e-7)ring(wall,y,p.v1*age,'rgba(255,198,97,.52)',1.55,[],Math.PI/2,3*Math.PI/2);
    if(on('points'))dot(wall,y,'#ffd074',3.5);
   }
  }
