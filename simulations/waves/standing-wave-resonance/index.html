@@ -27,6 +27,22 @@
 @media(min-width:1001px) and (max-width:1370px){.workspace{grid-template-columns:minmax(0,1.5fr) minmax(345px,.85fr)}.formula .big{font-size:18px}.metric .val{font-size:28px}.compareGrid{grid-template-columns:repeat(6,minmax(0,1fr))}.cmpCard .cf{font-size:11px}}
 @media(min-width:701px) and (max-width:1000px){.app{padding:8px 11px}.modes{gap:7px;margin-bottom:8px}.mode{min-height:65px;padding:8px}.mode strong{font-size:15px}.mode small{font-size:11px}.metrics{margin-bottom:8px;gap:7px}.metric{min-height:75px;padding:8px}.metric .val{font-size:27px}.metric .sub{font-size:11px}.workspace{grid-template-columns:minmax(0,1.4fr) minmax(290px,.9fr);gap:8px}.panel{padding:9px}.side{display:flex;gap:8px}.canvasWrap{height:290px;min-height:250px}.left{gap:8px}.toolbar button{font-size:12px;padding:6px 2px}.formula{padding:7px}.formula .big{font-size:20px}.formula .foot{font-size:11px}.segmentTeaching{padding:8px}.segmentBar{min-height:28px;margin:6px 0}.sliderline{margin:10px 0 2px}.sliderline output{font-size:16px}.medRule{font-size:11px;padding:7px}.nHead .large{font-size:25px}.whatif button{padding:6px}.compare{margin-top:9px}.compareGrid{grid-template-columns:repeat(3,minmax(0,1fr))}.cmpCard canvas{height:70px}.lower{grid-template-columns:1.15fr .85fr;margin-top:9px}}
 @media(max-width:700px){.sectionlead{margin:3px 0 5px}.mode{min-height:54px}.metrics{margin-bottom:8px}.metric{min-height:78px}.canvasWrap{height:265px;min-height:245px}.panel{padding:9px}.left{gap:8px}.formula{padding:8px}.formula .sm,.formula .foot{font-size:11px}.segmentTeaching{padding:8px}.segmentBar{min-height:30px;margin:6px 0}.side{gap:8px}.sliderline{margin:11px 0 3px}.compare{margin-top:9px}.compareGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.lower{margin-top:9px}.pattern{grid-template-columns:repeat(3,1fr)}.pattern .tile{padding:6px}.pattern .tile strong{font-size:15px}.pattern .tile p{font-size:11px}.footer{line-height:1.45}}
+
+/* 連續掃頻：主畫布附近即可操作，投影模式亦保留控制 */
+.scanBox{border:1px solid #49718d;border-radius:12px;background:linear-gradient(110deg,#102d45,#14354d);padding:9px 12px}
+.scanHead,.scanNumbers{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:7px}
+.scanHead strong{font-size:15px;color:#d2f8ef}.scanTabs{display:flex;gap:5px}
+.scanTabs button{min-height:30px;padding:4px 10px;font-size:12px;font-weight:750;border-radius:8px}
+.scanTabs button.active{background:#257779;border-color:#90f7d6;color:#fff}
+.scanNumbers{margin-top:5px;font-size:13px;font-weight:700}.scanNumbers output{font-size:20px;font-weight:850;color:#9ff9e7;font-variant-numeric:tabular-nums}
+#scanFrequency{width:100%;margin:0;accent-color:#78e8d5;min-height:25px}
+.scanMarks{height:27px;position:relative;margin:0 9px}
+.scanMarks button{position:absolute;top:0;transform:translateX(-50%);min-height:25px;min-width:30px;padding:1px 3px;background:#244760;border:1px solid #668fac;border-radius:6px;font-size:11px;line-height:18px;font-weight:850}
+.scanMarks button.active{background:#e7bb73;color:#22283a;border-color:#ffe0a0}
+.scanStatus{color:#c9e5f6;font-size:12px;min-height:18px;line-height:1.45}
+.scanStatus.resonant{color:#ffe0a0;font-weight:800}
+@media(max-width:700px){.scanBox{padding:8px}.scanHead strong{font-size:13px}.scanNumbers output{font-size:18px}.scanTabs button{font-size:11px;padding:3px 7px}}
+@media(min-width:1001px){.scanBox{padding:6px 10px}.scanHead strong{font-size:13px}.scanNumbers{margin-top:0}.scanNumbers output{font-size:16px}.scanMarks{height:23px}.scanMarks button{min-height:21px;line-height:16px}.scanStatus{font-size:11px}}
 </style>
 </head>
 <body>
@@ -54,6 +70,13 @@
   <div class="canvasWrap"><canvas id="mainPlot" aria-label="駐波位移、波節、波腹以及上下包絡線；一端固定或開放的端點依模式改變"></canvas><span class="canvasBadge" id="phaseBadge">位移相位 <b>0.00 T</b></span></div>
   <div class="legend"><span><i class="swatch" style="background:#6de5d8"></i>即時位移波形</span><span><i class="swatch" style="background:#8aadd2;border-top:1px dashed #fff"></i>最大位移包絡線</span><span><i class="dot" style="background:#ffca81"></i>N：波節</span><span><i class="dot" style="background:#ff93bd"></i>A：波腹</span></div>
   <div class="toolbar"><button id="play" class="primary">▶ 播放動畫</button><button id="back">⏮ 逐格退</button><button id="step">⏭ 逐格進</button><button id="reset">↺ 重設</button><label class="playRate" for="animSpeed">動畫速度<select id="animSpeed"><option value="0.25">0.25×</option><option value="0.5" selected>0.5×</option><option value="1">1×</option><option value="1.5">1.5×</option></select></label></div>
+  <section class="scanBox" aria-label="外加頻率掃描">
+    <div class="scanHead"><strong>外加頻率｜連續掃頻實驗</strong><div class="scanTabs" role="group" aria-label="模擬操作方式"><button id="scanOn" type="button" aria-pressed="true" class="active">手動掃頻</button><button id="scanOff" type="button" aria-pressed="false">原有諧音示範</button></div></div>
+    <div class="scanNumbers"><label for="scanFrequency">驅動頻率 f（慢慢向右拖動）</label><output id="scanHz">-- Hz</output></div>
+    <input type="range" id="scanFrequency" min="1" max="500" step="0.01" value="20" aria-label="連續改變外加驅動頻率，接近共振頻率時自動磁吸" />
+    <div class="scanMarks" id="scanMarks" aria-label="前六個共振頻率磁吸點"></div>
+    <div class="scanStatus" id="scanStatus" role="status" aria-live="polite">拉動頻率，觀察受迫振動與共振。</div>
+  </section>
   <div class="formulaBox">
     <div class="formula"><div class="sm">長度與波長的關係（可從圖形推導）</div><div class="big" id="lengthEq">L = 1 × λ/2</div><div class="foot" id="pieceEq">繩上剛好容納 1 個半波長</div></div>
     <div class="formula"><div class="sm">目前階數對應的波長與頻率</div><div class="big" id="frequencyEq">f₁ = v / (2L)</div><div class="foot" id="harmonicLabel">第一諧音 · 基音</div></div>
@@ -83,13 +106,13 @@
 </div>
 <section class="panel compare" id="compare"><div class="compareLead"><h2>⑤ 同條件比較不同階數</h2><p>長度、介質不變｜點選任一階，主動畫會同步切換</p></div><div class="compareGrid" id="compareGrid"></div><p class="compareNote" id="compareNote">固定長度與波速時：階數越高，波長越短，頻率越高。比較圖形的波節、波腹數量。</p></section>
 <div class="lower"><section class="panel"><h2 style="font-size:22px;margin:0 0 10px">⑥ 用圖形找規律</h2><div class="pattern" id="patterns"><div class="tile"><strong>λ↓</strong><p>在同一條弦上，階數升高會使波長縮短。</p></div><div class="tile"><strong>f↑</strong><p>波速不變時，波長越短，頻率越高。</p></div><div class="tile"><strong>v = √(F/μ)</strong><p>張力越大波速越快，線密度越大波速越慢。</p></div></div></section><section class="panel"><h2 style="font-size:22px;margin:0 0 9px">本次比較｜當前模式</h2><table class="table"><thead><tr><th>物理量</th><th>目前數值</th></tr></thead><tbody><tr><td>第一諧音（基頻）f₁</td><td id="fBase">65.88 Hz</td></tr><tr><td>本階諧音</td><td id="hNumber">第 1 諧音</td></tr><tr><td>波節數（含端點）</td><td id="nodesCount">2</td></tr><tr><td>波腹數（含端點）</td><td id="antiCount">1</td></tr><tr><td>相鄰波節距離</td><td id="nodeSpacing">λ/2</td></tr></tbody></table></section></div>
-<p class="footer">依據《樂器》講義第 26–29、77–79 頁的弦與開管位移駐波模型。兩端開放為理想開管「空氣質點位移」示意（開口為位移波腹、壓力波節），忽略管口端修正與耗散。張力／線密度只控制弦波速，不控制聲速。圖中位移振幅與動畫播放速度是教學示意，不是實際高頻波形的時間尺度。第一階＝基音；高階為泛音。閉／自由端亦忽略真實支承的偏差。</p>
+<p class="footer">依據《樂器》講義第 26–29、77–79 頁的弦與開管位移駐波模型。兩端開放為理想開管「空氣質點位移」示意（開口為位移波腹、壓力波節），忽略管口端修正與耗散。張力／線密度只控制弦波速，不控制聲速。圖中位移振幅與動畫播放速度是教學示意，不是實際高頻波形的時間尺度。第一階＝基音；高階為泛音。閉／自由端亦忽略真實支承的偏差。新增的掃頻使用含阻尼的線性受迫振動、固有模態疊加模型；非共振仍有反射干涉與振動，不應誤解為完全沒有駐波成分。只有在固有頻率附近，特定模態才有明顯的共振增幅及穩定的節腹型態。掃頻動畫的振幅視覺縮放、驅動頻譜與播放速度均為教學示意，並非實際量測。</p>
 </div>
 <script>
 (()=>{'use strict';
 const $=id=>document.getElementById(id),app=$('app');
 const DOM={main:$('mainPlot'),grid:$('compareGrid')};
-let mode='ff',n=1,phase=0,playing=false,last=0,resizeMonitor=null;
+let mode='ff',n=1,phase=0,playing=false,last=0,resizeMonitor=null,scanEnabled=true,driveHz=null;
 const modes={ff:{name:'兩端固定的弦',condition:'N—N',desc:'兩端固定為波節',model:'string'},fo:{name:'一端固定、一端自由的弦',condition:'N—A',desc:'左端波節、右端波腹',model:'string'},oo:{name:'開管（兩端開放）',condition:'A—A',desc:'開管兩端皆為位移波腹',model:'air'}};
 const raw=()=>({L:+$('L').value,F:+$('F').value,mu:+$('mu').value,temp:+$('temp').value});
 function nthHarmonic(k=n,m=mode){return m==='fo'?2*k-1:k}
@@ -103,14 +126,96 @@ function landmarks(k=n,m=mode){const nodes=[],anti=[];
  else if(m==='oo'){for(let i=0;i<=k;i++)anti.push(i/k);for(let i=0;i<k;i++)nodes.push((i+.5)/k)}
  else{for(let i=0;i<k;i++){nodes.push(2*i/(2*k-1));anti.push((2*i+1)/(2*k-1))}}
  return{nodes,anti};}
-function setMode(value){if(!modes[value])return;mode=value;n=1;phase=0;playing=false;last=0;$('play').textContent='▶ 播放動畫';for(const el of document.querySelectorAll('.mode')){const on=el.dataset.mode===value;el.classList.toggle('active',on);el.setAttribute('aria-pressed',String(on))}
+
+/* 共振頻率 f_k = (k 或 2k-1) f1。滑桿採 Hz，調整介質參數時保留輸入 Hz。 */
+function scanBounds(){const f1=physics(1).f1;return{f1,min:.25*f1,max:(nthHarmonic(6)+.45)*f1}}
+function scanResonance(){
+ const b=scanBounds();let k=1,d=Infinity;
+ for(let i=1;i<=6;i++){const e=Math.abs(driveHz-physics(i).f);if(e<d){d=e;k=i}}
+ return{k,h:nthHarmonic(k),f:physics(k).f,delta:d,ratio:driveHz/b.f1,
+  resonant:d<=Math.max(1e-7,b.f1*.00015),close:d<=b.f1*.20};
+}
+function syncScanRange(){
+ const b=scanBounds();
+ if(!Number.isFinite(driveHz))driveHz=.38*b.f1;
+ driveHz=Math.max(b.min,Math.min(b.max,driveHz));
+ if(scanEnabled){const s=scanResonance();if(s.resonant)n=s.k}
+}
+function isGridSelected(k){return scanEnabled?scanResonance().resonant&&scanResonance().k===k:n===k}
+function setScan(enabled){
+ scanEnabled=!!enabled;
+ if(scanEnabled){if(!Number.isFinite(driveHz))driveHz=.38*physics(1).f1;playing=true;$('play').textContent='⏸ 暫停動畫'}
+ else{const s=scanResonance();if(s.resonant)n=s.k;driveHz=physics(n).f}
+ refresh();
+}
+function setDriveHz(value,snap=true){
+ const b=scanBounds();let hz=Math.max(b.min,Math.min(b.max,Number(value)));
+ if(!Number.isFinite(hz))return;
+ if(snap){for(let k=1;k<=6;k++){const f=physics(k).f;
+  if(Math.abs(hz-f)<=.075*b.f1){hz=f;n=k;break}
+ }}
+ driveHz=hz;scanEnabled=true;
+ refresh();
+}
+function renderScanControls(){
+ const b=scanBounds(),s=scanResonance(),slider=$('scanFrequency');
+ slider.min=fmt(b.min,3);slider.max=fmt(b.max,3);slider.step='0.01';slider.value=String(driveHz);
+ $('scanHz').textContent=fmt(driveHz)+' Hz（'+fmt(s.ratio,2)+' f₁）';
+ $('scanOn').classList.toggle('active',scanEnabled);$('scanOff').classList.toggle('active',!scanEnabled);
+ $('scanOn').setAttribute('aria-pressed',String(scanEnabled));$('scanOff').setAttribute('aria-pressed',String(!scanEnabled));
+ $('scanMarks').innerHTML=Array.from({length:6},(_,i)=>{const k=i+1,h=nthHarmonic(k),f=physics(k).f;
+  return '<button type="button" data-scan-k="'+k+'" class="'+(scanEnabled&&s.resonant&&s.k===k?'active':'')+
+   '" style="left:'+fmt(100*(f-b.min)/(b.max-b.min),3)+'%" title="第 '+h+' 諧音：'+fmt(f)+' Hz" aria-label="定位到第 '+h+' 諧音 '+fmt(f)+' Hz">'+h+'</button>'
+ }).join('');
+ const note=$('scanStatus');note.classList.toggle('resonant',scanEnabled&&s.resonant);
+ note.textContent=!scanEnabled?'原有諧音示範：可選 n 或下方比較卡；拖動上方滑桿即可切入掃頻。':
+  s.resonant?'● 共振磁吸成功：第 '+s.h+' 諧音（第 '+s.k+' 個模式），穩定波節／波腹形成':
+  s.close?'○ 接近第 '+s.h+' 諧音，尚未達到精確共振；可繼續微調。':
+  '○ 非共振：目前為邊界反射後的受迫振動，尚無明顯固有駐波模式。';
+}
+function updateScanReadouts(){
+ const p=physics(),s=scanResonance(),f=driveHz,lam=p.v/f,region=mode==='fo'?'奇數個 λ/4':'整數個 λ/2';
+ $('freqNum').textContent=fmt(f);$('lambdaNum').textContent=fmt(lam);
+ $('ratioNum').textContent=fmt(s.ratio,2);$('ratioFoot').textContent='驅動頻率 f／基頻 f₁';
+ $('freqFoot').textContent='外加驅動頻率（即時設定）';$('lambdaFoot').textContent='λ = v / f（入射波）';
+ $('nCaption').textContent='原有諧音階數選擇';$('nShown').textContent=s.resonant?'模式 '+s.k:'手動掃頻中';
+ $('nHarmonic').textContent='調整 n 可返回諧音示範';
+ $('modeTag').textContent=(mode==='oo'?'空氣柱':'弦')+'｜'+modes[mode].desc+'｜掃頻';
+ $('frequencyEq').textContent='f = '+fmt(f)+' Hz';
+ $('fBase').textContent=fmt(p.f1)+' Hz';
+ if(s.resonant){
+   const matched=physics(s.k);$('nShown').textContent=mode==='fo'?'n='+s.k+' / m='+s.h:'n = '+s.k;
+   $('lengthEq').textContent='L = '+s.h+' × '+(mode==='fo'?'λ/4':'λ/2');
+   $('pieceEq').textContent='符合邊界條件，形成第 '+s.h+' 諧音';
+   $('frequencyEq').textContent='f'+subscript(s.h)+' = '+fmt(matched.f)+' Hz';
+   $('harmonicLabel').textContent=harmonicName(s.k);
+   $('insight').innerHTML='<strong>共振成立：</strong>驅動頻率恰好等於固有頻率，振動模態被強烈激發，波節與波腹位置穩定。';
+   $('hNumber').textContent='第 '+s.h+' 諧音（共振）';
+   $('segDesc').textContent=s.h+' 段 × '+(mode==='fo'?'λ/4':'λ/2')+' = L';
+   $('segBar').innerHTML=Array.from({length:s.h},()=>'<div class="seg">'+(mode==='fo'?'λ/4':'λ/2')+'</div>').join('');
+   const marks=landmarks(s.k);$('nodesCount').textContent=marks.nodes.length+' 個';
+   $('antiCount').textContent=marks.anti.length+' 個';
+   $('nodeSpacing').textContent=mode==='fo'&&s.k===1?'只有一個波節；N 到 A = λ/4':'λ/2';
+ }else{
+   $('lengthEq').textContent='L / λ = '+fmt(p.L/lam,2);
+   $('pieceEq').textContent='未符合「'+region+'」的共振幾何條件';
+   $('harmonicLabel').textContent='非共振｜受迫振動';
+   $('insight').innerHTML='<strong>觀察重點：</strong>波仍會在介質中傳播並反射，但未對準固有頻率，無法建立明顯而穩定的單一固有駐波模式。此處以含阻尼的受迫振動模型展示。';
+   $('hNumber').textContent='非共振';
+   $('segDesc').textContent='L / λ = '+fmt(p.L/lam,2)+'（未吻合共振條件）';
+   $('segBar').innerHTML='<div class="seg" style="opacity:.7">外加頻率尚未符合端點條件</div>';
+   $('nodesCount').textContent='無固定固有模態';$('antiCount').textContent='無固定固有模態';
+   $('nodeSpacing').textContent='非共振時不適用';
+ }
+}
+function setMode(value){if(!modes[value])return;mode=value;n=1;phase=0;playing=scanEnabled;last=0;driveHz=scanEnabled?.38*physics(1,value).f1:physics(1,value).f;$('play').textContent=playing?'⏸ 暫停動畫':'▶ 播放動畫';for(const el of document.querySelectorAll('.mode')){const on=el.dataset.mode===value;el.classList.toggle('active',on);el.setAttribute('aria-pressed',String(on))}
  $('stringControls').classList.toggle('hidden',value==='oo');$('airControls').classList.toggle('hidden',value!=='oo');
  $('lLabel').textContent=value==='oo'?'管長 L':'弦長 L';$('vName').textContent=value==='oo'?'空氣中聲速 v':'弦波速 v';$('vFoot').textContent=value==='oo'?'v ≈ 331 + 0.6θ':'v = √(F/μ)';
  $('modelNote').innerHTML=value==='oo'?'<b>開管模型：</b>動畫是空氣質點「位移駐波」，開口為位移波腹，與「壓力波節」相對應。聲速由氣溫近似計算，弦張力與線密度不適用。':'<b>弦波模型：</b>波速由張力與線密度決定。圖形位移振幅及時間播放刻意放大／放慢，數值頻率由物理公式計算。';
  const whatif=$('whatif');whatif.innerHTML=value==='oo'?'<button data-act="L2">管長 ×2</button><button data-act="Lhalf">管長 ÷2</button><button data-act="tempplus">氣溫 +10°C</button><button data-act="tempminus">氣溫 −10°C</button>':'<button data-act="L2">弦長 ×2</button><button data-act="Lhalf">弦長 ÷2</button><button data-act="F2">張力 ×2</button><button data-act="mu2">線密度 ×2</button>';
  refresh(true);
 }
-function setN(value){n=Math.max(1,Math.min(6,Math.round(value)));$('n').value=n;refresh()}
+function setN(value){n=Math.max(1,Math.min(6,Math.round(value)));scanEnabled=false;driveHz=physics(n).f;$('n').value=n;refresh()}
 function updateReadouts(){const p=physics(),unitType=mode==='oo'?'空氣柱':'弦';
  $('vNum').textContent=fmt(p.v);$('lambdaNum').textContent=fmt(p.lambda);$('freqNum').textContent=fmt(p.f);$('ratioNum').textContent=p.h;
  $('ratioFoot').textContent=harmonicName();$('freqFoot').textContent='f = v / λ';$('lambdaFoot').textContent=mode==='fo'?'λ = 4L/(2n − 1)':'λ = 2L/n';
@@ -155,15 +260,88 @@ function drawWave(canvas,k,m=mode,mini=false){const {g,W,H}=canvasSpace(canvas),
 
  if(!mini){let yy=H-29;stroke(g,'#abcce3',1.7,[],()=>{g.moveTo(x0,yy);g.lineTo(x1,yy);g.moveTo(x0,yy-6);g.lineTo(x0,yy+6);g.moveTo(x1,yy-6);g.lineTo(x1,yy+6)});g.fillStyle='#e7f5ff';g.font='bold 17px system-ui';g.textAlign='center';g.fillText(`L = ${fmt(raw().L,1)} m`,(x0+x1)/2,yy-12);g.font='13px system-ui';g.fillStyle='#afc8de';g.fillText('兩個相鄰波節的距離 = λ/2；節點到鄰近腹點 = λ/4',(x0+x1)/2,H-6)}
 }
-function renderGrid(){let content='';for(let k=1;k<=6;k++){let p=physics(k),name=harmonicName(k),harm=p.h;content+=`<button class="cmpCard ${k===n?'active':''}" data-n="${k}" aria-pressed="${k===n}"><span class="ch"><span>${mode==='fo'?'m = '+harm:'n = '+k}</span><small>${k===1?'基音':`第 ${k-1} 泛音`}</small></span><canvas id="cmp${k}" aria-label="第 ${harm} 諧音的波形包絡線"></canvas><span class="cf"><span>${fmt(p.f)} Hz</span><span>${harm} f₁</span></span><span class="bar"><span style="width:${100*harm/(mode==='fo'?11:6)}%"></span></span></button>`;}
+
+/* 受迫振動：阻尼正常模態疊加。固定端取 sin，開放端位移取 cos；
+   分母為 ω_k²−ω²+i2ζω_kω。示意驅動力頻譜 ∝ ω²，方便比較六階。
+   所有頻率皆滿足端點邊界條件，只有固有頻率顯示理想駐波節腹。 */
+function drawDrivenWave(canvas){
+ const {g,W,H}=canvasSpace(canvas),x0=51,x1=W-38,wd=x1-x0,y0=H*.54,scale=Math.min(93,H*.24);
+ const r=driveHz/physics(1).f1,damping=.043,components=[];
+ for(let k=1;k<=14;k++){
+   const h=nthHarmonic(k),a=h*h-r*r,b=2*damping*h*r,den=a*a+b*b;
+   const input=r*r/(1+.075*(k-1));
+   components.push({k,re:input*a/den,im:-input*b/den});
+ }
+ const complexAt=u=>{
+   let re=0,im=0;
+   for(const c of components){const y=shape(u,c.k,mode);re+=y*c.re;im+=y*c.im}
+   return [re,im];
+ };
+ let maxMag=0;
+ for(let i=0;i<=180;i++){const q=complexAt(i/180);maxMag=Math.max(maxMag,Math.hypot(q[0],q[1]))}
+ const gain=scale*(.20+.80*Math.min(1,maxMag/11.5))/Math.max(1e-7,maxMag);
+ g.clearRect(0,0,W,H);
+ g.font='14px system-ui';g.textAlign='left';g.fillStyle='#afc8df';
+ g.fillText(mode==='oo'?'空氣質點：外加頻率受迫振動':'弦的橫向受迫振動（示意）',15,61);
+ g.textAlign='right';g.fillStyle='#ffca81';g.fillText('非共振｜尚未建立固有模態',W-14,30);
+ if(mode==='oo'){
+  g.fillStyle='#124e5b4f';g.fillRect(x0,y0-111,wd,222);g.lineWidth=3;g.strokeStyle='#5a92a4';
+  for(const dy of [-1,1]){g.beginPath();g.moveTo(x0+6,y0+dy*111);g.lineTo(x1-6,y0+dy*111);g.stroke()}
+ }
+ for(let j=-2;j<=2;j++){const yy=y0+j*scale/2;stroke(g,'#263d58',1,[],()=>{g.moveTo(x0,yy);g.lineTo(x1,yy)})}
+ stroke(g,'#51728d',1.7,[],()=>{g.moveTo(x0,y0);g.lineTo(x1,y0)});
+ for(const sign of [-1,1])stroke(g,'#587d99',1.7,[5,5],()=>{
+  for(let i=0;i<=400;i++){const u=i/400,q=complexAt(u),yy=y0+sign*gain*Math.hypot(q[0],q[1]);
+   if(!i)g.moveTo(x0,yy);else g.lineTo(x0+wd*u,yy)}
+ });
+ const cos=Math.cos(phase),sin=Math.sin(phase);
+ stroke(g,'#6de5d8',4.5,[],()=>{
+  for(let i=0;i<=480;i++){const u=i/480,q=complexAt(u),yy=y0-gain*(q[0]*cos-q[1]*sin);
+   if(!i)g.moveTo(x0,yy);else g.lineTo(x0+wd*u,yy)}
+ });
+ for(const pos of [0,1]){
+  const x=x0+wd*pos,fix=mode==='ff'||(mode==='fo'&&pos===0);
+  if(fix){g.fillStyle='#8693a7';g.fillRect(x-10,y0-85,20,170);g.fillStyle='#d2e2ed';g.fillRect(x-6,y0-78,3,156)}
+  else if(mode==='fo'){g.strokeStyle='#83e3d8';g.lineWidth=3;g.beginPath();g.moveTo(x,y0-104);g.lineTo(x,y0+104);g.stroke()}
+  g.fillStyle=fix?'#ffca81':'#ff93bd';g.beginPath();g.arc(x,y0,5,0,2*Math.PI);g.fill();
+  g.textAlign='center';g.font='bold 15px system-ui';g.fillText(fix?'N':'A',x,y0+31);
+ }
+ const yy=H-29;
+ stroke(g,'#abcce3',1.7,[],()=>{g.moveTo(x0,yy);g.lineTo(x1,yy);g.moveTo(x0,yy-6);g.lineTo(x0,yy+6);g.moveTo(x1,yy-6);g.lineTo(x1,yy+6)});
+ g.fillStyle='#e7f5ff';g.font='bold 17px system-ui';g.textAlign='center';
+ g.fillText('L = '+fmt(raw().L,1)+' m',(x0+x1)/2,yy-12);
+ g.font='13px system-ui';g.fillStyle='#afc8de';
+ g.fillText('虛線：振幅包絡；非共振時不標示固定的內部波節／波腹',(x0+x1)/2,H-6);
+}
+function renderGrid(){let content='';for(let k=1;k<=6;k++){let p=physics(k),name=harmonicName(k),harm=p.h;content+=`<button class="cmpCard ${isGridSelected(k)?'active':''}" data-n="${k}" aria-pressed="${isGridSelected(k)}"><span class="ch"><span>${mode==='fo'?'m = '+harm:'n = '+k}</span><small>${k===1?'基音':`第 ${k-1} 泛音`}</small></span><canvas id="cmp${k}" aria-label="第 ${harm} 諧音的波形包絡線"></canvas><span class="cf"><span>${fmt(p.f)} Hz</span><span>${harm} f₁</span></span><span class="bar"><span style="width:${100*harm/(mode==='fo'?11:6)}%"></span></span></button>`;}
  $('compareGrid').innerHTML=content;
 }
-function paint(){drawWave(DOM.main,n,mode);for(let k=1;k<=6;k++){const el=$('cmp'+k);if(el)drawWave(el,k,mode,true)}$('phaseBadge').innerHTML=`位移相位 <b>${fmt(((phase/(2*Math.PI))%1+1)%1,2)} T</b>`;}
-function refresh(regrid=false){updateReadouts();if(regrid||!$('cmp1'))renderGrid();else{for(const b of $('compareGrid').querySelectorAll('.cmpCard')){const on=+b.dataset.n===n;b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on));const p=physics(+b.dataset.n),h=p.h;b.querySelector('.cf').innerHTML=`<span>${fmt(p.f)} Hz</span><span>${h} f₁</span>`}}
- paint();}
+function paint(){if(scanEnabled&&!scanResonance().resonant)drawDrivenWave(DOM.main);else drawWave(DOM.main,scanEnabled?scanResonance().k:n,mode);for(let k=1;k<=6;k++){const el=$('cmp'+k);if(el)drawWave(el,k,mode,true)}$('phaseBadge').innerHTML=`位移相位 <b>${fmt(((phase/(2*Math.PI))%1+1)%1,2)} T</b>`;}
+function refresh(regrid=false){syncScanRange();updateReadouts();if(scanEnabled)updateScanReadouts();if(regrid||!$('cmp1'))renderGrid();else{for(const b of $('compareGrid').querySelectorAll('.cmpCard')){const on=isGridSelected(+b.dataset.n);b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on));const p=physics(+b.dataset.n),h=p.h;b.querySelector('.cf').innerHTML=`<span>${fmt(p.f)} Hz</span><span>${h} f₁</span>`}}
+ paint();renderScanControls();}
 function reset(){playing=false;last=0;phase=0;$('play').textContent='▶ 播放動畫';refresh()}
 function changePreset(act){const p=raw();if(act==='L2')$('L').value=Math.min(5,Math.round(p.L*20)/10);if(act==='Lhalf')$('L').value=Math.max(.5,Math.round(p.L*5)/10);if(act==='F2')$('F').value=Math.min(240,Math.round(p.F*2/5)*5);if(act==='mu2')$('mu').value=Math.min(16,Math.round(p.mu*4)/2);if(act==='tempplus')$('temp').value=Math.min(40,p.temp+10);if(act==='tempminus')$('temp').value=Math.max(0,p.temp-10);
  $('whatifNote').textContent=(act==='F2'?'張力增加：波速、頻率變大；幾何允許的波長不變。':act==='mu2'?'線密度增加：波速與頻率下降；幾何允許的波長不變。':act==='L2'?'長度增加：波長增加，頻率降低；波速不變。':act==='Lhalf'?'長度縮短：波長變短，頻率提高；波速不變。':'氣溫變化：改變空氣中的聲速與共振頻率；理想波長仍由管長與階數決定。');refresh();}
+
+$('scanOn').onclick=()=>setScan(true);
+$('scanOff').onclick=()=>setScan(false);
+$('scanFrequency').addEventListener('input',e=>setDriveHz(e.target.value,true));
+$('scanFrequency').addEventListener('keydown',e=>{
+ const b=scanBounds(),s=scanResonance();
+ let direction=0,delta=0;
+ if(e.key==='ArrowRight'||e.key==='ArrowUp')direction=1;
+ if(e.key==='ArrowLeft'||e.key==='ArrowDown')direction=-1;
+ if(e.key==='PageUp')direction=1,delta=.5*b.f1;
+ if(e.key==='PageDown')direction=-1,delta=.5*b.f1;
+ if(e.key==='Home'){e.preventDefault();setDriveHz(b.min,false);return}
+ if(e.key==='End'){e.preventDefault();setDriveHz(b.max,false);return}
+ if(!direction)return;
+ e.preventDefault();delta=delta||.11*b.f1;
+ // 鍵盤也必須能離開磁吸區，避免方向鍵被吸附卡住。
+ if(s.resonant)delta=Math.max(delta,.12*b.f1);
+ setDriveHz(driveHz+direction*delta,true);
+});
+$('scanMarks').addEventListener('click',e=>{const b=e.target.closest('[data-scan-k]');if(b)setDriveHz(physics(+b.dataset.scanK).f,true)});
 for(const b of document.querySelectorAll('.mode'))b.addEventListener('click',()=>setMode(b.dataset.mode));
 $('n').addEventListener('input',e=>setN(e.target.value));$('minusN').onclick=()=>setN(n-1);$('plusN').onclick=()=>setN(n+1);
 for(const id of ['L','F','mu','temp'])$(id).addEventListener('input',()=>refresh());
@@ -175,9 +353,9 @@ $('projection').onclick=()=>{const on=app.classList.toggle('projection');$('proj
 $('restore').onclick=()=>{$('L').value='1.2';$('F').value='100';$('mu').value='4';$('temp').value='20';setN(1);$('whatifNote').textContent='已恢復預設數值；請重新探索長度、張力、線密度與諧音的影響。';reset()};
 $('compareGrid').addEventListener('click',e=>{const b=e.target.closest('[data-n]');if(b)setN(+b.dataset.n)});
 $('whatif').addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(b)changePreset(b.dataset.act)});
-function tick(now){if(document.hidden){last=now;requestAnimationFrame(tick);return}if(playing){if(last){const dt=Math.min(.06,(now-last)/1000);phase+=dt*2*Math.PI*(+$('animSpeed').value)}paint()}last=now;requestAnimationFrame(tick)}
+function tick(now){if(document.hidden){last=now;requestAnimationFrame(tick);return}if(playing){if(last){const dt=Math.min(.06,(now-last)/1000);phase+=dt*2*Math.PI*(+$('animSpeed').value)*(scanEnabled?(.7+.14*Math.min(11,driveHz/physics(1).f1)):1)}paint()}last=now;requestAnimationFrame(tick)}
 if('ResizeObserver'in window){resizeMonitor=new ResizeObserver(()=>paint());resizeMonitor.observe(DOM.main)}
-setMode('ff');reset();requestAnimationFrame(tick);
+setMode('ff');requestAnimationFrame(tick);
 })();
 </script>
 </body></html>
