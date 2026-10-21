@@ -21,3 +21,12 @@
 
 ## 待驗證
 iPad Safari 實機、30 分鐘長時間效能、正式網址實際操作及 CDN 更新狀態尚未驗證，不能當作通過。
+
+
+## 2026-10-21｜V1.8 精簡版：移除模式切換按鈕
+- 使用者明確核可 `ripple-interference-v1.8-no-mode-buttons/index.html`，要求正式版移除五個模式切換按鈕，預設保持雙波源干涉。
+- 變更：只移除頁首包含 `data-mode` 的五按鈕 `nav.tabs`，其餘網頁 HTML、CSS 與全部模擬 JavaScript 不變。
+- 已確認改動後與核可預覽檔在網頁正式版標題／預覽版本字樣之外完全一致。
+- 內嵌 JavaScript 語法解析通過；五個 `data-mode` 按鈕不再出現在頁面 DOM。
+- 保留原有已在 V1.8 檢查的物理數值與操作測試紀錄；本次未另行重新執行 iPad Safari 實機及長時間效能測試。
+- 目錄隱藏清單、兩個已下架舊動畫程式及 GitHub Pages URL 均不變。
