@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>水波干涉｜精確疊加實驗室｜Physics Lab</title>
+<style>
+:root{font-family:system-ui,-apple-system,"Noto Sans TC",sans-serif;color:#eaf5ff;background:#09182b;--panel:#10263d;--surface:#172f4a;--edge:#375875;--muted:#adc7df;--green:#73edcc;--purple:#c2a3ff;--yellow:#ffd773;--pink:#ff8db9}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 30% -200px,#19416b,#09182b 76%);min-height:100vh}button,select,input{font:inherit}button{border-radius:9px;background:#23425f;border:1px solid #52728d;color:#eaf4ff;padding:9px 12px;min-height:44px;cursor:pointer;white-space:nowrap}button:hover{background:#305a79}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #ffc867;outline-offset:2px}button.on,button.primary{background:#1e647f;border-color:#8bd5ed}button.active{background:#28638c;border-color:#98d8f7}input[type=range]{width:100%;accent-color:#8bd5ee;min-height:30px;cursor:pointer}input[type=checkbox]{width:19px;height:19px;accent-color:#57c7e8}a{color:#acdfff;text-decoration:none}.app{max-width:1780px;margin:auto;padding:12px 15px 24px}.header{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:12px}.head-title{display:flex;gap:11px;align-items:center}.brand{display:grid;place-items:center;width:49px;height:49px;border-radius:13px;background:#193e5d;font-size:27px;border:1px solid #5184b1}.header h1{font-size:clamp(20px,2.05vw,29px);margin:0;line-height:1.3}.sub{font-size:13px;color:#a9c7dd;margin-top:3px}.home{font-weight:650;font-size:14px;border:1px solid #477292;border-radius:10px;padding:10px 13px;white-space:nowrap;min-height:44px;display:flex;align-items:center}.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:5px 0 10px}.tabs button{font-size:13px;min-height:37px;padding:7px 15px}.tabs button.active{background:#244f78}.shell{display:grid;grid-template-columns:minmax(0,1fr) 282px;align-items:start;gap:11px}.center{display:grid;gap:10px;min-width:0}.panel{background:var(--panel);border:1px solid var(--edge);border-radius:14px;padding:12px;min-width:0}.data-row{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}.metric{min-width:0;padding:9px 10px;border:1px solid #365877;border-radius:10px;background:#182f49}.metric small{color:#bad0e3;display:block;font-size:12px}.metric b{display:block;font-size:clamp(17px,1.6vw,23px);letter-spacing:.1px;font-variant-numeric:tabular-nums;white-space:nowrap;margin-top:2px}.metric b.accent{color:#ffe2a1}.playbar{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.playbar .status{margin-left:auto;color:#acd2e5;font-size:13px}.operations{display:grid;grid-template-columns:minmax(0,1.8fr) minmax(350px,1fr);gap:9px}.operations>.panel{margin:0}.operations .playbar{align-content:center;min-height:57px}.operations .view-panel{align-content:center}.operations .view-panel .explainer{font-size:11px}.seg{display:flex;gap:6px;flex-wrap:wrap}.seg button{font-size:13px}.view-panel{display:flex;justify-content:space-between;align-items:center;gap:9px;flex-wrap:wrap}.explainer{font-size:13px;color:#c6dbeb}.big-graph{min-width:0}.graph-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:7px}.graph-top h2{font-size:16px;margin:0}.graph-top small{font-size:12px;color:var(--muted)}.canvases{display:grid;gap:7px;grid-template-columns:minmax(0,1fr)}.canvases.dual{grid-template-columns:repeat(2,minmax(0,1fr))}.canvas-wrap{position:relative;border:1px solid #52718d;background:#05152d;border-radius:12px;overflow:hidden;min-width:0}.canvas-wrap canvas{width:100%;height:auto;aspect-ratio:900/510;display:block;touch-action:none;cursor:crosshair}.canvas-wrap .tag{position:absolute;top:8px;left:10px;pointer-events:none;background:#081c30d9;color:#e5f5ff;padding:4px 9px;border:1px solid #537997;border-radius:7px;font-size:12px;font-weight:700}.canvas-wrap.hidden{display:none}.legends{display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px 15px;font-size:12px;color:#c6dae9;margin-top:8px}.legend-line{display:inline-block;width:21px;border-top:3px solid var(--yellow);vertical-align:middle;margin:0 5px 2px 0}.legend-node{border-top-color:var(--pink)}.legend-one{border-top-color:var(--green)}.legend-two{border-top-color:var(--purple)}.legend-dash{border-top-style:dashed}.legend-band{width:22px;height:11px;display:inline-block;vertical-align:middle;border-radius:4px;margin:0 5px 2px 0;background:rgba(255,219,130,.38);border:1px solid rgba(255,219,130,.68)}.legend-band.node{background:rgba(255,143,183,.3);border-color:#ff8fb7}.analysis-head{display:flex;align-items:center;justify-content:space-between;gap:7px;flex-wrap:wrap}.analysis-head h3{font-size:15px;margin:0}.analysis-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin-top:10px}.analysis-grid .value{border:1px solid #386080;background:#193653;border-radius:9px;padding:7px;min-width:0}.value small{display:block;color:#b6cfe1;font-size:12px}.value b{display:block;font-size:clamp(17px,1.55vw,22px);margin:2px 0;white-space:nowrap}.value b.warning{color:var(--pink)}.formula-strip{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;margin-top:8px;font-size:14px}.formula-strip span{font-weight:650}.insight{color:#d6e5ef;font-size:13px;line-height:1.6;margin-top:6px}.trace-card{padding-bottom:8px}.trace-head{display:flex;align-items:center;justify-content:space-between;gap:7px;flex-wrap:wrap;margin-bottom:8px}.trace-head h3{font-size:15px;margin:0}.trace-head button{min-height:36px;font-size:13px;padding:5px 10px}.trace-frame{border:1px solid #315879;border-radius:9px;background:#071d31;overflow:hidden}.trace-frame canvas{width:100%;height:146px;display:block}.right h2{font-size:16px;margin:0 0 9px}.control{margin:9px 0}.control label{font-size:13px;display:flex;justify-content:space-between;gap:8px}.control output{font-weight:720;color:#c1eaff;font-variant-numeric:tabular-nums}.control input{margin-top:2px}.rule{border:0;border-top:1px solid #35536f;margin:12px 0}.checkrow{display:flex;gap:8px;align-items:center;font-size:13px;margin:6px 0;min-height:30px}.quick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.quick button{font-size:12px;white-space:normal;line-height:1.25;padding:7px;min-height:40px}.asidehint{font-size:12px;line-height:1.6;color:var(--muted)}.asidehint b{color:#eff9ff}.section-caption{font-size:13px;font-weight:720;color:#d8e9fa;margin:12px 0 6px}.mode-note{padding:10px;border:1px solid #3f6888;border-radius:10px;background:#16334e;line-height:1.65;font-size:13px;color:#d2e7f3}.other-option{display:none}.other-option.open{display:block}details{border-top:1px solid #35536f;padding:8px 0}details summary{font-size:13px;font-weight:650;cursor:pointer}footer{font-size:12px;text-align:center;color:#93b6d2;padding:12px}
+@media(min-width:1420px){.metric b{font-size:24px}.canvas-wrap canvas{max-height:510px;object-fit:contain}.right{position:sticky;top:9px}}
+@media(max-width:1070px){.shell{grid-template-columns:minmax(0,1fr) 246px}.metric{padding:7px}.metric b{font-size:16px}.data-row{gap:5px}.right .control{margin:7px 0}.playbar button{font-size:12px;padding:7px 9px}}
+@media(max-width:1250px){.operations{grid-template-columns:1fr}}
+@media(max-width:840px){.shell{grid-template-columns:1fr}.data-row{grid-template-columns:repeat(3,minmax(0,1fr))}.right{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 15px}.right h2,.right .section-caption,.right .rule,.right .mode-note,.right details{grid-column:1/-1}.analysis-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:510px){.app{padding:7px}.header{align-items:flex-start}.home{font-size:12px;padding:8px}.brand{display:none}.header h1{font-size:18px}.metric b{font-size:15px}.tabs button{padding:6px 9px}.playbar button{min-height:38px}.canvases.dual{grid-template-columns:1fr}.right{display:block}.data-row{grid-template-columns:repeat(2,minmax(0,1fr))}.analysis-grid .value b{font-size:17px}}
+
+/* V1.2 教室投影精簡佈局：保留原有模型及所有按鈕事件 */
+.app{padding:9px 13px 20px}
+.header{display:grid;grid-template-columns:minmax(255px,auto) minmax(0,1fr) auto;gap:9px;align-items:center;margin-bottom:6px}
+.head-title{gap:8px}.brand{width:39px;height:39px;font-size:23px;border-radius:10px}
+.header h1{font-size:clamp(18px,1.55vw,22px);line-height:1.15}
+.sub{font-size:11px;margin-top:3px;white-space:nowrap}
+.header .tabs{display:flex;justify-content:center;align-items:center;gap:4px;flex-wrap:nowrap;margin:0;min-width:0}
+.header .tabs button{font-size:clamp(11px,1vw,13px);min-height:44px;padding:6px 9px;flex:0 1 auto}
+.home{font-size:12px;padding:8px 10px;min-height:44px}
+.data-row{grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin:0 0 7px}
+.metric{min-height:41px;padding:7px 10px;display:flex;align-items:center;gap:8px;justify-content:space-between;white-space:nowrap}
+.metric small{display:inline;font-size:12px;white-space:nowrap}
+.metric b{display:inline;margin:0;font-size:clamp(14px,1.28vw,18px);line-height:1.1;overflow:hidden;text-overflow:ellipsis}
+.operations{display:flex;gap:10px;align-items:center;justify-content:space-between;border:1px solid var(--edge);border-radius:12px;background:var(--panel);padding:7px 9px;margin-bottom:8px;min-height:58px}
+.operations>.panel{background:none;border:0;border-radius:0;padding:0;min-width:0}
+.operations>.panel:first-child{flex:1 1 auto}
+.operations>.view-panel{flex:0 0 auto;display:flex;align-items:center;justify-content:flex-end;gap:5px}
+.operations .playbar{min-height:0;flex-wrap:nowrap;gap:6px}
+.operations .playbar button,.operations .seg button{min-height:42px;font-size:13px;padding:7px 10px;white-space:nowrap}
+.operations .playbar .status{margin-left:5px;font-size:12px;white-space:nowrap}
+.operations .seg{flex-wrap:nowrap;gap:5px}
+.shell{grid-template-columns:minmax(0,1fr) clamp(300px,29vw,405px);gap:10px}
+.center{gap:8px}
+.panel{padding:9px}
+.graph-top{margin-bottom:5px}
+.graph-top h2{font-size:16px}
+.graph-top small{font-size:11px}
+.big-graph{padding:8px}
+.legends{font-size:11px;margin-top:5px}
+.legends .explainer{width:100%;font-size:11px}
+@media(max-width:1230px){
+  .header{grid-template-columns:minmax(0,1fr) auto}
+  .header .tabs{grid-column:1/-1;grid-row:2;justify-content:flex-start;gap:6px;margin:0}
+  .header .tabs button{min-height:39px}
+  .operations{gap:5px}
+  .operations .playbar{gap:4px}
+  .operations .playbar button,.operations .seg button{font-size:12px;padding:7px 8px}
+  .operations .playbar .status{font-size:11px;margin-left:2px}
+  .shell{grid-template-columns:minmax(0,1fr) 280px}
+}
+@media(max-width:1050px){
+  .operations{flex-wrap:nowrap;gap:6px}
+  .operations>.panel:first-child{flex:1 1 auto}
+  .operations .playbar{justify-content:flex-start}
+  .operations>.view-panel{flex:0 0 auto;justify-content:flex-end}
+  .data-row{gap:4px}
+  .metric{padding:5px 7px;gap:4px}
+  .metric small{font-size:11px}
+  .metric b{font-size:14px}
+  .shell{grid-template-columns:minmax(0,1fr) 250px}
+}
+@media(max-width:840px){
+ .header{grid-template-columns:minmax(0,1fr) auto}
+ .header .tabs{flex-wrap:wrap}
+ .shell{grid-template-columns:minmax(0,1fr)}
+ .data-row{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .operations{flex-wrap:wrap}
+ .operations>.panel:first-child{flex:1 1 100%}
+ .operations>.view-panel{flex:1 1 100%;justify-content:flex-start}
+ .operations .playbar{flex-wrap:wrap}
+ .operations .playbar .status{margin-left:auto}
+ .right{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 15px}
+}
+@media(max-width:510px){
+ .app{padding:6px}
+ .header h1{font-size:17px}
+ .header .tabs button{font-size:11px;padding:5px 7px;min-height:39px}
+ .data-row{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .data-row .metric:last-child{grid-column:span 2}
+ .operations .playbar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+ .operations .playbar button{font-size:11px;min-width:0;padding:6px 4px}
+ .operations .playbar .status{grid-column:span 3;margin:0}
+ .operations .seg button{font-size:12px}
+ .right{display:block}
+}
+
+/* V1.3 整併選點數據：不新增一整排卡片，於同一工具列強調 D/λ。 */
+.data-row{
+  display:grid;
+  grid-template-columns:.84fr .86fr .82fr .99fr 1.28fr 1.36fr 1.10fr 1.06fr 1.17fr;
+  gap:5px;margin:0 0 7px;align-items:stretch;
+}
+.data-row .metric{
+  display:flex;flex-direction:column;align-items:flex-start;
+  justify-content:center;gap:2px;min-width:0;min-height:53px;
+  padding:6px 8px;white-space:normal;
+}
+.data-row .metric small{font-size:11px;line-height:1.17;white-space:nowrap;color:#bbd1e6}
+.data-row .metric b{font-size:clamp(13px,1.20vw,17px);line-height:1.18;white-space:nowrap;max-width:100%;overflow:visible;text-overflow:clip;margin:0;}
+.data-row .metric-highlight{
+  border:2px solid #f0c577;
+  background:linear-gradient(115deg,#294b5d,#294458 65%,#4a463b);
+  box-shadow:inset 0 0 0 1px rgba(254,235,167,.11);
+  padding:5px 7px;
+}
+.data-row .metric-highlight small{color:#e8e0c3;font-weight:600}
+.data-row .metric-highlight b{color:#ffe49c;font-size:clamp(21px,1.9vw,27px);font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:.2px}
+.data-row .metric-class b{color:#ffe1a6;font-size:clamp(12px,1.13vw,16px)}
+@media(min-width:1420px){.data-row .metric b{font-size:18px}.data-row .metric-highlight b{font-size:28px}}
+@media(max-width:1190px){
+ .data-row{gap:4px}
+ .data-row .metric{padding:5px 6px}
+ .data-row .metric small{font-size:10px}
+ .data-row .metric b{font-size:13px}
+ .data-row .metric-highlight b{font-size:21px}
+ .data-row .metric-class b{font-size:12px}
+}
+@media(max-width:920px){
+ .data-row{grid-template-columns:repeat(5,minmax(0,1fr))}
+ .data-row .metric-highlight{grid-column:span 2}
+ .data-row .metric b{font-size:15px}
+ .data-row .metric-highlight b{font-size:23px}
+}
+@media(max-width:510px){
+ .data-row{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .data-row .metric:last-child{grid-column:auto}
+ .data-row .metric-highlight{grid-column:span 2}
+ .data-row .metric-highlight b{font-size:25px}
+ .data-row .metric{min-height:46px}
+}
+
+/* V1.4：模式、播放與視圖統一設在網頁標題列，取消獨立工具列高度。 */
+.header{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:5px 10px;margin-bottom:5px}
+.header .head-title{min-width:0;grid-column:1;grid-row:1}
+.header .home{grid-column:2;grid-row:1;justify-self:end}
+.head-actions{grid-column:1/-1;grid-row:2;display:flex;gap:7px;align-items:center;min-width:0;padding:5px 6px;background:var(--panel);border:1px solid var(--edge);border-radius:11px}
+.header .head-actions .tabs{display:flex;flex:0 0 auto;align-items:center;gap:4px;min-width:0;flex-wrap:nowrap;margin:0;padding-right:8px;border-right:1px solid #355774;justify-content:flex-start}
+.header .head-actions .tabs button{font-size:12px;min-height:44px;padding:6px 9px;white-space:nowrap;flex:0 0 auto}
+.header .head-actions .operations{display:flex;align-items:center;justify-content:space-between;flex:1 1 auto;min-width:0;gap:5px;flex-wrap:nowrap;border:0;background:none;border-radius:0;padding:0;margin:0;min-height:0}
+.head-actions .operations>.panel{border:0;background:transparent;padding:0;min-width:0;flex:0 0 auto}
+.head-actions .operations>.panel:first-child{flex:1 1 auto}
+.head-actions .operations>.view-panel{display:flex;flex:0 0 auto;justify-content:flex-end;align-items:center}
+.head-actions .operations .playbar{display:flex;gap:4px;align-items:center;min-height:0;flex-wrap:nowrap}
+.head-actions .operations .playbar button,.head-actions .operations .seg button{font-size:12px;min-height:44px;padding:7px 9px;line-height:1.2;white-space:nowrap}
+.head-actions .operations .playbar .status{font-size:11px;white-space:nowrap;margin-left:4px;color:#acc9e3}
+.head-actions .operations .seg{display:flex;align-items:center;gap:4px;flex-wrap:nowrap}
+.data-row{margin:0 0 7px}
+@media(max-width:1400px){
+ .header .head-actions .tabs button{font-size:11px;padding:6px 7px}
+ .head-actions .operations .playbar button,.head-actions .operations .seg button{font-size:11px;padding:7px 8px}
+ .head-actions .operations .playbar .status{font-size:10px;margin-left:2px}
+}
+@media(max-width:1160px){
+ .head-actions{flex-wrap:wrap;gap:5px}
+ .header .head-actions .tabs{flex:1 1 100%;border-right:0;border-bottom:1px solid #355774;padding:0 0 5px;justify-content:space-between}
+ .header .head-actions .tabs button{font-size:12px;flex:1 1 auto}
+ .header .head-actions .operations{flex:1 1 100%;gap:5px}
+ .head-actions .operations .playbar button,.head-actions .operations .seg button{font-size:12px;padding:7px 9px}
+}
+@media(max-width:850px){
+ .header .head-actions .tabs{flex-wrap:wrap}
+ .head-actions .operations{flex-wrap:wrap!important}
+ .head-actions .operations>.panel:first-child{flex:1 1 100%}
+ .head-actions .operations>.view-panel{flex:1 1 100%;justify-content:flex-start}
+ .head-actions .operations .playbar{flex-wrap:wrap}
+ .head-actions .operations .playbar .status{margin-left:auto}
+}
+@media(max-width:510px){
+ .head-actions .operations .playbar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
+ .head-actions .operations .playbar button{padding:6px 3px;font-size:11px;min-width:0}
+ .head-actions .operations .playbar .status{grid-column:1/-1;margin:0}
+ .head-actions .operations .seg{width:100%}
+ .head-actions .operations .seg button{flex:1 1 auto}
+}
+
+/* V1.7: 圖外線名索引，單排水平捲動，完整保留每條左右分支 */
+.line-names{display:flex;gap:6px;overflow-x:auto;align-items:center;padding:5px 2px 9px;margin-top:2px;scrollbar-width:thin;scrollbar-color:#4d7795 transparent;min-height:34px}
+.line-names:empty{display:none}
+.line-chip{flex:0 0 auto;border-radius:7px;border:1px solid #56728e;background:#152c47;padding:5px 9px;font-size:12px;line-height:1.25;font-weight:700;white-space:nowrap;color:#f3f8ff}
+.line-chip.anti{border-color:#b99c5e;color:#ffe29b;background:#3a342f}
+.line-chip.node{border-color:#b97697;color:#ffc7dc;background:#35283d}
+.line-chip .branch{font-weight:500;opacity:.82;margin-left:3px}
+.line-names .small-note{flex:0 0 auto;font-size:11px;color:#a9c7dd;white-space:nowrap;margin-right:4px}
+</style></head><body><div class="app">
+<header class="header"><div class="head-title"><div class="brand" aria-hidden="true">〰</div><div><h1>水波干涉｜精確疊加實驗室</h1><div class="sub">從第一道波峰出發 · 實線波峰／虛線波谷</div></div></div>
+<a class="home" href="../../../index.html">← Physics Lab 首頁</a>
+<div class="head-actions" aria-label="模式與播放視圖控制"><nav class="tabs" aria-label="物理模擬模式"><button data-mode="interference" class="active">雙波源干涉</button><button data-mode="reflection">反射</button><button data-mode="refraction">折射</button><button data-mode="diffraction">繞射</button><button data-mode="huygens">惠更斯原理</button></nav>
+<div class="operations"><div class="panel"><div class="playbar"><button id="play" class="primary">▶ 播放</button><button id="back">⏮ 逐格後退</button><button id="step">⏭ 逐格前進</button><button id="nextCycle">⏭ 下一週期</button><button id="reset">↺ 重新開始</button><span class="status" id="timeLabel">t = 0.00 s｜尚未發波</span></div></div>
+<div class="panel view-panel"><div class="seg" aria-label="畫面類型"><button id="viewWave" class="on">波前線條</button><button id="viewFringe">擬真亮暗紋</button><button id="viewDual">雙視圖</button></div></div></div></div></header>
+
+<div class="data-row" aria-label="水波參數與選點即時數據">
+  <div class="metric"><small>波長 λ</small><b id="metricLambda">2.00 m</b></div>
+  <div class="metric"><small>波源間距 d</small><b id="metricSep">5.00 m</b></div>
+  <div class="metric"><small>頻率 f</small><b id="metricFreq">0.80 Hz</b></div>
+  <div class="metric"><small>波速 v=fλ</small><b id="metricSpeed">1.60 m/s</b></div>
+  <div class="metric metric-distance"><small>P 至波源 PS₁／PS₂</small><b id="metricDistances">—</b></div>
+  <div class="metric metric-highlight" title="從 P 到兩波源的距離差 D，除以波長 λ；初相位差另外影響干涉判讀">
+    <small id="metricDiffLabel">波程差 D = 0.00 m</small><b id="metricWaveCount">0.00 λ</b>
+  </div>
+  <div class="metric"><small>P 合成振幅（穩態）</small><b id="metricAmplitude">—</b></div>
+  <div class="metric"><small>P 此刻位移</small><b id="metricDisplacement">—</b></div>
+  <div class="metric metric-class"><small>P 干涉分類</small><b id="metricClass" class="accent">一般干涉點</b></div>
+</div>
+<div class="shell"><section class="center">
+<div class="panel big-graph"><div class="graph-top"><h2>水波平面｜即時干涉</h2><small id="arrivalHint">波源 S₁、S₂ 均可見；點選或拖曳平面選擇 P；靠近波前交會點時自動吸附；曲線名稱直接對準各條腹線／節線</small></div><div id="canvases" class="canvases"><div class="canvas-wrap" id="waveBox"><span class="tag">瞬時波形、波前</span><canvas id="plane" width="900" height="510" aria-label="水波槽瞬時位移平面圖，可拖曳選點 P" tabindex="0"></canvas></div><div class="canvas-wrap hidden" id="fringeBox"><span class="tag">時間平均亮暗分布（示意）</span><canvas id="fringe" width="900" height="510" aria-label="水波槽擬真藍色干涉亮暗紋，可拖曳選點 P" tabindex="0"></canvas></div></div><div class="legends"><span class="explainer" id="viewHint">實線是波峰、虛線是波谷。兩波從 t=0 起逐漸向外傳遞。</span><span><i class="legend-line legend-one"></i>S₁ 波前</span><span><i class="legend-line legend-two"></i>S₂ 波前</span><span><i class="legend-line legend-one"></i><i class="legend-line legend-two"></i>實線：波峰</span><span><i class="legend-line legend-dash legend-one"></i><i class="legend-line legend-dash legend-two"></i>虛線：波谷</span><span><i class="legend-band"></i>黃色色帶：腹線</span><span><i class="legend-band node"></i>粉色帶：節線</span><span>亮暗強弱 ≠ 瞬時波峰波谷</span><span>S₁—S₂ 線上：A、N 位置與波程差同步（可切換）</span></div></div>
+<div class="panel"><div class="analysis-head"><h3>選點 P｜波程差與疊加</h3><span id="pointPosition" class="explainer">P (0.0, 1.0) m</span></div><div class="analysis-grid"><div class="value"><small>PS₁ / PS₂</small><b id="distText">—</b></div><div class="value"><small>波程差 D / λ</small><b id="pathText">—</b></div><div class="value"><small>合成振幅（充分到達後）</small><b id="ampText">—</b></div><div class="value"><small>此刻疊加位移</small><b id="sumText">—</b></div></div><div class="formula-strip"><span style="color:var(--green)" id="y1Text">y₁ = 0.00 cm</span><span style="color:var(--purple)" id="y2Text">y₂ = 0.00 cm</span><span style="color:var(--yellow)" id="ytText">y = 0.00 cm</span></div><div class="insight" id="judgement">開始播放後，兩個波前會向外傳遞，抵達 P 時才能觀察實際疊加。</div></div>
+<div class="panel trace-card"><div class="trace-head"><h3 id="traceTitle">選點 P｜時間歷程 y(t)</h3><div class="seg"><button id="traceTime" class="on">選點：時間圖</button><button id="traceSpace">剖面：空間圖</button></div></div><div class="trace-frame"><canvas id="trace" width="900" height="180" aria-label="選點 P 的兩列行進波及合成波的對照圖"></canvas></div><div class="legends"><span>S₁ <i class="legend-line legend-one"></i> 位移</span><span>S₂ <i class="legend-line legend-two"></i> 位移</span><span>合成 <i class="legend-line"></i> 位移</span><span id="traceCaption">同一個 P，三條曲線使用同一時間軸</span></div></div>
+</section><aside class="panel right"><h2>教學控制</h2>
+<div class="section-caption">雙波源參數</div>
+<div class="control"><label for="lambda">波長 λ <output id="lambdaV"></output></label><input id="lambda" type="range" min="0.8" max="4.0" step="0.1" value="2"></div>
+<div class="control"><label for="sep">波源間距 d <output id="sepV"></output></label><input id="sep" type="range" min="2" max="9" step="0.25" value="5"></div>
+<div class="control"><label for="amp">振幅 A <output id="ampV"></output></label><input id="amp" type="range" min="0.3" max="2" step="0.1" value="1"></div>
+<div class="control"><label for="freq">頻率 f <output id="freqV"></output></label><input id="freq" type="range" min="0.3" max="1.8" step="0.1" value="0.8"></div>
+<div class="control"><label for="phase">初相位差 Δφ <output id="phaseV"></output></label><input id="phase" type="range" min="0" max="180" step="15" value="0"></div>
+<div class="control"><label for="rate">播放速度 <output id="rateV"></output></label><input id="rate" type="range" min="0.1" max="3" step="0.1" value="1"></div>
+<hr class="rule"><div class="section-caption">主圖輔助標示</div>
+<label class="checkrow"><input id="show1" type="checkbox" checked>顯示 S₁ 波峰／波谷</label><label class="checkrow"><input id="show2" type="checkbox" checked>顯示 S₂ 波峰／波谷</label><label class="checkrow"><input id="antinodes" type="checkbox">顯示腹線（黃色半透明色帶）</label><label class="checkrow"><input id="nodes" type="checkbox">顯示節線（粉色半透明色帶）</label><label class="checkrow"><input id="sourceLineGuide" type="checkbox" checked>顯示 S₁—S₂ 線上的腹點／節點規律</label><label class="checkrow"><input id="path" type="checkbox">顯示 P 至 S₁、S₂ 的測量線（實心直線）</label><label class="checkrow"><input id="crossLine" type="checkbox">顯示水平剖面線</label>
+<div class="control"><label for="sectionY">剖面高度 y <output id="sectionYV"></output></label><input id="sectionY" type="range" min="-5.5" max="5.5" step="0.1" value="1"></div>
+<hr class="rule"><div class="section-caption">教學快選</div><div class="quick"><button data-preset="start">從零開始</button><button data-preset="mature">完整干涉</button><button data-preset="center">中央腹線 A₀</button><button data-preset="n1">第一節線 N₁</button><button data-preset="a1">第一腹線 A₁</button><button data-preset="section">剖面對照</button></div>
+<hr class="rule"><details><summary>其他現象參數（保留原模式）</summary><div class="control"><label>入射角 <output id="angleV"></output></label><input id="angle" type="range" min="0" max="60" step="5" value="30"></div><div class="control"><label>介質 2 波速比 <output id="ratioV"></output></label><input id="ratio" type="range" min="0.5" max="1.5" step="0.05" value="0.7"></div><div class="control"><label>狹縫寬度 <output id="gapV"></output></label><input id="gap" type="range" min="1" max="7" step="0.5" value="2"></div></details>
+<div class="mode-note" id="modeNote"><b>波前約定：</b>兩波源預設同相，t=0 時皆從第一道正波峰開始發波；之後波源會持續振動，並非每一時刻都是波峰。波前用實線表示波峰、虛線表示波谷；腹／節線用可關閉的半透明色帶表示（不是波前）。採用理想突然起振模型，暫不模擬真實水波起振的平滑過渡與距離衰減。藍色亮暗僅為相干波的時間平均強弱近似，不是精確水面反光計算。</div>
+</aside></div>
+<footer>物理教學正式版 V1.8｜波前形成、干涉點與腹／節線對照</footer></div>
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id),plane=$('plane'),fringe=$('fringe'),trace=$('trace'),c=plane.getContext('2d'),cf=fringe.getContext('2d'),g=trace.getContext('2d');
+const W=900,H=510,UNIT=40,cy=255,sourceY=-1.5,FIELDMW=450,FIELDMH=255,off=document.createElement('canvas');off.width=FIELDMW;off.height=FIELDMH;const fc=off.getContext('2d',{willReadFrequently:false}),image=fc.createImageData(FIELDMW,FIELDMH);let fieldCache=null;
+let mode='interference',view='wave',traceMode='time',time=0,playing=false,clockLast=0,point={x:0,y:1},dragging=null;
+const vkeys=['lambda','sep','amp','freq','phase','rate','sectionY','angle','ratio','gap'];
+const v=()=>({lambda:+$('lambda').value,sep:+$('sep').value,amp:+$('amp').value,freq:+$('freq').value,phase:+$('phase').value,rate:+$('rate').value,sectionY:+$('sectionY').value,angle:+$('angle').value,ratio:+$('ratio').value,gap:+$('gap').value});
+const getSources=p=>[{x:-p.sep/2,y:sourceY},{x:p.sep/2,y:sourceY}];
+const world=(x,y)=>({x:(x-W/2)/UNIT,y:(cy-y)/UNIT}),px=p=>({x:W/2+p.x*UNIT,y:cy-p.y*UNIT});
+const dist=(p,s)=>Math.hypot(p.x-s.x,p.y-s.y);
+function distances(p,a){const [s1,s2]=getSources(a),r1=dist(p,s1),r2=dist(p,s2);return{r1,r2,D:Math.abs(r2-r1),signed:r2-r1}}
+function gate(r,when,a){return when>=r/(a.freq*a.lambda)-1e-10?1:0}
+function waves(p,a,when=time){const {r1,r2}=distances(p,a),one=gate(r1,when,a),two=gate(r2,when,a),omega=2*Math.PI*a.freq,k=2*Math.PI/a.lambda,phi=a.phase*Math.PI/180;const y1=a.amp*one*Math.cos(omega*when-k*r1),y2=a.amp*two*Math.cos(omega*when-k*r2+phi);return{y1,y2,y:y1+y2,one,two}}
+function status(p,a){const pd=distances(p,a),ratio=(pd.signed/a.lambda-a.phase/360),nearestA=Math.round(ratio),nearestN=Math.round(ratio-.5),da=Math.abs(ratio-nearestA),dn=Math.abs(ratio-(nearestN+.5)),full=waves(p,a).one>.999&&waves(p,a).two>.999;let type='一般干涉點',symbol='—',detail='介於完全加強與完全減弱之間';if(da<.023){type='腹點';symbol='A'+Math.abs(nearestA);detail='兩個分波同相，完全建設性干涉'}else if(dn<.023){type='節點';symbol='N'+(Math.abs(nearestN+.5)+.5);detail='兩個分波反相，完全破壞性干涉'}return{...pd,ratio,da,dn,type,symbol,detail,full}}
+function stamp(ctx,text,x,y,color='#e5f5ff',size=13){ctx.save();ctx.font=`700 ${size}px system-ui`;ctx.lineWidth=3;ctx.strokeStyle='#041429';ctx.strokeText(text,x,y);ctx.fillStyle=color;ctx.fillText(text,x,y);ctx.restore()}
+function stroke(ctx,x0,y0,x1,y1,color='#dbeeff',w=1,dash=[]){ctx.save();ctx.strokeStyle=color;ctx.lineWidth=w;ctx.setLineDash(dash);ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(x1,y1);ctx.stroke();ctx.restore()}
+function circleLegacy(p,r,color,w=2,dash=[]){if(r<0)return;const q=legacyPx(p);c.save();c.beginPath();c.ellipse(q.x,q.y,r*42,r*32,0,0,Math.PI*2);c.strokeStyle=color;c.lineWidth=w;c.setLineDash(dash);c.stroke();c.restore()}
+// Backward-compatible schematic renderer helpers for original non-interference tabs.
+function toPx(p){return legacyPx(p)}function legacyPx(p){return{x:450+p.x*42,y:480-p.y*32}}function line(x0,y0,x1,y1,color='#d7e6f6',w=1,dash=[]){stroke(c,x0,y0,x1,y1,color,w,dash)}function text(s,x,y,col='#eaf6ff',size=13){stamp(c,s,x,y,col,size)}function circle(p,r,col,w=2,dash=[]){circleLegacy(p,r,col,w,dash)}function pointMark(p,label,col){const q=legacyPx(p);c.fillStyle=col;c.beginPath();c.arc(q.x,q.y,5,0,Math.PI*2);c.fill();if(label)text(label,q.x+9,q.y-9,col)}
+const fieldStore={};
+function samplePolyline(points, spacing){
+  if(!points || points.length<2) return points?points.slice():[];
+  const out=[points[0]]; let remain=spacing;
+  for(let i=1;i<points.length;i++){
+    let a=points[i-1], b=points[i];
+    let dx=b.x-a.x, dy=b.y-a.y, seg=Math.hypot(dx,dy);
+    if(seg===0) continue;
+    while(seg>=remain){
+      const t=remain/seg;
+      a={x:a.x+dx*t,y:a.y+dy*t}; out.push(a);
+      dx=b.x-a.x; dy=b.y-a.y; seg=Math.hypot(dx,dy); remain=spacing;
+    }
+    remain-=seg;
+  }
+  return out;
+}
+function guideFamilies(a){
+  const families=[];
+  families.push({kind:'anti', order:0, name:'A₀', title:'中央腹線 A₀', branch:0, target:0, points:Array.from({length:121},(_,i)=>({x:0,y:-6+i*0.1}))});
+  const maxOrder=Math.max(1,Math.floor((a.sep-0.001)/a.lambda)+2);
+  for(let m=1;m<=maxOrder;m++){
+    const deltaA=m*a.lambda;
+    if(deltaA<a.sep-1e-6){ for(const sign of [-1,1]) families.push(hyperbolaFamily(a,'anti',m,deltaA,sign)); }
+    const deltaN=(m-0.5)*a.lambda;
+    if(deltaN<a.sep-1e-6){ for(const sign of [-1,1]) families.push(hyperbolaFamily(a,'node',m,deltaN,sign)); }
+  }
+  return families.filter(Boolean);
+}
+function hyperbolaFamily(a,kind,order,delta,sign){
+  const c=a.sep/2, aa=delta/2, b2=c*c-aa*aa; if(!(b2>1e-6)) return null;
+  const pts=[], stepY=0.12, maxY=6.2;
+  for(let yp=-maxY; yp<=maxY; yp+=stepY){
+    const x=sign*aa*Math.sqrt(1 + (yp*yp)/b2), y=sourceY+yp;
+    if(!Number.isFinite(x)||x<-10.9||x>10.9||y<-6.2||y>6.2) continue;
+    pts.push({x,y});
+  }
+  const spacing=Math.max(0.5, a.lambda*0.34);
+  const snaps=samplePolyline(pts, spacing);
+  return {kind,order,name:(kind==='anti'?'A':'N')+order,title:`第${order}${kind==='anti'?'腹':'節'}線 ${kind==='anti'?'A':'N'}${order}`,branch:sign,target:delta,points:pts,snapPoints:snaps};
+}
+function sourceLineMarkers(a){
+  const marks=[]; const half=a.sep/2;
+  marks.push({kind:'anti',name:'A₀',short:'A₀',x:0,y:sourceY,target:0});
+  for(let m=1;;m++){
+    const xa=m*a.lambda/2;
+    if(xa<half-1e-6){ marks.push({kind:'anti',name:'A'+m,short:'A'+m,x:xa,y:sourceY,target:m*a.lambda}); marks.push({kind:'anti',name:'A'+m,short:'A'+m,x:-xa,y:sourceY,target:m*a.lambda}); }
+    const xn=(m-0.5)*a.lambda/2;
+    if(xn<half-1e-6){ marks.push({kind:'node',name:'N'+m,short:'N'+m,x:xn,y:sourceY,target:(m-0.5)*a.lambda}); marks.push({kind:'node',name:'N'+m,short:'N'+m,x:-xn,y:sourceY,target:(m-0.5)*a.lambda}); }
+    if(!(xa<half-1e-6 || xn<half-1e-6)) break;
+  }
+  return marks.sort((a,b)=>a.x-b.x);
+}
+function ringSeries(a,si){
+  const travel=a.freq*a.lambda*time, phi=a.phase/360, shift=si?phi*a.lambda:0, out=[];
+  const nMax=Math.ceil((travel+Math.abs(shift))/a.lambda)+2;
+  for(let n=0;n<=nMax;n++){
+    for(const off of [0,.5]){
+      const r=travel+shift-(n+off)*a.lambda;
+      if(r<=0||r>travel+1e-9||r>18) continue;
+      out.push({radius:r,type:off===0?'crest':'trough'});
+    }
+  }
+  return out;
+}
+function circleIntersections(c1,r1,c2,r2){
+  const dx=c2.x-c1.x, dy=c2.y-c1.y, d=Math.hypot(dx,dy);
+  if(d<1e-8 || d>r1+r2+1e-8 || d<Math.abs(r1-r2)-1e-8) return [];
+  const a=(r1*r1-r2*r2+d*d)/(2*d), h2=r1*r1-a*a;
+  if(h2<-1e-8) return [];
+  const h=Math.sqrt(Math.max(0,h2));
+  const xm=c1.x + a*dx/d, ym=c1.y + a*dy/d;
+  const rx=-dy*(h/d), ry=dx*(h/d);
+  if(h<1e-7) return [{x:xm,y:ym}];
+  return [{x:xm+rx,y:ym+ry},{x:xm-rx,y:ym-ry}];
+}
+function dynamicInterferencePoints(a){
+  const [s1,s2]=getSources(a), list=[], seen=[];
+  const rings1=ringSeries(a,0), rings2=ringSeries(a,1);
+  const tol=.08;
+  for(const A of rings1) for(const B of rings2){
+    const kind=A.type===B.type?'anti':'node';
+    for(const p of circleIntersections(s1,A.radius,s2,B.radius)){
+      if(p.x<-10.95||p.x>10.95||p.y<-6.05||p.y>6.05) continue;
+      if(seen.some(q=>q.kind===kind && Math.hypot(p.x-q.x,p.y-q.y)<tol)) continue;
+      const st=status(p,a);
+      const order=kind==='anti'? Math.round(Math.abs(st.ratio)) : Math.max(1,Math.round(Math.abs(st.ratio)+0.5));
+      seen.push({x:p.x,y:p.y,kind});
+      list.push({x:p.x,y:p.y,kind,order});
+    }
+  }
+  return list.sort((a,b)=>a.x-b.x||a.y-b.y);
+}
+function snapPoint(raw,a){
+  const threshold=0.38; let best=null, bestD=1e9;
+  for(const p of dynamicInterferencePoints(a)){
+    if(p.kind==='anti' && !$('antinodes').checked) continue;
+    if(p.kind==='node' && !$('nodes').checked) continue;
+    const d=Math.hypot(raw.x-p.x, raw.y-p.y);
+    if(d<threshold && d<bestD){bestD=d; best=p;}
+  }
+  if($('sourceLineGuide').checked){
+    for(const m of sourceLineMarkers(a)){
+      const d=Math.hypot(raw.x-m.x, raw.y-m.y);
+      if(d<threshold && d<bestD){bestD=d; best=m;}
+    }
+  }
+  return best?{x:best.x,y:best.y}:raw;
+}
+function drawGuideFamilies(ctx,a,families){
+ for(const fam of families){
+  const enabled=fam.kind==='anti'?$('antinodes').checked:$('nodes').checked;
+  if(!enabled)continue;
+  const pts=fam.points||[];
+  if(pts.length<2)continue;
+  ctx.save();ctx.strokeStyle=fam.kind==='anti'?'rgba(255,219,130,.44)':'rgba(255,143,183,.40)';ctx.lineWidth=8.4;ctx.lineCap='round';ctx.beginPath();
+  pts.forEach((p,i)=>{const q=px(p);if(i===0)ctx.moveTo(q.x,q.y);else ctx.lineTo(q.x,q.y)});
+  ctx.stroke();ctx.restore();
+ }
+}
+// 標籤直接沿幾何曲線定位，每一條分支各自標示，但名稱不寫左／右。
+function drawCurveNames(ctx,a,families){
+ const enabled=families.filter(f=>f.kind==='anti'?$('antinodes').checked:$('nodes').checked);
+ const occupied=[{x:4,y:4,w:176,h:50},{x:725,y:4,w:171,h:41}];
+ // 左右分支分別擁有自己的名稱；分開選擇高度以避免曲線密集處擠在一起。
+ const ordered=enabled.slice().sort((f,g)=>{
+   const fX=f.branch===0?0:f.branch, gX=g.branch===0?0:g.branch;
+   return (fX-gX) || (f.order-g.order) || (f.kind==='anti'?-1:1);
+ });
+ for(const f of ordered){
+   const name=f.order===0?'中央腹線':`第${f.order}${f.kind==='anti'?'腹線':'節線'}`;
+   const hue=f.kind==='anti'?'#ffe7a8':'#ffc3db';
+   ctx.save();ctx.font='bold 12px system-ui';
+   const width=Math.ceil(ctx.measureText(name).width)+16,height=22;
+   const prefer=90+f.order*17+(f.kind==='node'?27:0)+(f.branch<0?6:0);
+   const candidates=[];
+   for(const pt of f.points||[]){
+     const q=px(pt);
+     if(q.x<width/2+7||q.x>W-width/2-7||q.y<48||q.y>285)continue;
+     // 名稱框直接以波程差曲線上的點為中心，短垂直指示線連到該曲線。
+     for(const under of [false,true]){
+       const xx=q.x-width/2, yy=under?q.y+9:q.y-29;
+       if(yy<45||yy+height>295)continue;
+       const rect={x:xx,y:yy,w:width,h:height};
+       const overlaps=occupied.some(r=>xx<r.x+r.w+6&&xx+width+6>r.x&&yy<r.y+r.h+5&&yy+height+5>r.y);
+       if(overlaps)continue;
+       candidates.push({q,rect,under,score:Math.abs(q.y-prefer)+(under?7:0)});
+     }
+   }
+   candidates.sort((a,b)=>a.score-b.score);
+   let choice=candidates[0];
+   if(!choice){
+     // 線非常密集時仍保留標籤，優先放到可見曲線附近，避免丟掉線名。
+     let fallback=null;
+     for(const pt of f.points||[]){const q=px(pt);if(q.x>width/2+7&&q.x<W-width/2-7&&q.y>45&&q.y<290){const sc=Math.abs(q.y-prefer);if(!fallback||sc<fallback.score)fallback={q,score:sc};}}
+     if(!fallback){ctx.restore();continue;}
+     const q=fallback.q;choice={q,rect:{x:q.x-width/2,y:Math.max(45,q.y-29),w:width,h:height},under:false};
+   }
+   occupied.push(choice.rect);
+   const {q,rect,under}=choice;
+   ctx.fillStyle='rgba(7,22,41,.91)';ctx.strokeStyle=f.kind==='anti'?'rgba(255,215,115,.75)':'rgba(255,141,185,.75)';ctx.lineWidth=1;
+   ctx.beginPath();roundRect(ctx,rect.x,rect.y,rect.w,rect.h,7);ctx.fill();ctx.stroke();
+   // 用實心短引線與錨點精確指出這個標籤所對應的曲線位置。
+   ctx.beginPath();ctx.moveTo(q.x,under?rect.y:q.y);ctx.lineTo(q.x,under?q.y:rect.y+height);ctx.stroke();
+   ctx.beginPath();ctx.fillStyle=f.kind==='anti'?'#ffd773':'#ff8db9';ctx.arc(q.x,q.y,2.7,0,Math.PI*2);ctx.fill();
+   ctx.fillStyle=hue;ctx.fillText(name,rect.x+8,rect.y+15);ctx.restore();
+ }
+}
+function roundRect(ctx,x,y,w,h,r){ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r)}
+function drawSourceLineGuide(ctx,a){
+ if(!$('sourceLineGuide').checked)return;
+ const [s1,s2]=getSources(a),left=px(s1),right=px(s2);
+ stroke(ctx,left.x,left.y,right.x,right.y,'rgba(235,244,255,.88)',2.6);
+ const marks=sourceLineMarkers(a), y=left.y;
+ for(const m of marks){
+   const q=px(m), anti=m.kind==='anti';
+   ctx.save();ctx.fillStyle=anti?'#ffd773':'#ff8db9';ctx.strokeStyle='#102b49';ctx.lineWidth=1.6;
+   ctx.beginPath();ctx.arc(q.x,q.y,5.3,0,Math.PI*2);ctx.fill();ctx.stroke();
+   // 腹點名稱在連線下、節點名稱在連線上；不顯示 λ/4 和重複說明。
+   const label=String(m.short).replace(/[0-9]/g,x=>'₀₁₂₃₄₅₆₇₈₉'[Number(x)]);
+   ctx.font='bold 11px system-ui';
+   ctx.fillStyle=anti?'#ffe0a0':'#ffc8df';ctx.textAlign='center';
+   ctx.lineWidth=3;ctx.strokeStyle='#09192c';
+   const ly=y+(anti?25:-15);
+   ctx.strokeText(label,q.x,ly);ctx.fillText(label,q.x,ly);ctx.restore();
+ }
+}
+function computeField(a){const key=[a.sep,a.lambda,a.phase].join('/');if(fieldCache&&fieldCache.key===key)return fieldCache;let rs1=new Float32Array(FIELDMW*FIELDMH),rs2=new Float32Array(rs1.length),delta=new Float32Array(rs1.length);const [s1,s2]=getSources(a);for(let j=0;j<FIELDMH;j++){const y=world(0,(j+.5)*H/FIELDMH).y;for(let i=0;i<FIELDMW;i++){const x=world((i+.5)*W/FIELDMW,0).x,n=j*FIELDMW+i,r1=Math.hypot(x-s1.x,y-s1.y),r2=Math.hypot(x-s2.x,y-s2.y);rs1[n]=r1;rs2[n]=r2;delta[n]=Math.cos(2*Math.PI*(r2-r1)/a.lambda-a.phase*Math.PI/180)}}fieldCache={key,rs1,rs2,delta};return fieldCache}
+function raster(a,kind){const {rs1,rs2,delta}=computeField(a),arr=image.data,maxR=a.freq*a.lambda*time,k=2*Math.PI/a.lambda,omega=2*Math.PI*a.freq,phi=a.phase*Math.PI/180;for(let n=0;n<rs1.length;n++){const r1=rs1[n],r2=rs2[n],w1=maxR>=r1-1e-10?1:0,w2=maxR>=r2-1e-10?1:0;let lum=0;
+if(kind==='fringe'){
+const intensity=(w1*w1+w2*w2+2*w1*w2*delta[n])*.25;const instant=Math.abs(w1*Math.cos(omega*time-k*r1)+w2*Math.cos(omega*time-k*r2+phi))*.5;lum=Math.pow(Math.max(0,intensity),.64)*(.87+.13*instant);
+// 微弱波紋反光僅作視覺質感，不作為振幅或波程差判斷。
+}else{const signed=w1*Math.cos(omega*time-k*r1)+w2*Math.cos(omega*time-k*r2+phi);lum=.10+(.39+.27*signed/2)*Math.max(w1,w2);}
+const p=n*4;let R,G,B;if(kind==='fringe'){
+R=4+Math.round(132*lum);G=18+Math.round(196*lum);B=43+Math.round(207*lum);
+}else{
+const l=Math.max(0,Math.min(1,lum));R=6+Math.round(82*l);G=26+Math.round(125*l);B=65+Math.round(153*l);
+}arr[p]=R;arr[p+1]=G;arr[p+2]=B;arr[p+3]=255;}
+fc.putImageData(image,0,0);return off;}
+function arcRings(ctx,a){const sources=getSources(a),travel=a.freq*a.lambda*time,phi=a.phase/360;for(let si=0;si<2;si++){const show=$(si?'show2':'show1').checked;if(!show)continue;const p=px(sources[si]),shift=si?phi*a.lambda:0,nMax=Math.ceil(travel/a.lambda)+1;for(let n=0;n<=nMax;n++){for(const off of [0,.5]){const radius=travel+shift-(n+off)*a.lambda;if(radius<=0||radius>travel||radius>18)continue;ctx.save();ctx.strokeStyle=si?'rgba(193,163,255,.91)':'rgba(112,241,215,.92)';ctx.lineWidth=off===0?1.6:1.1;ctx.setLineDash(off===0?[]:[5,6]);ctx.beginPath();ctx.arc(p.x,p.y,radius*UNIT,0,2*Math.PI);ctx.stroke();ctx.restore()}}}}
+function marching(ctx,a,kind){const col=kind==='anti'?'#ffdb82':'#ff8fb7',phase=a.phase/360,k=2*Math.PI/a.lambda,trav=a.freq*a.lambda*time,gap=18,NX=Math.ceil(W/gap),NY=Math.ceil(H/gap),maxN=Math.ceil(a.sep/a.lambda)+2;ctx.save();ctx.strokeStyle=col;ctx.globalAlpha=kind==='anti'?.26:.34;ctx.lineWidth=kind==='anti'?9.5:9.5;ctx.lineCap='round';ctx.setLineDash([]);ctx.beginPath();const field=new Float32Array((NX+1)*(NY+1)),reach=new Uint8Array(field.length),[s1,s2]=getSources(a);for(let j=0;j<=NY;j++)for(let i=0;i<=NX;i++){const xx=Math.min(W,i*gap),yy=Math.min(H,j*gap),p=world(xx,yy),r1=dist(p,s1),r2=dist(p,s2),at=j*(NX+1)+i;field[at]=(r2-r1)/a.lambda-phase;reach[at]=r1<=trav&&r2<=trav?1:0}
+const segMap=[[3,0,1],[6,1,2],[12,2,3],[9,3,0],[5,0,1,2,3],[10,3,0,1,2]]; // end edge order interpreted below
+const corners=(i,j)=>[j*(NX+1)+i,j*(NX+1)+i+1,(j+1)*(NX+1)+i+1,(j+1)*(NX+1)+i];const edges=[[0,1],[1,2],[2,3],[3,0]];
+for(let m=-maxN;m<=maxN;m++){const target=m+(kind==='node'?.5:0);for(let j=0;j<NY;j++)for(let i=0;i<NX;i++){const ids=corners(i,j),vals=ids.map(id=>field[id]);if(Math.min(...vals)>target||Math.max(...vals)<target)continue;const cross=[];for(let edge=0;edge<4;edge++){const [p,q]=edges[edge],da=vals[p]-target,db=vals[q]-target;if((da<0&&db>=0)||(da>=0&&db<0)){const frac=Math.max(0,Math.min(1,(target-vals[p])/(vals[q]-vals[p]))),coords=[[i*gap,j*gap],[(i+1)*gap,j*gap],[(i+1)*gap,(j+1)*gap],[i*gap,(j+1)*gap]],P=coords[p],Q=coords[q],x=P[0]+frac*(Q[0]-P[0]),y=P[1]+frac*(Q[1]-P[1]);cross.push([Math.min(W,x),Math.min(H,y)])}}
+for(let n=0;n+1<cross.length;n+=2){const aa=cross[n],bb=cross[n+1],mid=world((aa[0]+bb[0])/2,(aa[1]+bb[1])/2);if(dist(mid,s1)<=trav&&dist(mid,s2)<=trav){ctx.moveTo(...aa);ctx.lineTo(...bb)}}}}
+ctx.stroke();ctx.restore()}
+function drawDynamicPoints(ctx,a){
+  const pts=dynamicInterferencePoints(a);
+  for(const p of pts){
+    if(p.kind==='anti' && !$('antinodes').checked) continue;
+    if(p.kind==='node' && !$('nodes').checked) continue;
+    const q=px(p), fill=p.kind==='anti'?'#ffd773':'#ff8db9';
+    ctx.save(); ctx.fillStyle=fill; ctx.strokeStyle='#112843'; ctx.lineWidth=1.2; ctx.beginPath(); ctx.arc(q.x,q.y,4.6,0,Math.PI*2); ctx.fill(); ctx.stroke(); ctx.restore();
+  }
+}
+function drawBase(ctx,a,kind){ctx.clearRect(0,0,W,H);ctx.fillStyle='#06172f';ctx.fillRect(0,0,W,H);ctx.imageSmoothingEnabled=true;ctx.drawImage(raster(a,kind),0,0,W,H);
+ctx.save();ctx.strokeStyle='rgba(169,212,245,.10)';ctx.lineWidth=.8;for(let x=-10;x<=10;x+=2){const q=px({x,y:0}).x;ctx.beginPath();ctx.moveTo(q,0);ctx.lineTo(q,H);ctx.stroke()}for(let y=-6;y<=6;y+=2){const q=px({x:0,y}).y;ctx.beginPath();ctx.moveTo(0,q);ctx.lineTo(W,q);ctx.stroke()}ctx.restore();
+if(kind==='wave')arcRings(ctx,a);
+const families=guideFamilies(a); drawGuideFamilies(ctx,a,families);
+if(kind==='wave') drawDynamicPoints(ctx,a);
+if($('crossLine').checked||traceMode==='space'){const yy=px({x:0,y:a.sectionY}).y;stroke(ctx,10,yy,W-10,yy,'rgba(255,222,165,.45)',7);stamp(ctx,`剖面 y=${a.sectionY.toFixed(1)}m`,13,yy-10,'#ffe9b5',13)}
+const sources=getSources(a),colors=['#fa797b','#fa797b']; drawSourceLineGuide(ctx,a); sources.forEach((s,i)=>{const q=px(s);ctx.save();ctx.shadowColor='#ff7b7d';ctx.shadowBlur=14;ctx.fillStyle=colors[i];ctx.beginPath();ctx.arc(q.x,q.y,8,0,2*Math.PI);ctx.fill();ctx.restore();stamp(ctx,i?'S₂':'S₁',q.x+13,q.y-13,'#fff4f4',17)});
+drawCurveNames(ctx,a,families);
+if($('path').checked){sources.forEach((s,i)=>{const from=px(s),to=px(point);stroke(ctx,from.x,from.y,to.x,to.y,i?'#cba5ff':'#69e8d0',1.5); const midx=(from.x+to.x)/2, midy=(from.y+to.y)/2; const rr=dist(point,s)/a.lambda; stamp(ctx,`${i?'PS₂':'PS₁'}=${rr.toFixed(2)}λ`,midx-18,midy-7,i?'#e2d4ff':'#b2ffe9',12);})}
+const P=px(point);ctx.fillStyle='#fff7de';ctx.strokeStyle='#152945';ctx.lineWidth=2;ctx.beginPath();ctx.arc(P.x,P.y,6.3,0,Math.PI*2);ctx.fill();ctx.stroke();stamp(ctx,'P',P.x+10,P.y-12,'#fff',16);
+ctx.fillStyle='rgba(6,23,47,.8)';ctx.fillRect(W-182,9,173,29);stamp(ctx,'t = '+time.toFixed(2)+' s',W-168,29,'#d7f4ff',14);
+}
+function drawOther(v){const t=time;const k=2*Math.PI/v.lambda;const yy=toPx({x:0,y:0}).y;const ang=v.angle*Math.PI/180;
+if(mode==='reflection'){line(0,315,900,315,'#ffce75',4);line(450,60,450,470,'#7696b2',1,[6,5]);for(let n=-16;n<16;n++){const phase=n*v.lambda/2+2*t;let pts=[[-11,phase],[11,phase]];c.beginPath();for(let x=-12;x<=12;x+=.25){const y=6+phase-x*Math.tan(ang)*.38;const q=toPx({x,y});if(x===-12)c.moveTo(q.x,q.y);else c.lineTo(q.x,q.y)}c.strokeStyle=n%2?'#77dbc9':'#adc9ff';c.lineWidth=1.6;c.stroke();}text('反射界面（波前反向傳播）',470,302,'#ffce75');}
+else if(mode==='refraction'){line(0,260,900,260,'#ffce75',4);let angle2=Math.asin(Math.max(-1,Math.min(1,Math.sin(ang)*v.ratio)));for(let n=-20;n<20;n++){c.beginPath();for(let x=-12;x<=12;x+=.25){const shift=n*v.lambda/2+2*t;const y=shift+(x*Math.tan(ang)*.38);const y2=shift*v.ratio+(x*Math.tan(angle2)*.38);const Q=toPx({x,y:y>6.8?y:y2});if(x===-12)c.moveTo(Q.x,Q.y);else c.lineTo(Q.x,Q.y)}c.strokeStyle=n%2?'#5de0ca':'#be9bff';c.lineWidth=1.5;c.stroke()}text('介質界面　頻率不變，波速與波長改變',200,250,'#ffce75');}
+else if(mode==='diffraction'){line(0,310,450-v.gap*16,310,'#ffce75',7);line(450+v.gap*16,310,900,310,'#ffce75',7);for(let n=0;n<22;n++){const r=(n*v.lambda/2+2*t)%18;if(r>.1)circle({x:0,y:5.35},r,n%2?'#5de0ca':'#be9bff',1.6,n%2?[4,5]:[])}text('狹縫後產生彎曲的波前（近似示意）',120,300);}
+else{const origin={x:0,y:8.3};line(95,toPx(origin).y,805,toPx(origin).y,'#5de0ca',3);const n=11,rad=(t*1.5)%4;for(let i=0;i<n;i++){const p={x:-8+i*1.6,y:8.3};pointMark(p,'','#5de0ca');circle(p,rad,'#be9bff',1.1)}line(100,toPx({x:0,y:8.3-rad}).y,800,toPx({x:0,y:8.3-rad}).y,'#ffcd70',3);text('子波前向包絡形成下一道波前',245,65);}}
+
+function drawOtherCanvas(a){c.clearRect(0,0,W,H);c.fillStyle='#0c2942';c.fillRect(0,0,W,H);drawOther(a);c.save();c.fillStyle='#0a2338dd';c.fillRect(15,H-47,W-30,36);stamp(c,'此模式沿用舊版原理示意；本次 V1 專注精確的「雙波源干涉」。',30,H-24,'#d9eaf8',14);c.restore()}
+function drawTrace(a){const w=900,h=180,marginL=54,marginR=21,mid=87,range=2*a.amp*1.15,maxV=Math.max(1,range),span=w-marginL-marginR;g.clearRect(0,0,w,h);g.fillStyle='#071d31';g.fillRect(0,0,w,h);stroke(g,marginL,mid,w-marginR,mid,'#62829c',1);g.fillStyle='#a9c4d7';g.font='13px system-ui';g.fillText('位移 cm',5,16);
+let xs,xf,xx,toP,unit;if(traceMode==='time'){const period=1/a.freq,xs=Math.max(0,time-4*period),xf=xs+Math.max(6*period,time-xs+period),q=point;xx=t=>t;toP=t=>waves(q,a,t);unit='s';$('traceTitle').textContent='選點 P｜時間歷程 y(t)';$('traceCaption').textContent='同一個 P，三個位移共用時間軸。'}else{xs=-10.6;xf=10.6;xx=x=>x;toP=x=>waves({x,y:a.sectionY},a);unit='m';$('traceTitle').textContent=`水平剖面 y=${a.sectionY.toFixed(1)}m｜空間波形 y(x)`;$('traceCaption').textContent='同一條水平剖面，S₁、S₂ 與合成波逐點同步。'}
+function xP(x){return marginL+(x-xs)/(xf-xs)*span}function yP(y){return mid-(y/maxV)*67}
+for(let d=-2;d<=2;d++){const y=yP(d*a.amp);stroke(g,marginL,y,w-marginR,y,'rgba(165,197,223,.12)',1);g.fillText((d*a.amp).toFixed(1),15,y+4)}
+for(let i=0;i<=5;i++){const x=xs+i*(xf-xs)/5,xp=xP(x);stroke(g,xp,21,xp,160,'rgba(165,197,223,.10)',1);g.fillText(x.toFixed(traceMode==='time'?1:0),xp-12,169)}
+for(const [key,color,width] of [['y1','#73edcc',2],['y2','#c2a3ff',2],['y','#ffd773',3]]){g.beginPath();g.strokeStyle=color;g.lineWidth=width;for(let j=0;j<=510;j++){const x=xs+j/510*(xf-xs),data=toP(xx(x)),pxx=xP(x),pyy=yP(data[key]);if(j===0)g.moveTo(pxx,pyy);else g.lineTo(pxx,pyy)}g.stroke()}
+if(traceMode==='time'&&time>=xs&&time<=xf){const xp=xP(time);stroke(g,xp,20,xp,160,'#fff',1.4,[6,5]);g.fillStyle='#eaf4ff';g.font='12px system-ui';g.fillText('此刻',Math.min(xp+5,w-55),31)}else if(traceMode==='space'){const xp=xP(point.x);stroke(g,xp,20,xp,160,'#fff',1.4,[6,5]);g.fillStyle='#eaf4ff';g.font='12px system-ui';g.fillText('P 投影',Math.min(xp+5,w-70),31)}g.fillStyle='#b6d0e5';g.font='12px system-ui';g.fillText(`橫軸：${traceMode==='time'?'時間 t':'位置 x'}（${unit}）`,w-147,14)}
+function findTarget(a,target){let lo=0,hi=10.6;for(let i=0;i<50;i++){const mid=(lo+hi)/2,pd=distances({x:mid,y:1},a);if(pd.D<target)lo=mid;else hi=mid}return{x:(lo+hi)/2,y:1}}
+function update(a){const pd=status(point,a),q=waves(point,a),amp=2*a.amp*Math.abs(Math.cos(Math.PI*pd.ratio)),arrived=q.one>.999&&q.two>.999;
+for(const id of vkeys){let m={lambda:' m',sep:' m',amp:' cm',freq:' Hz',phase:'°',rate:'×',sectionY:' m',angle:'°',ratio:'',gap:' m'};$(id+'V').textContent=Number($(id).value).toFixed(id==='phase'||id==='angle'?0:id==='ratio'?2:1)+m[id]}
+$('metricLambda').textContent=a.lambda.toFixed(2)+' m';$('metricSep').textContent=(a.sep/a.lambda).toFixed(2)+' λ';$('metricFreq').textContent=a.freq.toFixed(2)+' Hz';$('metricSpeed').textContent=(a.freq*a.lambda).toFixed(2)+' m/s';$('metricClass').textContent=pd.type==='一般干涉點'?'一般干涉點':`${pd.type} ${pd.symbol}`;
+$('metricDistances').textContent=(pd.r1/a.lambda).toFixed(2)+' / '+(pd.r2/a.lambda).toFixed(2)+' λ';$('metricDiffLabel').textContent='波程差 D = '+(pd.D/a.lambda).toFixed(2)+' λ';$('metricWaveCount').textContent=(pd.D/a.lambda).toFixed(2)+' λ';$('metricAmplitude').textContent=amp.toFixed(2)+' cm';$('metricDisplacement').textContent=q.y.toFixed(2)+' cm';
+$('pointPosition').textContent=`P (${point.x.toFixed(1)}, ${point.y.toFixed(1)}) m`;$('distText').textContent=(pd.r1/a.lambda).toFixed(2)+' λ / '+(pd.r2/a.lambda).toFixed(2)+' λ';$('pathText').textContent='D = '+(pd.D/a.lambda).toFixed(2)+' λ';$('ampText').textContent=amp.toFixed(2)+' cm';$('sumText').textContent=q.y.toFixed(2)+' cm';$('y1Text').textContent='y₁ = '+q.y1.toFixed(2)+' cm';$('y2Text').textContent='y₂ = '+q.y2.toFixed(2)+' cm';$('ytText').textContent='y₁+y₂ = '+q.y.toFixed(2)+' cm';
+$('sumText').classList.toggle('warning',pd.type==='節點');$('timeLabel').textContent=`t = ${time.toFixed(2)} s　|　波前半徑 ≈ ${(a.freq*a.lambda*time).toFixed(1)} m`;
+const phaseShift=a.phase?'（已納入波源相位差）':'（兩波源同相）';const lineMarks=sourceLineMarkers(a).filter(m=>m.x>=-a.sep/2-1e-6&&m.x<=a.sep/2+1e-6); const pairCount=lineMarks.length>1?lineMarks.length-1:0; $('judgement').textContent=`${arrived?'已到達 P：':'波前尚未全部抵達 P：'}${pd.type} ${pd.symbol==='—'?'':pd.symbol}。D/λ=${(pd.D/a.lambda).toFixed(3)}，${pd.detail} ${phaseShift}。S₁—S₂ 連線上腹點 A 與節點 N 依序交錯，相鄰 A/N 相距 λ/4，可據此推算共有幾條腹線與節線。${arrived?'可直接比較上方數值與下方曲線。':'上方分類是波程差推得的穩態位置，位移須等待波前傳到 P 才形成。'}`;
+$('arrivalHint').textContent=mode==='interference'?'S₁、S₂ 由 t=0 正波峰起振；可切換顯示 S₁—S₂ 線上腹點／節點規律；完全建設性為實線-實線或虛線-虛線交會，完全破壞性為實線-虛線交會':'其他現象原理示意（保留原模式）';
+}
+function updateView(){const dual=view==='dual';$('canvases').classList.toggle('dual',dual);$('waveBox').classList.toggle('hidden',view==='fringe');$('fringeBox').classList.toggle('hidden',view==='wave');for(const [kind,id] of [['wave','viewWave'],['fringe','viewFringe'],['dual','viewDual']])$(id).classList.toggle('on',view===kind);$('viewHint').textContent=view==='wave'?'僅波峰用實線、波谷用虛線。黃色／粉紅色半透明色帶表示腹／節線，非波前。':view==='fringe'?'藍色柔和亮暗：時間平均強度近似；腹／節線為可選半透明色帶，非波峰／波谷。':'左：瞬時波前（實線峰／虛線谷）；右：平均明暗。腹／節線使用色帶，參數一致。'}
+function refresh(){const a=v();if(mode==='interference'){if(view!=='fringe')drawBase(c,a,'wave');if(view!=='wave')drawBase(cf,a,'fringe');drawTrace(a);update(a);}else{drawOtherCanvas(a);g.clearRect(0,0,900,180);g.fillStyle='#081f34';g.fillRect(0,0,900,180);stamp(g,'此模式是原版波前示意，雙波源位移對照不適用。',54,92,'#d7eaff',21);for(const id of vkeys){let suff={lambda:' m',sep:' m',amp:' cm',freq:' Hz',phase:'°',rate:'×',sectionY:' m',angle:'°',ratio:'',gap:' m'};$(id+'V').textContent=Number($(id).value).toFixed(1)+suff[id]}$('metricLambda').textContent=a.lambda.toFixed(2)+' m';$('metricSep').textContent='—';$('metricFreq').textContent='—';$('metricSpeed').textContent='—';$('metricClass').textContent='不適用';for(const id of ['metricDistances','metricAmplitude','metricDisplacement','metricWaveCount'])$(id).textContent='—';$('metricDiffLabel').textContent='波程差 D（不適用）';$('pointPosition').textContent='—';for(const id of ['distText','pathText','ampText','sumText','y1Text','y2Text','ytText'])$(id).textContent='—';$('judgement').textContent='此模式沿用原版概念性波前示意，選點波程差與逐點疊加僅適用雙波源干涉。';$('timeLabel').textContent='t = '+time.toFixed(2)+' s';$('traceTitle').textContent='波形對照：本模式不適用';}}
+function setMode(k){mode=k;document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===k));playing=false;$('play').textContent='▶ 播放';time=0;clockLast=0;if(k!=='interference'){view='wave';updateView();$('modeNote').innerHTML='<b>其他現象：</b>沿用舊版波前概念圖作為過渡示意；精確的波程差、亮暗紋與剖面分析僅適用雙波源干涉。';}else{$('modeNote').innerHTML='<b>模型與波前約定：</b>預設同相波源在 t=0 開始以正波峰發波；波源之後隨時間振動，不是一直保持波峰。採用理想突然起振的因果波模型（第一道波峰在 r=vt），忽略真實漸起、反射及衰減。波峰實線、波谷虛線；腹／節線為半透明色帶。藍色亮暗紋為時間平均強弱的視覺近似，非真實反光量測。'}refresh()}
+function preset(name){setMode('interference');$('phase').value=0;if(name==='start'){$('sep').value=5;$('lambda').value=2;point={x:0,y:1};time=0}else if(name==='mature'){time=14;point={x:0,y:1}}else if(name==='center'){time=11;point={x:0,y:1}}else if(name==='n1'){time=11;point=findTarget(v(),v().lambda/2);$('nodes').checked=true}else if(name==='a1'){time=11;point=findTarget(v(),v().lambda);$('antinodes').checked=true}else if(name==='section'){time=11;$('crossLine').checked=true;traceMode='space';$('traceTime').classList.remove('on');$('traceSpace').classList.add('on')}playing=false;$('play').textContent='▶ 播放';refresh()}
+function seekStep(sign){playing=false;$('play').textContent='▶ 播放';time=Math.max(0,time+sign/(24*v().freq));refresh()}
+const controls=[...vkeys,'show1','show2','nodes','antinodes','sourceLineGuide','path','crossLine'];for(const id of controls){$(id).addEventListener('input',()=>{if(['sep','lambda','phase'].includes(id))fieldCache=null;refresh()})}
+$('play').onclick=()=>{playing=!playing;$('play').textContent=playing?'⏸ 暫停':'▶ 播放';clockLast=0};$('back').onclick=()=>seekStep(-1);$('step').onclick=()=>seekStep(1);$('nextCycle').onclick=()=>{playing=false;time+=1/v().freq;$('play').textContent='▶ 播放';refresh()};$('reset').onclick=()=>{playing=false;time=0;$('play').textContent='▶ 播放';refresh()};
+for(const name of ['Wave','Fringe','Dual'])$('view'+name).onclick=()=>{view=name.toLowerCase();updateView();refresh()};
+$('traceTime').onclick=()=>{traceMode='time';$('traceTime').classList.add('on');$('traceSpace').classList.remove('on');refresh()};$('traceSpace').onclick=()=>{traceMode='space';$('crossLine').checked=true;$('traceTime').classList.remove('on');$('traceSpace').classList.add('on');refresh()};
+document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));document.querySelectorAll('[data-preset]').forEach(b=>b.onclick=()=>preset(b.dataset.preset));
+function pick(e,canvas,begin){const rect=canvas.getBoundingClientRect(),x=(e.clientX-rect.left)*W/rect.width,y=(e.clientY-rect.top)*H/rect.height,p=world(x,y);if(begin){const crossPx=px({x:0,y:v().sectionY}).y;dragging=($('crossLine').checked&&Math.abs(y-crossPx)<13)?'section':'point'}if(dragging==='section'){const y2=Math.max(-5.5,Math.min(5.5,p.y));$('sectionY').value=(Math.round(y2*10)/10).toFixed(1);if(traceMode!=='space'){traceMode='space';$('traceSpace').classList.add('on');$('traceTime').classList.remove('on')}}else{const a=v();let raw={x:Math.max(-10.6,Math.min(10.6,p.x)),y:Math.max(-6,Math.min(6,p.y))};point=snapPoint(raw,a)}refresh()}
+for(const canvas of [plane,fringe]){canvas.addEventListener('pointerdown',e=>{canvas.setPointerCapture(e.pointerId);pick(e,canvas,true)});canvas.addEventListener('pointermove',e=>{if(dragging)pick(e,canvas,false)});canvas.addEventListener('pointerup',()=>dragging=null);canvas.addEventListener('pointercancel',()=>dragging=null)}
+function tick(now){if(playing&&!document.hidden){if(clockLast>0){time+=Math.min(.05,(now-clockLast)/1000)*v().rate;refresh()}}clockLast=now;requestAnimationFrame(tick)}document.addEventListener('visibilitychange',()=>{clockLast=0});updateView();refresh();requestAnimationFrame(tick);
+})();
+</script></body></html>
