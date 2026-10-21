@@ -6,6 +6,11 @@ from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
 ALLOWED={"mechanics","thermal","waves","electromagnetism","optics","modern","experiments"}
+# Homepage/catalog only: files and direct URLs remain published by GitHub Pages.
+HIDDEN_FROM_CATALOG={
+    "simulations/waves/ripple-tank-lab/",
+    "simulations/waves/ripple-wave-superposition/",
+}
 catalog=[]
 for entry in sorted((ROOT/"simulations").glob("*/*/index.html")):
     if not (entry.parent/"manifest.json").is_file():
@@ -31,7 +36,9 @@ for file in sorted((ROOT/"simulations").rglob("manifest.json")):
         raise SystemExit(f"Missing/invalid text: {file}")
     if not isinstance(obj["keywords"],list) or len(obj["keywords"])>20 or any(not isinstance(s,str) or not s.strip() or len(s)>50 for s in obj["keywords"]):
         raise SystemExit(f"Invalid keywords: {file}")
-    catalog.append({**obj,"path":f"simulations/{category}/{slug}/"})
+    catalog_path=f"simulations/{category}/{slug}/"
+    if catalog_path not in HIDDEN_FROM_CATALOG:
+        catalog.append({**obj,"path":catalog_path})
 (ROOT/"simulations.json").write_text(json.dumps(catalog,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
 print(f"Catalog generated: {len(catalog)} animations")
 
