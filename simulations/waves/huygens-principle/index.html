@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#081a2a">
-<title>惠更斯原理 V2.4｜首代圓形波與正確反射波前｜Physics Lab</title>
+<title>惠更斯原理 V2.5｜單縫與障礙物繞射講義示意｜Physics Lab</title>
 <style>
 :root{color-scheme:dark;font-family:system-ui,-apple-system,'Noto Sans TC','Microsoft JhengHei',sans-serif;color:#eaf4ff;background:#081827;--panel:#10283e;--border:#34536c;--muted:#adc7db;--front:#69caff;--secondary:#ffc76a;--envelope:#76f2ba;--reflection:#caacff}
 *{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button,select{background:#183c58;color:#eaf4ff;border:1px solid #4c708b;border-radius:9px;padding:9px 12px;cursor:pointer}button{min-height:43px}button:hover{background:#245778}button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #ffdc73;outline-offset:2px}button.active,button.primary{background:#1668ad;border-color:#7acaff;color:#fff}button:disabled,input:disabled{opacity:.35;cursor:not-allowed}input[type=range]{width:100%;min-height:30px;accent-color:#59b7ff}input[type=checkbox]{accent-color:#55d8af;width:18px;height:18px}a{color:#aedaff;text-decoration:none}
@@ -21,6 +21,12 @@
 @media(max-width:740px){.layout{grid-template-columns:1fr}.side{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.info{grid-column:1/-1}.screen{min-height:230px}}
 @media(max-width:540px){.app{padding:7px}.panel{padding:9px}.top h1{font-size:19px}.branding .icon{width:44px;height:44px}.modes{grid-template-columns:repeat(2,1fr)}.actions button{min-width:130px}.side{display:block}.side>.panel{margin-bottom:9px}.readouts{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
+/* Diffraction lesson controls stay within the existing diffraction mode. */
+.diffraction-presets{display:flex;gap:5px;margin-top:9px}
+#diffractionOptions[hidden],#diffractionPresets[hidden]{display:none!important}
+.diffraction-presets button{flex:1;min-width:0;padding:8px 3px;font-size:12px;min-height:42px}
+.diffraction-presets button.active{background:#1668ad;border-color:#7acaff}
+#diffractionKind{padding:7px;min-height:42px;max-width:210px;font-size:13px}
 /* V2.1: compact controls, unobtrusive single-line values overlay. */
 .layout{align-items:start}
 .stage{gap:8px}
@@ -58,11 +64,15 @@
 <div class="hint">連續播放：持續產生新波前；分段播放：完成下一代波前後自動暫停；逐格播放：每按一次僅推進或倒退 T/24，方便仔細觀察子波與包絡線。</div>
 </section>
 <aside class="side"><section class="panel"><h2>物理參數</h2>
-<div class="ctrl"><label for="lambda">介質 1 波長 λ₁</label><input id="lambda" type="range" min="35" max="150" step="5" value="75"><output id="lambdaOut">75 格</output></div>
+<div class="ctrl"><label for="lambda">介質 1 波長 λ₁</label><input id="lambda" type="range" min="25" max="150" step="5" value="75"><output id="lambdaOut">75 格</output></div>
 <div class="ctrl"><label for="v1">介質 1 波速 v₁</label><input id="v1" type="range" min="30" max="180" step="5" value="80"><output id="v1Out">80 格/s</output></div>
 <div class="ctrl"><label for="v2">介質 2 波速 v₂</label><input id="v2" type="range" min="20" max="210" step="5" value="50"><output id="v2Out">50 格/s</output></div>
 <div class="ctrl"><label for="angle">入射角 θ₁</label><input id="angle" type="range" min="0" max="65" step="5" value="30"><output id="angleOut">30°</output></div>
-<div class="ctrl"><label for="obstacle">障礙物高度</label><input id="obstacle" type="range" min="20" max="340" step="10" value="130"><output id="obstacleOut">130 格</output></div>
+<div id="diffractionOptions" class="group" hidden><div class="groupheading">繞射講義對照</div>
+ <div class="check"><label for="diffractionKind">觀察情境　</label><select id="diffractionKind" aria-label="選擇單狹縫或障礙物繞射"><option value="slit">單狹縫繞射</option><option value="block">障礙物邊緣繞射</option></select></div>
+ <div id="diffractionPresets" class="diffraction-presets" aria-label="狹縫寬度與波長比快選"><button type="button" data-diff-ratio="12">d/λ = 12</button><button type="button" data-diff-ratio="6">d/λ = 6</button><button type="button" data-diff-ratio="1">d/λ = 1</button></div>
+ <p class="info">綠色代表傳播波前，黃色僅保留局部子波。狹縫變窄或波長增大，波前越接近圓弧。</p></div>
+ <div class="ctrl"><label id="obstacleLabel" for="obstacle">障礙物高度</label><input id="obstacle" type="range" min="20" max="340" step="5" value="130"><output id="obstacleOut">130 格</output></div>
 <div class="ctrl"><label for="slit">單縫寬 a</label><input id="slit" type="range" min="15" max="105" step="5" value="35"><output id="slitOut">35 格</output></div>
 <div class="ctrl"><label for="gap">雙縫中心距 d</label><input id="gap" type="range" min="60" max="200" step="5" value="115"><output id="gapOut">115 格</output></div>
 <div class="ctrl"><label for="sources">波前次波源數</label><input id="sources" type="range" min="3" max="17" step="2" value="7"><output id="sourcesOut">7</output></div>
@@ -84,7 +94,7 @@
 (()=>{'use strict';
 const $=id=>document.getElementById(id),canvas=$('canvas'),ctx=canvas.getContext('2d');
 const W=900,H=500,cy=H/2,wall=452,x0=148;
-let mode='plane',t=0,playing=false,playType='none',segmentEnd=0,lastFrame=null;
+let mode='plane',diffractionKind='slit',t=0,playing=false,playType='none',segmentEnd=0,lastFrame=null;
 const keySliders=['lambda','v1','v2','angle','obstacle','slit','gap','sources','rate'];
 const sliders={lambda:'格',v1:'格/s',v2:'格/s',angle:'°',obstacle:'格',slit:'格',gap:'格',sources:'',rate:'×'};
 function P(){let p={};for(const key of keySliders)p[key]=Number($(key).value);p.f=p.v1/p.lambda;p.T=p.lambda/p.v1;p.lambda2=p.v2/p.f;p.rad=p.angle*Math.PI/180;p.snell=p.v2/p.v1*Math.sin(p.rad);p.critical=Math.abs(p.snell)>1;p.refract=Math.asin(Math.max(-1,Math.min(1,p.snell)));return p}
@@ -105,15 +115,15 @@ function updateUI(p){
 for(const key of keySliders){setText(key+'Out',Number($(key).value).toFixed(key==='rate'?1:0)+(key==='rate'?'×':key==='sources'?'':' '+sliders[key]))}
 setText('fOut',p.f.toFixed(2)+' Hz');setText('lambda2Out',p.lambda2.toFixed(1)+' 格');
 const {gen,phase}=generation(p);
-const labels={plane:['波長 λ₁',p.lambda+' 格','波速 v₁',p.v1+' 格/s','頻率 f',p.f.toFixed(2)+' Hz','目前波前','第 '+(gen+1)+' 代'],circle:['波長 λ₁',p.lambda+' 格','波速 v₁',p.v1+' 格/s','頻率 f',p.f.toFixed(2)+' Hz','目前波前','第 '+(gen+1)+' 代'],reflection:['入射角 θ₁',p.angle+'°','反射角 θr',p.angle+'°','波速 v',p.v1+' 格/s','波前代數','第 '+(gen+1)+' 代'],refraction:['入射角 θ₁',p.angle+'°','折射角 θ₂',p.critical?'全反射條件':(p.refract*180/Math.PI).toFixed(1)+'°','波長 λ₂',p.lambda2.toFixed(1)+' 格','頻率 f',p.f.toFixed(2)+' Hz'],obstacle:['障礙物高度 d',p.obstacle+' 格','波長 λ',p.lambda+' 格','尺寸比 d/λ',(p.obstacle/p.lambda).toFixed(2),'波前代數','第 '+(gen+1)+' 代'],double:['單縫寬 a',p.slit+' 格','雙縫中心距 d',p.gap+' 格','波長 λ',p.lambda+' 格','尺寸比 a/λ',(p.slit/p.lambda).toFixed(2)]};
+const labels={plane:['波長 λ₁',p.lambda+' 格','波速 v₁',p.v1+' 格/s','頻率 f',p.f.toFixed(2)+' Hz','目前波前','第 '+(gen+1)+' 代'],circle:['波長 λ₁',p.lambda+' 格','波速 v₁',p.v1+' 格/s','頻率 f',p.f.toFixed(2)+' Hz','目前波前','第 '+(gen+1)+' 代'],reflection:['入射角 θ₁',p.angle+'°','反射角 θr',p.angle+'°','波速 v',p.v1+' 格/s','波前代數','第 '+(gen+1)+' 代'],refraction:['入射角 θ₁',p.angle+'°','折射角 θ₂',p.critical?'全反射條件':(p.refract*180/Math.PI).toFixed(1)+'°','波長 λ₂',p.lambda2.toFixed(1)+' 格','頻率 f',p.f.toFixed(2)+' Hz'],obstacle:[diffractionKind==='slit'?'狹縫寬度 d':'障礙物高度 d',p.obstacle+' 格','波長 λ',p.lambda+' 格','尺寸比 d/λ',(p.obstacle/p.lambda).toFixed(2),'波前代數','第 '+(gen+1)+' 代'],double:['單縫寬 a',p.slit+' 格','雙縫中心距 d',p.gap+' 格','波長 λ',p.lambda+' 格','尺寸比 a/λ',(p.slit/p.lambda).toFixed(2)]};
 const a=labels[mode];for(let i=0;i<4;i++){setText('metric'+(i+1)+'label',a[2*i]);setText('metric'+(i+1),a[2*i+1])}
 setText('stageBadge','第 '+(gen+1)+(cycleCount()?' / '+cycleCount():'')+' 代 · '+(phase*100).toFixed(0)+'%');setText('clockBadge','t = '+t.toFixed(2)+' s');setText('pct',Math.round(phase*100)+'%');$('progress').value=Math.round(phase*1000);
-$('v2').disabled=mode!=='refraction';$('angle').disabled=!['reflection','refraction'].includes(mode);$('obstacle').disabled=mode!=='obstacle';$('slit').disabled=mode!=='double';$('gap').disabled=mode!=='double';$('brightness').disabled=mode!=='double';$('whole').disabled=!['plane','circle'].includes(mode);$('history').disabled=!['plane','circle'].includes(mode);$('sources').disabled=mode==='obstacle';
+$('diffractionOptions').hidden=mode!=='obstacle';$('diffractionPresets').hidden=diffractionKind!=='slit';$('diffractionKind').value=diffractionKind;setText('obstacleLabel',diffractionKind==='slit'?'狹縫寬度 d':'障礙物高度 d');document.querySelectorAll('[data-diff-ratio]').forEach(b=>b.classList.toggle('active',mode==='obstacle'&&diffractionKind==='slit'&&Math.abs(p.obstacle/p.lambda-Number(b.dataset.diffRatio))<.02));$('v2').disabled=mode!=='refraction';$('angle').disabled=!['reflection','refraction'].includes(mode);$('obstacle').disabled=mode!=='obstacle';$('slit').disabled=mode!=='double';$('gap').disabled=mode!=='double';$('brightness').disabled=mode!=='double';$('whole').disabled=!['plane','circle'].includes(mode);$('history').disabled=!['plane','circle'].includes(mode);$('sources').disabled=mode==='obstacle';
 $('reflectedLegend').hidden=mode!=='reflection';
-setText('ratioLabel',mode==='obstacle'?'障礙物大小 / λ':mode==='double'?'單縫寬 / λ':mode==='refraction'?'折射波長比 λ₂/λ₁':'波前傳遞');setText('ratioOut',mode==='obstacle'?(p.obstacle/p.lambda).toFixed(2):mode==='double'?(p.slit/p.lambda).toFixed(2):mode==='refraction'?(p.lambda2/p.lambda).toFixed(2):'—');
-const lesson={plane:'直線波前逐代向右形成：完成第 8 代後從左邊重新開始，持續展示舊波前、子波與新波前的關係。',circle:'第 1 代從圓心的點波源發出逐漸擴張的圓形波（半徑 r = v₁t）；第 2、3 代再由上一代圓周上的點發出子波、形成新包絡線，完成後回到圓心。',reflection:`入射角 = 反射角 = ${p.angle}°。入射波前碰到介面的位置才開始產生子波；反射波前由同一列有限長、等長且平行的入射波前鏡射形成。`,refraction:p.critical?'此組合超過折射臨界角：本幾何模型改顯示全反射示意，沒有折射傳播波。':`頻率不變（${p.f.toFixed(2)} Hz）；v₁ = ${p.v1}、v₂ = ${p.v2} 格/s；λ₁ = ${p.lambda}、λ₂ = ${p.lambda2.toFixed(1)} 格。折射線相對法線${p.v2<p.v1?'偏向':p.v2>p.v1?'偏離':'不偏折'}。`,obstacle:`障礙物尺寸／波長 = ${(p.obstacle/p.lambda).toFixed(2)}。障礙物兩端邊緣的新子波向陰影區傳播；相對尺寸越小，繞射效果越明顯。`,double:`兩狹縫等效為相干次波源；路徑差 Δr = r₁−r₂。相長時 |Δr| = mλ，相消時 |Δr| = (m+½)λ（理想同相近似）。`};
-const warns={plane:'舊波前先固定於本代起始位置，再由每個黃色點發出子波；綠色新波前必須位於傳播方向前方，下一代從前一代新波前繼續發出子波。',circle:'第 1 代是單一圓心點波源形成的圓形子波，其圓周就是第一代波前（不重複繪製重合圓）。第 2、3 代才由舊波前各點產生子波與外側新包絡線。',reflection:'等長平面波前與波峰間距由同一組幾何定義；波前剛碰到介面時，反射段會從接觸點逐漸形成，因此靠近界面時只顯示正在形成的部分。黃色子波源必須等實際入射波前到達對應的介面位置才啟動。此模型不含反射吸收及波束邊緣繞射。',refraction:'司乃耳定律 sinθ₁/sinθ₂ = v₁/v₂ = λ₁/λ₂；交界處子波半徑以當地波速計算。若達全反射，動畫顯示幾何反射，不模擬倏逝波。',obstacle:'障礙邊緣以有限個次波源示意繞射；不求解水波完整邊界條件或陰影區的精確振幅。',double:'灰階亮暗是理想同相次波疊加的相對時間平均強弱，不是瞬時波峰或波谷。狹縫寬度以簡化 sinc 包絡表示，不是完整菲涅耳積分。'};
-setText('lesson',lesson[mode]);setText('explain',lesson[mode]);setText('caution',warns[mode]);setText('legendHint',mode==='double'?'藍色波前由左傳入；兩個狹縫上的黃色次波源形成圓形子波。勾選灰階明暗可觀察相干疊加的強弱。':mode==='reflection'?'藍色入射波前、紫色反射波前；實線為波峰、虛線為波谷，顯示開關可獨立控制。':'實線波峰／虛線波谷，相距 λ/2。黃色圓弧是各點發出的子波，可獨立切換。');
+setText('ratioLabel',mode==='obstacle'?(diffractionKind==='slit'?'狹縫寬度 / λ':'障礙物高度 / λ'):mode==='double'?'單縫寬 / λ':mode==='refraction'?'折射波長比 λ₂/λ₁':'波前傳遞');setText('ratioOut',mode==='obstacle'?(p.obstacle/p.lambda).toFixed(2):mode==='double'?(p.slit/p.lambda).toFixed(2):mode==='refraction'?(p.lambda2/p.lambda).toFixed(2):'—');
+const lesson={plane:'直線波前逐代向右形成：完成第 8 代後從左邊重新開始，持續展示舊波前、子波與新波前的關係。',circle:'第 1 代從圓心的點波源發出逐漸擴張的圓形波（半徑 r = v₁t）；第 2、3 代再由上一代圓周上的點發出子波、形成新包絡線，完成後回到圓心。',reflection:`入射角 = 反射角 = ${p.angle}°。入射波前碰到介面的位置才開始產生子波；反射波前由同一列有限長、等長且平行的入射波前鏡射形成。`,refraction:p.critical?'此組合超過折射臨界角：本幾何模型改顯示全反射示意，沒有折射傳播波。':`頻率不變（${p.f.toFixed(2)} Hz）；v₁ = ${p.v1}、v₂ = ${p.v2} 格/s；λ₁ = ${p.lambda}、λ₂ = ${p.lambda2.toFixed(1)} 格。折射線相對法線${p.v2<p.v1?'偏向':p.v2>p.v1?'偏離':'不偏折'}。`,obstacle:diffractionKind==='slit'?`狹縫寬度 d/λ = ${(p.obstacle/p.lambda).toFixed(2)}。d≫λ 時透射波前大部分近直線，邊緣彎曲；d≈λ 時傳出波前接近半圓形。綠色線條是精簡後的傳播波前，非所有子波的軌跡。`:`障礙物高度 d/λ = ${(p.obstacle/p.lambda).toFixed(2)}。原有障礙物模式保留；波前在障礙物邊緣向幾何陰影區彎曲，精簡為不重疊的代表波前。`,double:`兩狹縫等效為相干次波源；路徑差 Δr = r₁−r₂。相長時 |Δr| = mλ，相消時 |Δr| = (m+½)λ（理想同相近似）。`};
+const warns={plane:'舊波前先固定於本代起始位置，再由每個黃色點發出子波；綠色新波前必須位於傳播方向前方，下一代從前一代新波前繼續發出子波。',circle:'第 1 代是單一圓心點波源形成的圓形子波，其圓周就是第一代波前（不重複繪製重合圓）。第 2、3 代才由舊波前各點產生子波與外側新包絡線。',reflection:'等長平面波前與波峰間距由同一組幾何定義；波前剛碰到介面時，反射段會從接觸點逐漸形成，因此靠近界面時只顯示正在形成的部分。黃色子波源必須等實際入射波前到達對應的介面位置才啟動。此模型不含反射吸收及波束邊緣繞射。',refraction:'司乃耳定律 sinθ₁/sinθ₂ = v₁/v₂ = λ₁/λ₂；交界處子波半徑以當地波速計算。若達全反射，動畫顯示幾何反射，不模擬倏逝波。',obstacle:diffractionKind==='slit'?'以狹縫出射的惠更斯波前包絡作定性示意；曲率依 d/λ 連續近似，非繞射積分求得的精確相位或強度分布。障礙物對照仍可切換。':'障礙邊緣以少量局部次波及幾何波前示意；不求解水波完整邊界條件或陰影區的精確振幅。',double:'灰階亮暗是理想同相次波疊加的相對時間平均強弱，不是瞬時波峰或波谷。狹縫寬度以簡化 sinc 包絡表示，不是完整菲涅耳積分。'};
+setText('lesson',lesson[mode]);setText('explain',lesson[mode]);setText('caution',warns[mode]);setText('legendHint',mode==='double'?'藍色波前由左傳入；兩個狹縫上的黃色次波源形成圓形子波。勾選灰階明暗可觀察相干疊加的強弱。':mode==='reflection'?'藍色入射波前、紫色反射波前；實線為波峰、虛線為波谷，顯示開關可獨立控制。':mode==='obstacle'?'藍色：入射波前；綠色：精簡的出射波前；黃色：僅顯示代表子波。波峰實線、波谷虛線可獨立切換。':'實線波峰／虛線波谷，相距 λ/2。黃色圓弧是各點發出的子波，可獨立切換。');
 }
 function lin(x,y,xx,yy,color='#69caff',w=2,dash=[]){ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(xx,yy);ctx.lineWidth=w;ctx.strokeStyle=color;ctx.setLineDash(dash);ctx.stroke();ctx.setLineDash([])}
 function ring(x,y,r,color='#ffc76a',lw=1.7,dash=[],a0=0,a1=Math.PI*2){if(r<.3)return;ctx.beginPath();ctx.arc(x,y,r,a0,a1);ctx.strokeStyle=color;ctx.lineWidth=lw;ctx.setLineDash(dash);ctx.stroke();ctx.setLineDash([])}
@@ -401,7 +411,7 @@ function incomingStripes(p){
  const leading=x0+p.v1*t;
  for(const phase of visiblePhases()){
   const lim=waveIndices(leading,p.lambda,phase.offset,12,wall-7);
-  for(let n=lim.start;n<=lim.end;n++){
+  for(let n=lim.start;n<=(mode==='obstacle'?Math.min(lim.end,lim.start+5):lim.end);n++){
    const x=leading-(n+phase.offset)*p.lambda;
    if(x<x0-1e-8)continue;
    waveLine(x,90,x,H-20,'#85cfff',phase);
@@ -409,47 +419,67 @@ function incomingStripes(p){
  }
  ctx.restore();arrow(40,cy,55,0,'#b1e6bb');caption('入射平面波',33,H-18,'#9cd5ff');
 }
-function obstacleRings(p){
+// 繞射講義版：傳播波前與瞬時次波分開，避免完整圓形子波掩蓋包絡線。
+// d/λ 是教學比較用的控制量，非精確的菲涅耳場數值解。
+function diffractionFronts(p,kind){
  const half=p.obstacle/2,top=cy-half,bottom=cy+half;
  const arrival=(wall-x0)/p.v1,age=t-arrival;
- // 陰影區是「幾何陰影」不是絕對無波，渲染淡化避免誤導。
- ctx.fillStyle='rgba(43,64,84,.24)';ctx.fillRect(wall+6,top,W-wall-6,p.obstacle);
- ctx.save();ctx.beginPath();ctx.rect(wall+1,82,W-wall-2,H-100);ctx.clip();
+ const opening=kind==='slit',ratio=p.obstacle/p.lambda;
+ // 寬縫保留長直線段；窄縫趨於一個等效點波源的半圓包絡。
+ const straightFraction=opening?Math.max(0,Math.min(1,(ratio-1)/(ratio+.8))):0;
+ const flatHalf=opening?half*straightFraction:0;
+ if(!opening){ctx.fillStyle='rgba(43,64,84,.20)';ctx.fillRect(wall+6,top,W-wall-6,p.obstacle)}
+ ctx.save();ctx.beginPath();ctx.rect(wall+1,83,W-wall-5,H-103);ctx.clip();
  if(age>=0){
-  if(!on('envelope'))ctx.globalAlpha=.43;
-  const lead=p.v1*age;
-  const maxRadius=Math.hypot(W-wall,H);
+  const lead=p.v1*age, maxRadius=Math.hypot(W-wall,H);
+  if(!on('envelope'))ctx.globalAlpha=.38;
   for(const phase of visiblePhases()){
    const lim=waveIndices(lead,p.lambda,phase.offset,0,maxRadius);
-   for(let n=lim.start;n<=lim.end;n++){
+   // 僅保留最前方 6 列波峰／波谷，避免成十上百代的線條互相重疊。
+   for(let n=lim.start;n<=Math.min(lim.end,lim.start+5);n++){
     const r=lead-(n+phase.offset)*p.lambda;
-    if(r<0)continue; // cannot physically have traveled negative radius
+    if(r<.35)continue;
     const right=wall+r;
-    // 未被遮擋部分保持平面波波前；曲線與直線在障礙邊緣平滑相接。
-    waveLine(right,83,right,top,'#85ecc4',phase);
-    waveLine(right,bottom,right,H-19,'#85ecc4',phase);
-    // 半徑 r 的惠更斯邊緣波，沿 0→90 度漸入幾何陰影區。
-    ctx.beginPath();ctx.arc(wall,top,r,0,Math.PI/2);
-    ctx.strokeStyle='rgba(127,236,187,.88)';ctx.lineWidth=phase.width;
-    ctx.setLineDash(phase.dash);ctx.stroke();ctx.setLineDash([]);
-    ctx.beginPath();ctx.arc(wall,bottom,r,-Math.PI/2,0);
-    ctx.strokeStyle='rgba(127,236,187,.88)';ctx.lineWidth=phase.width;
-    ctx.setLineDash(phase.dash);ctx.stroke();ctx.setLineDash([]);
+    if(opening){
+     if(flatHalf>.4)waveLine(right,cy-flatHalf,right,cy+flatHalf,'#76f2ba',phase);
+     // 連續出射波前：直線波段兩端接向外彎的四分之一圓。
+     waveArc(wall,cy-flatHalf,r,'#76f2ba',phase,-Math.PI/2,0);
+     waveArc(wall,cy+flatHalf,r,'#76f2ba',phase,0,Math.PI/2);
+    }else{
+     // 障礙物後方沒有穿透波；上下的通過區保持平面波，僅邊緣彎入陰影。
+     waveLine(right,83,right,top,'#76f2ba',phase);
+     waveLine(right,bottom,right,H-20,'#76f2ba',phase);
+     // Shadow-side edge arcs stop at the central bisector: no crossing or invented extra fronts.
+     const edgeAngle=Math.asin(Math.min(1,half/r));
+     waveArc(wall,top,r,'#76f2ba',phase,0,edgeAngle);
+     waveArc(wall,bottom,r,'#76f2ba',phase,-edgeAngle,0);
+    }
    }
   }
  }
- // 當代次波展示限於最近一個週期，但永遠持續重生。
- if(age>0&&on('wavelets')){
-  const r=(age%p.T)*p.v1;
-  for(const y of [top,bottom])ring(wall,y,r,'rgba(255,209,113,.68)',1.45);
+ ctx.globalAlpha=1;
+ // 黃色局部子波只在最近一個週期內展示，且只畫前向局部半圓。
+ // 不再將完整圓環重複畫在已成形的綠色波前上。
+ if(age>0 && on('wavelets')){
+  const r=Math.min((age%p.T)*p.v1,p.lambda*.40,32);
+  if(r>.5){
+   const centers=opening?(ratio<=1.5?[cy]:[top,bottom]):[top,bottom];
+   for(const y of centers)ring(wall,y,r,'rgba(255,209,113,.43)',1.3,[],-Math.PI/2,Math.PI/2);
+  }
  }
  ctx.restore();
- lin(wall,top,wall,bottom,'#9da9b5',10);
- if(on('points')){dot(wall,top,'#ffd279',5);dot(wall,bottom,'#ffd279',5)}
- caption('障礙物',wall-97,top+19,'#dce4ef');
- caption('幾何陰影區（仍有繞射）',wall+34,cy,'#9db5c3');
- caption('上下邊緣子波',wall+24,top-17,'#e5cc8a');
+ if(opening){
+  lin(wall,0,wall,top,'#9da9b5',11);lin(wall,bottom,wall,H,'#9da9b5',11);
+  if(on('points')){
+   if(ratio<=1.5)dot(wall,cy,'#ffd279',4);else{dot(wall,top,'#ffd279',4);dot(wall,bottom,'#ffd279',4)}
+  }
+ }else{
+  lin(wall,top,wall,bottom,'#9da9b5',11);
+  if(on('points')){dot(wall,top,'#ffd279',4);dot(wall,bottom,'#ffd279',4)}
+  caption('障礙物',wall-90,top+17,'#dce4ef');
+ }
 }
+function obstacleRings(p){diffractionFronts(p,diffractionKind)}
 let fringeCacheKey='',fringeCanvas=document.createElement('canvas');fringeCanvas.width=420;fringeCanvas.height=235;let fc=fringeCanvas.getContext('2d');
 function doubleIntensity(p){const key=[p.lambda,p.slit,p.gap].join(',');if(key===fringeCacheKey)return;fringeCacheKey=key;const ww=fringeCanvas.width,hh=fringeCanvas.height,im=fc.createImageData(ww,hh),px=im.data;const ks=2*Math.PI/p.lambda;
 for(let py=0;py<hh;py++)for(let pxI=0;pxI<ww;pxI++){
@@ -498,6 +528,12 @@ function draw(){const p=P();stageCanvas();if(mode==='plane'||mode==='circle')wav
 function render(){const p=P();updateUI(p);draw()}
 function selectMode(which){mode=which;if(mode==='double')$('brightness').checked=true;document.querySelectorAll('[data-mode]').forEach(btn=>{let active=btn.dataset.mode===mode;btn.classList.toggle('active',active);btn.setAttribute('aria-pressed',active?'true':'false')});restart()}
 document.querySelectorAll('[data-mode]').forEach(btn=>btn.onclick=()=>selectMode(btn.dataset.mode));
+$('diffractionKind').addEventListener('change',()=>{diffractionKind=$('diffractionKind').value;restart()});
+document.querySelectorAll('[data-diff-ratio]').forEach(btn=>btn.addEventListener('click',()=>{
+ const ratio=Number(btn.dataset.diffRatio);
+ const presets={12:[300,25],6:[300,50],1:[75,75]};
+ const [d,lambda]=presets[ratio];$('obstacle').value=d;$('lambda').value=lambda;restart();
+}));
 for(const key of keySliders)$(key).addEventListener('input',()=>{
  if(key==='slit'&&Number($('gap').value)-Number($('slit').value)<15){$('gap').value=Math.min(200,Math.ceil((Number($('slit').value)+15)/5)*5)}
  if(key==='gap'&&Number($('gap').value)-Number($('slit').value)<15){$('slit').value=Math.max(15,Math.floor((Number($('gap').value)-15)/5)*5)}
