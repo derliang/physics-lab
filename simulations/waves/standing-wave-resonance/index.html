@@ -161,7 +161,7 @@ function startSnap(target,fromMarker=false){
  if(Math.abs(to-driveHz)<1e-7){driveHz=to;refresh();return}
  snapTween={from:driveHz,to,start:null,
   duration:fromMarker?Math.min(750,Math.max(360,360+Math.abs(to-driveHz)/b.f1*85)):360};
- if(!playing){playing=true;last=0;$('play').textContent='⏸ 暫停動畫'}
+ // 保留使用者原本的播放／暫停狀態。
 }
 function releaseScan(){
  if(!scanEnabled)return;
@@ -172,13 +172,14 @@ function releaseScan(){
  }
 }
 function advanceSnap(now){
- if(!snapTween)return;
+ if(!snapTween)return false;
  if(snapTween.start===null)snapTween.start=now;
  const t=Math.min(1,Math.max(0,(now-snapTween.start)/snapTween.duration));
  const easing=t*t*(3-2*t);
  driveHz=snapTween.from+(snapTween.to-snapTween.from)*easing;
  if(t>=1){driveHz=snapTween.to;snapTween=null}
  refresh();
+ return true;
 }
 function moveToHarmonic(k){
  scanEnabled=true;snapTween=null;startSnap(physics(k).f,true);refresh();
@@ -409,7 +410,7 @@ $('projection').onclick=()=>{const on=app.classList.toggle('projection');$('proj
 $('restore').onclick=()=>{$('L').value='1.2';$('F').value='100';$('mu').value='4';$('temp').value='20';setN(1);$('whatifNote').textContent='已恢復預設數值；請重新探索長度、張力、線密度與諧音的影響。';reset()};
 $('compareGrid').addEventListener('click',e=>{const b=e.target.closest('[data-n]');if(b)setN(+b.dataset.n)});
 $('whatif').addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(b)changePreset(b.dataset.act)});
-function tick(now){if(document.hidden){last=now;requestAnimationFrame(tick);return}advanceSnap(now);if(playing){if(last){const dt=Math.min(.06,(now-last)/1000);phase+=dt*2*Math.PI*(+$('animSpeed').value)*(scanEnabled?(.7+.14*Math.min(11,driveHz/physics(1).f1)):1)}paint()}last=now;requestAnimationFrame(tick)}
+function tick(now){if(document.hidden){last=now;requestAnimationFrame(tick);return}if(playing&&last){const dt=Math.min(.06,(now-last)/1000);phase+=dt*2*Math.PI*(+$('animSpeed').value)*(scanEnabled?(.7+.14*Math.min(11,driveHz/physics(1).f1)):1)}const tweenPainted=advanceSnap(now);if(playing&&!tweenPainted)paint();last=now;requestAnimationFrame(tick)}
 if('ResizeObserver'in window){resizeMonitor=new ResizeObserver(()=>paint());resizeMonitor.observe(DOM.main)}
 setMode('ff');requestAnimationFrame(tick);
 })();
