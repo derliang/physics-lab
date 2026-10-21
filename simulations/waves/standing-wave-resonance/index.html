@@ -50,9 +50,8 @@
 <header>
   <div class="logo"><span class="logoicon" aria-hidden="true"><svg viewBox="0 0 66 66" fill="none"><path d="M7 30H59" stroke="#74a5c1" stroke-width="2" stroke-dasharray="4 5"/><path d="M7 30Q20 1 33 30T59 30M7 30Q20 59 33 30T59 30" stroke="#6ae5d7" stroke-width="3.6"/><circle cx="7" cy="30" r="3.5" fill="#ffcd89"/><circle cx="33" cy="30" r="3.5" fill="#ffcd89"/><circle cx="59" cy="30" r="3.5" fill="#ffcd89"/></svg></span>
   <div><h1>駐波共振｜弦與管的諧音實驗室</h1><p>三種端點條件 × 諧音比較 × 即時物理數據</p></div></div>
-  <div class="topTools"><button id="projection" class="projectionBtn" aria-pressed="false">⛶ 教室投影放大</button><a class="home" href="https://derliang.github.io/physics-lab/">← Physics Lab 首頁</a></div>
+  <div class="topTools"><a class="home" href="https://derliang.github.io/physics-lab/">← Physics Lab 首頁</a></div>
 </header>
-<div class="sectionlead"><strong>① 選擇邊界條件</strong><span>對照講義第 27、29、77–79 頁的波節與波腹分布</span></div>
 <div class="modes" role="group" aria-label="駐波邊界條件">
   <button id="mode-ff" class="mode active" data-mode="ff" aria-pressed="true"><span class="micon">N—N</span><span><strong>兩端固定</strong><small>弦｜兩端皆為波節</small></span></button>
   <button id="mode-fo" class="mode" data-mode="fo" aria-pressed="false"><span class="micon">N—A</span><span><strong>一端固定、一端自由</strong><small>弦｜只有奇數倍諧音</small></span></button>
@@ -66,7 +65,7 @@
 </div>
 <div class="workspace">
 <section class="panel left" aria-label="駐波動態模擬">
-  <div class="stageheader"><h2>② 駐波動態與波節／波腹</h2><span class="tag" id="modeTag">弦：固定端 N · 固定端 N</span></div>
+  <div class="stageheader"><h2>駐波動態與波節／波腹</h2><span class="tag" id="modeTag">弦：固定端 N · 固定端 N</span></div>
   <div class="canvasWrap"><canvas id="mainPlot" aria-label="駐波位移、波節、波腹以及上下包絡線；一端固定或開放的端點依模式改變"></canvas><span class="canvasBadge" id="phaseBadge">位移相位 <b>0.00 T</b></span></div>
   <div class="legend"><span><i class="swatch" style="background:#6de5d8"></i>即時位移波形</span><span><i class="swatch" style="background:#8aadd2;border-top:1px dashed #fff"></i>最大位移包絡線</span><span><i class="dot" style="background:#ffca81"></i>N：波節</span><span><i class="dot" style="background:#ff93bd"></i>A：波腹</span></div>
   <div class="toolbar"><button id="play" class="primary">▶ 播放動畫</button><button id="back">⏮ 逐格退</button><button id="step">⏭ 逐格進</button><button id="reset">↺ 重設</button><label class="playRate" for="animSpeed">動畫速度<select id="animSpeed"><option value="0.25">0.25×</option><option value="0.5" selected>0.5×</option><option value="1">1×</option><option value="1.5">1.5×</option></select></label></div>
@@ -85,7 +84,7 @@
   <div class="segmentTeaching"><div class="segmentTop"><strong>長度拆解｜數一數 L 裡有幾段波長</strong><span id="segDesc">1 個半波長</span></div><div class="segmentBar" id="segBar"></div><div class="segmentEnds"><span id="segStart">固定端 N</span><span id="segEnd">固定端 N</span></div></div>
 </section>
 <aside class="side" aria-label="實驗參數與教學操作">
-  <section class="panel"><h2 class="controlTitle">③ 調整參數 <span>數值即時更新</span></h2>
+  <section class="panel"><h2 class="controlTitle">調整參數 <span>數值即時更新</span></h2>
     <div class="nEditor"><div class="nHead"><div><div class="controlHelp" id="nCaption">共振階數 n</div><div class="large" id="nShown">n = 1</div><div class="harm" id="nHarmonic">第一諧音 · 基音</div></div><div class="counter"><button id="minusN" aria-label="減少共振階數">−</button><button id="plusN" aria-label="增加共振階數">＋</button></div></div><input id="n" type="range" min="1" max="6" value="1" step="1" aria-label="選擇共振階數"></div>
     <div class="sliderline"><label for="L" id="lLabel">弦長 L</label><output id="Lout">1.2 <small>m</small></output></div><input id="L" type="range" min="0.5" max="5" value="1.2" step="0.1" /><div class="controlHelp">改變長度，同階諧音的波長與頻率會反向變化。</div>
     <div id="stringControls"><div class="subsection">弦的物理性質</div>
@@ -97,15 +96,15 @@
     </div>
     <div class="medRule" id="modelNote"><b>弦波模型：</b>振幅為視覺示意，不代表實際弦在 1 cm 內震動。播放動畫刻意放慢，數值頻率仍為真實計算結果。</div>
   </section>
-  <section class="panel"><h2 class="controlTitle">④ 探索數值規律 <span>一鍵做實驗</span></h2>
+  <section class="panel"><h2 class="controlTitle">探索數值規律 <span>一鍵做實驗</span></h2>
     <div class="whatif" id="whatif"><button data-act="L2">弦長 ×2</button><button data-act="Lhalf">弦長 ÷2</button><button data-act="F2">張力 ×2</button><button data-act="mu2">線密度 ×2</button></div>
     <p class="controlHelp" id="whatifNote" style="margin:9px 0">建議：固定 n，比較各項參數改變前後，哪些量會變、哪些不變？</p>
     <button id="restore" style="width:100%;font-weight:850;background:#1b4f69;border-color:#65beb3;margin-top:4px">↺ 恢復預設參數</button>
   </section>
 </aside>
 </div>
-<section class="panel compare" id="compare"><div class="compareLead"><h2>⑤ 同條件比較不同階數</h2><p>長度、介質不變｜點選任一階，主動畫會同步切換</p></div><div class="compareGrid" id="compareGrid"></div><p class="compareNote" id="compareNote">固定長度與波速時：階數越高，波長越短，頻率越高。比較圖形的波節、波腹數量。</p></section>
-<div class="lower"><section class="panel"><h2 style="font-size:22px;margin:0 0 10px">⑥ 用圖形找規律</h2><div class="pattern" id="patterns"><div class="tile"><strong>λ↓</strong><p>在同一條弦上，階數升高會使波長縮短。</p></div><div class="tile"><strong>f↑</strong><p>波速不變時，波長越短，頻率越高。</p></div><div class="tile"><strong>v = √(F/μ)</strong><p>張力越大波速越快，線密度越大波速越慢。</p></div></div></section><section class="panel"><h2 style="font-size:22px;margin:0 0 9px">本次比較｜當前模式</h2><table class="table"><thead><tr><th>物理量</th><th>目前數值</th></tr></thead><tbody><tr><td>第一諧音（基頻）f₁</td><td id="fBase">65.88 Hz</td></tr><tr><td>本階諧音</td><td id="hNumber">第 1 諧音</td></tr><tr><td>波節數（含端點）</td><td id="nodesCount">2</td></tr><tr><td>波腹數（含端點）</td><td id="antiCount">1</td></tr><tr><td>相鄰波節距離</td><td id="nodeSpacing">λ/2</td></tr></tbody></table></section></div>
+<section class="panel compare" id="compare"><div class="compareLead"><h2>同條件比較不同階數</h2><p>長度、介質不變｜點選任一階，主動畫會同步切換</p></div><div class="compareGrid" id="compareGrid"></div><p class="compareNote" id="compareNote">固定長度與波速時：階數越高，波長越短，頻率越高。比較圖形的波節、波腹數量。</p></section>
+<div class="lower"><section class="panel"><h2 style="font-size:22px;margin:0 0 10px">用圖形找規律</h2><div class="pattern" id="patterns"><div class="tile"><strong>λ↓</strong><p>在同一條弦上，階數升高會使波長縮短。</p></div><div class="tile"><strong>f↑</strong><p>波速不變時，波長越短，頻率越高。</p></div><div class="tile"><strong>v = √(F/μ)</strong><p>張力越大波速越快，線密度越大波速越慢。</p></div></div></section><section class="panel"><h2 style="font-size:22px;margin:0 0 9px">本次比較｜當前模式</h2><table class="table"><thead><tr><th>物理量</th><th>目前數值</th></tr></thead><tbody><tr><td>第一諧音（基頻）f₁</td><td id="fBase">65.88 Hz</td></tr><tr><td>本階諧音</td><td id="hNumber">第 1 諧音</td></tr><tr><td>波節數（含端點）</td><td id="nodesCount">2</td></tr><tr><td>波腹數（含端點）</td><td id="antiCount">1</td></tr><tr><td>相鄰波節距離</td><td id="nodeSpacing">λ/2</td></tr></tbody></table></section></div>
 <p class="footer">依據《樂器》講義第 26–29、77–79 頁的弦與開管位移駐波模型。兩端開放為理想開管「空氣質點位移」示意（開口為位移波腹、壓力波節），忽略管口端修正與耗散。張力／線密度只控制弦波速，不控制聲速。圖中位移振幅與動畫播放速度是教學示意，不是實際高頻波形的時間尺度。第一階＝基音；高階為泛音。閉／自由端亦忽略真實支承的偏差。新增的掃頻使用含阻尼的線性受迫振動、固有模態疊加模型；拖曳時採平滑頻率磁吸，於共振中心精確鎖定，放開後滑桿以平滑動畫完成定位。接近共振時逐漸降低非目標模態的顯示權重、顯現節腹標記，精確共振時以單一固有模態呈現理想節腹圖像。掃頻全程使用同一套受迫振動繪圖方式。非共振仍有反射干涉與振動，不應誤解為完全沒有駐波成分。只有在固有頻率附近，特定模態才有明顯的共振增幅及穩定的節腹型態。掃頻動畫的振幅視覺縮放、驅動頻譜與播放速度均為教學示意，並非實際量測。</p>
 </div>
 <script>
@@ -439,7 +438,6 @@ $('play').onclick=()=>{playing=!playing;last=0;$('play').textContent=playing?'�
 $('step').onclick=()=>{playing=false;$('play').textContent='▶ 播放動畫';phase+=2*Math.PI/24;refresh()};
 $('back').onclick=()=>{playing=false;$('play').textContent='▶ 播放動畫';phase-=2*Math.PI/24;refresh()};
 $('reset').onclick=reset;
-$('projection').onclick=()=>{const on=app.classList.toggle('projection');$('projection').textContent=on?'⤢ 返回一般版面':'⛶ 教室投影放大';$('projection').setAttribute('aria-pressed',String(on));requestAnimationFrame(paint)};
 $('restore').onclick=()=>{$('L').value='1.2';$('F').value='100';$('mu').value='4';$('temp').value='20';setN(1);$('whatifNote').textContent='已恢復預設數值；請重新探索長度、張力、線密度與諧音的影響。';reset()};
 $('compareGrid').addEventListener('click',e=>{const b=e.target.closest('[data-n]');if(b)setN(+b.dataset.n)});
 $('whatif').addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(b)changePreset(b.dataset.act)});
