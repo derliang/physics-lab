@@ -88,33 +88,56 @@ canvas{height:clamp(285px,calc(100dvh - 305px),590px)}
 .explain .value b{display:inline;font-size:18px;font-weight:750;line-height:1.15}
 @media(max-width:700px){.explain .values{gap:3px}.explain .value{gap:4px;padding:3px 2px}.explain .value span{font-size:11px}.explain .value b{font-size:14px}}
 .home-link{color:#a6e4ff;display:inline-flex;align-items:center;justify-content:center;padding:9px 13px;min-height:44px;border:1px solid #456580;border-radius:10px;white-space:nowrap;font-size:14px;font-weight:650}
+
+/* V1.5：同調週期波情境；舊版脈衝操作完整保留 */
+.scenario-group h3{font-size:12px;margin:5px 0 2px;color:#a9c4e2}
+.scenario-group .presets{margin:3px 0 4px}
+.periodic-presets{grid-template-columns:repeat(3,minmax(0,1fr))}
+.periodic-only{display:none}
+body.periodic-mode .periodic-only{display:block}
+body.periodic-mode .pulse-only{display:none}
+.periodic-facts{font-size:12px;line-height:1.5;color:#ffdb95;border:1px solid #665438;background:#2a2730;border-radius:7px;padding:4px 8px;margin:4px 0}
+.phase-entry{display:flex;align-items:center;gap:6px}
+.phase-entry input[type=range]{flex:1;min-width:0}
+.phase-entry input[type=number]{width:68px;padding:5px;color:var(--ink);background:#0b2239;border:1px solid #547493;border-radius:6px}
+.field-tip{font-size:11px;color:#bdd1e8;margin:3px 0}
+@media(max-width:700px){.periodic-presets{grid-template-columns:repeat(3,minmax(0,1fr))}.scenario-group .presets button{font-size:11px}}
 </style></head><body>
 <header><div class="header-line"><h1>波的疊加原理 <small>｜可點選的位移分解</small></h1><span class="header-meta">Physics Lab · 波動 1-4 · 教學互動實驗</span></div><a class="home-link" href="../../../index.html">← Physics Lab 首頁</a></header>
 <main>
 <section class="card">
-<h2>選擇教學情境</h2><div class="presets" id="presets"></div>
+<h2>選擇教學情境</h2>
+<div class="scenario-group"><h3>有限脈衝相向疊加</h3><div class="presets" id="presets"></div></div>
+<div class="scenario-group"><h3>同調週期波相向疊加</h3><div class="presets periodic-presets" id="periodicPresets"></div></div>
+<div class="periodic-only periodic-facts" id="periodicFacts" aria-live="polite"></div>
 <div id="scenario" class="muted" aria-live="polite"></div>
 <div class="controls"><button id="play">⏸ 暫停</button><button id="back" class="secondary">⏮ 逐格後退</button><button id="step" class="secondary">⏭ 單格前進</button><button id="zero" class="secondary">↤ 時間歸零</button><button id="restart" class="secondary">↻ 重新開始</button></div>
 <div class="legend"><span><i class="swatch" style="background:var(--a)"></i>波 A（向右）</span><span><i class="swatch" style="background:var(--b)"></i>波 B（向左）</span><span><i class="swatch" style="background:var(--sum)"></i>合成波 y = y₁ + y₂</span></div>
 <div class="explain" aria-live="polite"><div class="values"><div class="value" style="color:var(--a)"><span>波 A 位移</span><b id="ya"></b></div><div class="value" style="color:var(--b)"><span>波 B 位移</span><b id="yb"></b></div><div class="value" style="color:var(--sum)"><span>合成位移</span><b id="ys"></b></div></div><div class="analysis-line"><div class="math" id="formula"></div><div id="reason" class="muted"></div><div class="note" id="coords"></div></div></div>
 <div class="canvaswrap"><canvas id="wave" role="img" aria-label="波A、波B以及合成波隨時間變化的共用座標軸；點擊水平位置查看位移"></canvas></div>
-<div class="note">未重疊時，合成波與單一原波重合，圖中優先顯示原波顏色，避免遮蓋；重疊區以金色顯示合成波。隱藏 A、B 可單獨看完整合成波。點選任一水平位置檢查位移相加。</div>
+<div class="note pulse-only">未重疊時，合成波與單一原波重合，圖中優先顯示原波顏色，避免遮蓋；重疊區以金色顯示合成波。隱藏 A、B 可單獨看完整合成波。點選任一水平位置檢查位移相加。</div>
+<div class="note periodic-only">波 A、B 以相同頻率向相反方向傳播。兩端標示波源 S₁、S₂；軸上空心點是等振幅時的駐波節點。可選擇顯示合成波包絡線；點選任一水平位置，觀察當地相位差與位移相加。</div>
 
 </section>
 <aside>
 <div class="card"><h2>自由調整參數</h2>
 <div class="setting"><label for="ampA">波 A 振幅（正負表示方向）<output id="ampAv"></output></label><input id="ampA" type="range" min="-3" max="3" step="0.1"></div>
 <div class="setting"><label for="ampB">波 B 振幅（正負表示方向）<output id="ampBv"></output></label><input id="ampB" type="range" min="-3" max="3" step="0.1"></div>
-<details class="advanced"><summary>進階波形設定：脈衝寬度與波速</summary><div class="setting"><label for="width">脈衝寬度 <output id="widthv"></output></label><input id="width" type="range" min="1" max="4" step="0.1"></div>
+<details class="advanced pulse-only"><summary>進階脈衝設定：脈衝寬度</summary><div class="setting"><label for="width">脈衝寬度 <output id="widthv"></output></label><input id="width" type="range" min="1" max="4" step="0.1"></div></details>
 <div class="setting"><label for="velocity">波速（兩波速率相同）<output id="velocityv"></output></label><input id="velocity" type="range" min="0.5" max="5" step="0.1"></div>
-</details><div class="setting"><label for="speed">播放速度 <output id="speedv"></output></label><input id="speed" type="range" min="0.1" max="3" step="0.1"></div>
+<div class="setting periodic-only"><label for="lambda">波長 λ（兩波相同）<output id="lambdav"></output></label><input id="lambda" type="range" min="1" max="8" step="0.25"></div>
+<div class="setting periodic-only phase-setting"><label for="phaseTurns">波源初相差（以波長 λ 為單位）<output id="phaseTurnsv"></output></label><div class="phase-entry"><input id="phaseSlider" type="range" min="0" max="8" step="0.25" aria-label="波長比例調整"><input id="phaseTurns" type="number" min="0" max="8" step="0.25" inputmode="decimal" aria-label="固定初相差波長倍數"></div><div class="field-tip" id="phaseExplain"></div></div>
+<div class="setting"><label for="speed">播放速度 <output id="speedv"></output></label><input id="speed" type="range" min="0.1" max="3" step="0.1"></div>
 <div class="setting"><label for="time">模擬時間 <output id="timev"></output></label><input id="time" type="range" min="0" max="10" step="0.01"></div>
 <h3>顯示波形</h3><label class="check"><input type="checkbox" id="showA" checked> 顯示波 A</label><label class="check"><input type="checkbox" id="showB" checked> 顯示波 B</label><label class="check"><input type="checkbox" id="showSum" checked> 顯示合成波</label><label class="check"><input type="checkbox" id="grid" checked> 顯示格線與刻度</label>
 <label class="check"><input type="checkbox" id="guides" checked> 顯示選點分解箭頭</label>
+<div class="periodic-only"><label class="check"><input type="checkbox" id="showEnvelope"> 顯示合成振幅包絡線</label><label class="check"><input type="checkbox" id="showNodes" checked> 顯示駐波節點（等振幅）</label></div>
 <button id="reset" class="secondary" style="width:100%;margin-top:12px">恢復此情境預設參數</button></div>
 <details class="card advancedPanel"><summary>教師自訂情境與分享</summary><label for="saveName">自訂情境名稱</label><input id="saveName" maxlength="35" placeholder="例如：兩脈衝位移相加" style="width:100%;padding:10px;border-radius:8px;background:#10263d;color:white;border:1px solid #45617d">
 <div class="controls"><button id="save" class="secondary">儲存本機</button><button id="share" class="secondary">複製分享網址</button></div><label for="saved">載入已儲存情境</label><select id="saved" style="width:100%;padding:10px;color:white;background:#10263d;border:1px solid #45617d;border-radius:8px"><option value="">選擇自訂情境</option></select><div id="message" aria-live="polite"></div></details>
-<details class="card advancedPanel"><summary>物理模型與課本重點</summary><p>小振幅、線性介質近似下，同一位置的合成位移為 <b>y(x,t) = y₁(x,t) + y₂(x,t)</b>。</p><p>兩個有限寬度脈衝相向傳播，重疊時逐點相加；分開後維持各自波形與行進方向，呈現<strong>波的獨立性</strong>。</p><p>此處「完全」是指兩脈衝完全重合（峰值位置及波形對齊），並非指任一瞬間局部位移變大或變小。完全破壞性干涉另須等振幅、反向位移。</p><p class="note">使用餘弦平滑脈衝作為教學模型；非課本圖的精確幾何重建。忽略反射、色散、非線性及能量耗散。波的疊加不等同能量相加；兩波完全抵銷的瞬間也不代表能量消失。</p></details>
+<details class="card advancedPanel"><summary>物理模型與課本重點</summary><p>小振幅、線性介質近似下，同一位置的合成位移為 <b>y(x,t) = y₁(x,t) + y₂(x,t)</b>。</p><p>有限寬度脈衝相向傳播，重疊時逐點相加；分開後維持各自波形與行進方向，呈現<strong>波的獨立性</strong>。</p>
+<p>新增的同調週期波具有相同頻率，且 S₁、S₂ 波源的初相差固定。以兩個波源的位置為各自的相位參考點，固定初相差 Δφ = 2π ×（波長倍數）；1λ 與 0λ 等價，5/4λ 與 1/4λ 等價。</p>
+<p>相向傳播的兩列等振幅同調波會形成駐波：兩波源同相或反相，<strong>不代表沿線每一位置、每一時刻的位移都同相或反相</strong>。等振幅時包絡線的零點是節點；振幅不等時一般只有振幅極小位置。</p><p>此處「完全」是指兩脈衝完全重合（峰值位置及波形對齊），並非指任一瞬間局部位移變大或變小。完全破壞性干涉另須等振幅、反向位移。</p><p class="note">使用餘弦平滑脈衝作為教學模型；非課本圖的精確幾何重建。忽略反射、色散、非線性及能量耗散。波的疊加不等同能量相加；兩波完全抵銷的瞬間也不代表能量消失。</p></details>
 </aside></main>
 <script>
 (function(){
@@ -124,47 +147,134 @@ const presets=[
 {id:'constructive',name:'建設性干涉',a:2,b:1.2,w:2.5,v:2,t:1.55,info:'起始兩脈衝分居左右；按播放後相向行進，在部分重疊時觀察建設性干涉。'},
 {id:'full-constructive',name:'完全建設性干涉',a:2,b:2,w:2.5,v:2,t:2,info:'起始兩脈衝分居左右；按播放後在完全重合時，峰值為 2 + 2 = 4 cm。'},
 {id:'destructive',name:'破壞性干涉',a:2,b:-1.2,w:2.5,v:2,t:1.55,info:'起始兩脈衝分居左右；按播放後部分重疊，觀察位移互相抵銷。'},
-{id:'full-destructive',name:'完全破壞性干涉',a:2,b:-2,w:2.5,v:2,t:2,info:'起始兩脈衝分居左右；按播放後完全重合時，整段合成位移瞬間為零。'}
+{id:'full-destructive',name:'完全破壞性干涉',a:2,b:-2,w:2.5,v:2,t:2,info:'起始兩脈衝分居左右；按播放後完全重合時，整段合成位移瞬間為零。'},
+{id:'periodic-inphase',name:'同調且同相',mode:'periodic',a:2,b:2,v:2,lambda:4,phaseTurns:0,info:'兩端波源 S₁ 與 S₂ 的初相相同（Δφ = 0），同頻率週期波相向傳播，形成以中點為波腹的駐波。'},
+{id:'periodic-antiphase',name:'同調且反相',mode:'periodic',a:2,b:2,v:2,lambda:4,phaseTurns:0.5,info:'兩端波源初相差 π（相當於 1/2λ），同頻率週期波相向傳播，形成以中點為波節的駐波。'},
+{id:'periodic-offset',name:'同調且固定相位差',mode:'periodic',a:2,b:2,v:2,lambda:4,phaseTurns:0.25,info:'自訂固定波源初相差（每次 1/4λ），觀察節點、波腹位置隨相位差平移；超過 1λ 會重複相同相位。'}
 ];
-const defaults={a:2,b:2,w:2.5,v:2,t:0,speed:1,grid:true,guides:true,showA:true,showB:true,showSum:true};
+const defaults={a:2,b:2,w:2.5,v:2,t:0,speed:1,grid:true,guides:true,showA:true,showB:true,showSum:true,mode:'pulse',lambda:4,phaseTurns:0,showEnvelope:false,showNodes:true};
 let s=Object.assign({},defaults,{t:0}),selected=8,playing=false,last=0,scenario='full-constructive',dirty=false;
 const left0=4,right0=12,XMAX=16;
 function pulse(x,c,w,amp){const d=(x-c)/(w/2);return Math.abs(d)<1?amp*.5*(1+Math.cos(Math.PI*d)):0;}
-function yA(x){return pulse(x,left0+s.v*s.t,s.w,s.a)}
-function yB(x){return pulse(x,right0-s.v*s.t,s.w,s.b)}
+function yA(x){if(s.mode==='periodic'){const k=2*Math.PI/s.lambda;return s.a*Math.cos(k*x-k*s.v*s.t)}return pulse(x,left0+s.v*s.t,s.w,s.a)}
+function yB(x){if(s.mode==='periodic'){const k=2*Math.PI/s.lambda;return s.b*Math.cos(k*(XMAX-x)-k*s.v*s.t+2*Math.PI*s.phaseTurns)}return pulse(x,right0-s.v*s.t,s.w,s.b)}
 function ySum(x){return yA(x)+yB(x)}
 function fmt(x){return (Math.abs(x)<.0005?0:x).toFixed(2)}
-function valid(o){return o&&Object.keys(o).every(k=>['a','b','w','v','t','speed','grid','guides','showA','showB','showSum'].includes(k))&&['a','b','w','v','t','speed'].every(k=>Number.isFinite(o[k]))&&o.a>=-3&&o.a<=3&&o.b>=-3&&o.b<=3&&o.w>=1&&o.w<=4&&o.v>=.5&&o.v<=5&&o.t>=0&&o.t<=10&&o.speed>=.1&&o.speed<=3&&typeof o.grid==='boolean'&&typeof o.guides==='boolean'&&['showA','showB','showSum'].every(k=>o[k]===undefined||typeof o[k]==='boolean')}
-function updateInputs(){[['ampA','a','cm'],['ampB','b','cm'],['width','w','m'],['velocity','v','m/s'],['speed','speed','×'],['time','t','s']].forEach(([id,key,unit])=>{el(id).value=s[key];el(id+'v').textContent=s[key].toFixed(key==='t'?2:1)+' '+unit});el('grid').checked=s.grid;el('guides').checked=s.guides;['showA','showB','showSum'].forEach(k=>{el(k).checked=s[k]})}
-function choose(id){const p=presets.find(q=>q.id===id);if(!p)return;scenario=id;dirty=false;s=Object.assign({},defaults,{a:p.a,b:p.b,w:p.w,v:p.v,t:0});selected=8;playing=false;renderButtons();updateInputs();paint();}
-function renderButtons(){const host=el('presets');host.innerHTML='';presets.forEach(p=>{const b=document.createElement('button');b.textContent=p.name;b.className=(!dirty&&scenario===p.id?'active':'');b.setAttribute('aria-pressed',String(!dirty&&scenario===p.id));b.addEventListener('click',()=>choose(p.id));host.appendChild(b)});el('scenario').textContent=dirty?'自訂參數：目前已離開快選的原始條件。':presets.find(p=>p.id===scenario).info;el('play').textContent=playing?'⏸ 暫停':'▶ 播放'}
+function valid(o){
+ const allow=['a','b','w','v','t','speed','grid','guides','showA','showB','showSum','mode','lambda','phaseTurns','showEnvelope','showNodes'];
+ if(!o||typeof o!=='object'||Array.isArray(o)||Object.keys(o).some(k=>!allow.includes(k)))return false;
+ if(!['a','b','w','v','t','speed'].every(k=>Number.isFinite(o[k])))return false;
+ if(o.a< -3||o.a>3||o.b< -3||o.b>3||o.w<1||o.w>4||o.v<.5||o.v>5||o.t<0||o.t>10||o.speed<.1||o.speed>3)return false;
+ if(o.mode!==undefined&&!['pulse','periodic'].includes(o.mode))return false;
+ if(o.lambda!==undefined&&(!Number.isFinite(o.lambda)||o.lambda<1||o.lambda>8))return false;
+ if(o.phaseTurns!==undefined&&(!Number.isFinite(o.phaseTurns)||o.phaseTurns<0||o.phaseTurns>8||Math.abs(o.phaseTurns*4-Math.round(o.phaseTurns*4))>1e-6))return false;
+ if(typeof o.grid!=='boolean'||typeof o.guides!=='boolean')return false;
+ return ['showA','showB','showSum','showEnvelope','showNodes'].every(k=>o[k]===undefined||typeof o[k]==='boolean');
+}
+function phaseLabel(n){
+ const q=Math.round(n*4);if(q%4===0)return (q/4)+'λ';if(q%2===0)return (q/2)+'/2λ';return q+'/4λ';
+}
+function phaseDegrees(n){return ((Math.round(n*360)%360)+360)%360}
+function updateInputs(){
+ [['ampA','a','cm'],['ampB','b','cm'],['width','w','m'],['velocity','v','m/s'],['speed','speed','×'],['time','t','s'],['lambda','lambda','m']].forEach(([id,key,unit])=>{el(id).value=s[key];el(id+'v').textContent=s[key].toFixed(key==='t'?2:key==='lambda'?2:1)+' '+unit});
+ el('grid').checked=s.grid;el('guides').checked=s.guides;
+ ['showA','showB','showSum','showEnvelope','showNodes'].forEach(k=>{el(k).checked=s[k]});
+ el('phaseSlider').value=s.phaseTurns;el('phaseTurns').value=s.phaseTurns;
+ el('phaseTurnsv').textContent=phaseLabel(s.phaseTurns);
+ const deg=phaseDegrees(s.phaseTurns);
+ el('phaseExplain').textContent='初相差 '+Math.round(s.phaseTurns*360)+'°，等效於 '+deg+'°（相位每 1λ 循環一次）';
+ document.body.classList.toggle('periodic-mode',s.mode==='periodic');
+}
+function choose(id){
+ const p=presets.find(q=>q.id===id);if(!p)return;
+ scenario=id;dirty=false;
+ s=Object.assign({},defaults,{a:p.a,b:p.b,w:p.w===undefined?defaults.w:p.w,v:p.v,t:0,mode:p.mode||'pulse',lambda:p.lambda||defaults.lambda,phaseTurns:p.phaseTurns||0});
+ selected=8;playing=false;renderButtons();updateInputs();paint();
+}
+function renderButtons(){
+ for(const [target,mode] of [['presets','pulse'],['periodicPresets','periodic']]){
+  const host=el(target);host.innerHTML='';
+  presets.filter(p=>(p.mode||'pulse')===mode).forEach(p=>{
+   const b=document.createElement('button');b.textContent=p.name;b.className=(!dirty&&scenario===p.id?'active':'');
+   b.setAttribute('aria-pressed',String(!dirty&&scenario===p.id));b.addEventListener('click',()=>choose(p.id));host.appendChild(b);
+  });
+ }
+ const p=presets.find(p=>p.id===scenario);
+ el('scenario').textContent=dirty?'自訂參數：目前已離開快選的原始條件。':(p?p.info:'');
+ el('play').textContent=playing?'⏸ 暫停':'▶ 播放';
+}
 function markChanged(){dirty=true;renderButtons();paint()}
 function setTime(t){s.t=Math.min(10,Math.max(0,t));el('time').value=s.t;el('timev').textContent=s.t.toFixed(2)+' s';paint()}
 function resize(){let dpr=Math.min(2.5,window.devicePixelRatio||1);let w=canvas.clientWidth,h=canvas.clientHeight;if(canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr)){canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr)}ctx.setTransform(dpr,0,0,dpr,0,0);return{w,h}}
 function paint(){
-const {w,h}=resize();ctx.clearRect(0,0,w,h);ctx.fillStyle='#091a2c';ctx.fillRect(0,0,w,h);
-const L=52,R=17,T=24,B=30,PW=Math.max(1,w-L-R),PH=Math.max(1,h-T-B),px=x=>L+x/XMAX*PW,py=y=>T+PH/2-y*PH/12;
-if(s.grid){ctx.lineWidth=.7;ctx.strokeStyle='#294055';for(let x=0;x<=16;x+=2){ctx.beginPath();ctx.moveTo(px(x),T);ctx.lineTo(px(x),h-B);ctx.stroke();ctx.fillStyle='#aabed5';ctx.font='11px system-ui';ctx.fillText(String(x),px(x)-5,h-B+16)}for(let y=-6;y<=6;y+=2){ctx.beginPath();ctx.moveTo(L,py(y));ctx.lineTo(w-R,py(y));ctx.stroke();ctx.fillStyle='#aabed5';ctx.fillText(String(y),L-26,py(y)+4)}}
-ctx.lineWidth=1.2;ctx.strokeStyle='#8299b4';ctx.beginPath();ctx.moveTo(L,T);ctx.lineTo(L,h-B);ctx.moveTo(L,py(0));ctx.lineTo(w-R,py(0));ctx.stroke();
-ctx.font='12px system-ui';ctx.fillStyle='#cad9e9';ctx.fillText('y (cm)',6,T+8);ctx.fillText('x (m)',w-47,h-8);
-function wave(fn,color,width,visible){ctx.strokeStyle=color;ctx.lineWidth=width;ctx.setLineDash([]);ctx.beginPath();let drawing=false;
-for(let j=0;j<=Math.ceil(PW);j++){const x=XMAX*j/PW; if(!visible(x)){if(drawing){ctx.stroke();ctx.beginPath();drawing=false;}continue;}
-if(!drawing){ctx.moveTo(px(x),py(fn(x)));drawing=true;}else{ctx.lineTo(px(x),py(fn(x)));}}
-if(drawing)ctx.stroke();}
-const activeA=x=>Math.abs(yA(x))>0.00001;
-const activeB=x=>Math.abs(yB(x))>0.00001;
-function showResultAt(x){if(!s.showA&&!s.showB)return true;if(s.showA&&s.showB)return activeA(x)&&activeB(x);if(s.showA)return activeB(x);return activeA(x);}
-if(s.showSum)wave(ySum,'#ffca68',3.6,showResultAt);
-if(s.showA)wave(yA,'#49d8b5',3.2,activeA);
-if(s.showB)wave(yB,'#bb9dff',3.2,activeB);
-const x=Math.max(0,Math.min(16,selected)),cx=px(x),a=yA(x),b=yB(x),sum=a+b;
-ctx.strokeStyle='#dbe5f4';ctx.lineWidth=1;ctx.setLineDash([4,5]);ctx.beginPath();ctx.moveTo(cx,T);ctx.lineTo(cx,h-B);ctx.stroke();ctx.setLineDash([]);
-function dot(y,color){ctx.fillStyle=color;ctx.strokeStyle='#fff';ctx.lineWidth=1;ctx.beginPath();ctx.arc(cx,py(y),5,0,Math.PI*2);ctx.fill();ctx.stroke()}
-if(s.showA)dot(a,'#49d8b5');if(s.showB)dot(b,'#bb9dff');if(s.showSum)dot(sum,'#ffca68');
-if(s.guides){function arrow(y0,y1,color,dx){const p0=py(y0),p1=py(y1);if(Math.abs(p1-p0)<2)return;const at=cx+dx,dir=Math.sign(p1-p0);ctx.lineWidth=3;ctx.strokeStyle=color;ctx.beginPath();ctx.moveTo(at,p0);ctx.lineTo(at,p1);ctx.stroke();ctx.fillStyle=color;ctx.beginPath();ctx.moveTo(at,p1);ctx.lineTo(at-5,p1-dir*8);ctx.lineTo(at+5,p1-dir*8);ctx.fill()}arrow(0,a,'#49d8b5',-14);arrow(a,sum,'#bb9dff',14)}
-el('ya').textContent=fmt(a)+' cm';el('yb').textContent=fmt(b)+' cm';el('ys').textContent=fmt(sum)+' cm';el('formula').textContent=fmt(a)+' + ('+fmt(b)+') = '+fmt(sum)+' cm';
-el('coords').textContent='選取 x = '+x.toFixed(2)+' m；時間 t = '+s.t.toFixed(2)+' s；各位移由同一位置、同一時間求得。';
-el('reason').textContent=Math.abs(a)<.001&&Math.abs(b)<.001?'此處兩波位移均為零，合成位移為零。':Math.abs(a+b)<.001?'兩個相反方向位移大小相等，互相抵銷，所以此點合成位移為零。':a*b<0?'兩波在此點的位移方向相反，因此代數相加後會部分抵銷。':a*b>0?'兩波在此點的位移方向相同，合成位移的絕對值增加。':'此點只有其中一波造成非零位移，所以合成位移與該波相同。';
+ const {w,h}=resize();ctx.clearRect(0,0,w,h);ctx.fillStyle='#091a2c';ctx.fillRect(0,0,w,h);
+ const L=52,R=17,T=24,B=30,PW=Math.max(1,w-L-R),PH=Math.max(1,h-T-B),px=x=>L+x/XMAX*PW,py=y=>T+PH/2-y*PH/12;
+ const periodic=s.mode==='periodic';
+ if(s.grid){
+  ctx.lineWidth=.7;ctx.strokeStyle='#294055';
+  for(let x=0;x<=16;x+=2){ctx.beginPath();ctx.moveTo(px(x),T);ctx.lineTo(px(x),h-B);ctx.stroke();ctx.fillStyle='#aabed5';ctx.font='11px system-ui';ctx.fillText(String(x),px(x)-5,h-B+16)}
+  for(let y=-6;y<=6;y+=2){ctx.beginPath();ctx.moveTo(L,py(y));ctx.lineTo(w-R,py(y));ctx.stroke();ctx.fillStyle='#aabed5';ctx.fillText(String(y),L-26,py(y)+4)}
+ }
+ ctx.lineWidth=1.2;ctx.strokeStyle='#8299b4';ctx.beginPath();ctx.moveTo(L,T);ctx.lineTo(L,h-B);ctx.moveTo(L,py(0));ctx.lineTo(w-R,py(0));ctx.stroke();
+ ctx.font='12px system-ui';ctx.fillStyle='#cad9e9';ctx.fillText('y (cm)',6,T+8);ctx.fillText('x (m)',w-47,h-8);
+ function wave(fn,color,width,visible,dash=[]){
+  ctx.strokeStyle=color;ctx.lineWidth=width;ctx.setLineDash(dash);ctx.beginPath();let drawing=false;
+  for(let j=0;j<=Math.ceil(PW);j++){
+   const x=XMAX*j/PW;
+   if(!visible(x)){if(drawing){ctx.stroke();ctx.beginPath();drawing=false}continue}
+   if(!drawing){ctx.moveTo(px(x),py(fn(x)));drawing=true}else ctx.lineTo(px(x),py(fn(x)));
+  }
+  if(drawing)ctx.stroke();ctx.setLineDash([]);
+ }
+ if(periodic){
+  const k=2*Math.PI/s.lambda, phi=2*Math.PI*s.phaseTurns;
+  function envelope(x){return Math.sqrt(Math.max(0,s.a*s.a+s.b*s.b+2*s.a*s.b*Math.cos(k*(2*x-XMAX)-phi)))}
+  if(s.showEnvelope&&s.showSum){
+   wave(envelope,'#aa8551',1.7,()=>true,[6,5]);
+   wave(x=>-envelope(x),'#aa8551',1.7,()=>true,[6,5]);
+  }
+  if(s.showA)wave(yA,'#49d8b5',2.3,()=>true);
+  if(s.showB)wave(yB,'#bb9dff',2.3,()=>true);
+  if(s.showSum)wave(ySum,'#ffca68',3.5,()=>true);
+  ctx.fillStyle='#b7dff2';ctx.font='bold 12px system-ui';
+  ctx.fillText('S₁ →',L+8,T+13);ctx.fillText('← S₂',w-R-44,T+13);
+  if(s.showNodes&&s.showSum&&Math.abs(s.a)>0.0001&&Math.abs(Math.abs(s.a)-Math.abs(s.b))<.0001){
+   const offset=s.a*s.b>0?1:0;
+   for(let n=-100;n<=100;n++){
+    const nx=(XMAX+(phi+(2*n+offset)*Math.PI)/k)/2;
+    if(nx<0||nx>XMAX)continue;
+    ctx.fillStyle='#091a2c';ctx.strokeStyle='#ffca68';ctx.lineWidth=1.6;
+    ctx.beginPath();ctx.arc(px(nx),py(0),3.8,0,Math.PI*2);ctx.fill();ctx.stroke();
+   }
+  }
+ }else{
+  const activeA=x=>Math.abs(yA(x))>0.00001;
+  const activeB=x=>Math.abs(yB(x))>0.00001;
+  function showResultAt(x){if(!s.showA&&!s.showB)return true;if(s.showA&&s.showB)return activeA(x)&&activeB(x);if(s.showA)return activeB(x);return activeA(x)}
+  if(s.showSum)wave(ySum,'#ffca68',3.6,showResultAt);
+  if(s.showA)wave(yA,'#49d8b5',3.2,activeA);
+  if(s.showB)wave(yB,'#bb9dff',3.2,activeB);
+ }
+ const x=Math.max(0,Math.min(16,selected)),cx=px(x),a=yA(x),b=yB(x),sum=a+b;
+ ctx.strokeStyle='#dbe5f4';ctx.lineWidth=1;ctx.setLineDash([4,5]);ctx.beginPath();ctx.moveTo(cx,T);ctx.lineTo(cx,h-B);ctx.stroke();ctx.setLineDash([]);
+ function dot(y,color){ctx.fillStyle=color;ctx.strokeStyle='#fff';ctx.lineWidth=1;ctx.beginPath();ctx.arc(cx,py(y),5,0,Math.PI*2);ctx.fill();ctx.stroke()}
+ if(s.showA)dot(a,'#49d8b5');if(s.showB)dot(b,'#bb9dff');if(s.showSum)dot(sum,'#ffca68');
+ if(s.guides){
+  function arrow(y0,y1,color,dx){const p0=py(y0),p1=py(y1);if(Math.abs(p1-p0)<2)return;const at=cx+dx,dir=Math.sign(p1-p0);ctx.lineWidth=3;ctx.strokeStyle=color;ctx.beginPath();ctx.moveTo(at,p0);ctx.lineTo(at,p1);ctx.stroke();ctx.fillStyle=color;ctx.beginPath();ctx.moveTo(at,p1);ctx.lineTo(at-5,p1-dir*8);ctx.lineTo(at+5,p1-dir*8);ctx.fill()}
+  arrow(0,a,'#49d8b5',-14);arrow(a,sum,'#bb9dff',14);
+ }
+ el('ya').textContent=fmt(a)+' cm';el('yb').textContent=fmt(b)+' cm';el('ys').textContent=fmt(sum)+' cm';
+ el('formula').textContent=fmt(a)+' + ('+fmt(b)+') = '+fmt(sum)+' cm';
+ el('coords').textContent='選取 x = '+x.toFixed(2)+' m；時間 t = '+s.t.toFixed(2)+' s；各位移由同一位置、同一時間求得。';
+ if(periodic){
+  const localPhase=phaseDegrees(s.phaseTurns+(XMAX-2*x)/s.lambda);
+  el('reason').textContent='當地相位差 '+localPhase.toFixed(0)+'°；兩端波源的初相差固定，但各位置的波程不同。';
+  const f=s.v/s.lambda, period=s.lambda/s.v;
+  el('periodicFacts').textContent='λ = '+s.lambda.toFixed(2)+' m ｜ f = '+f.toFixed(2)+' Hz ｜ T = '+period.toFixed(2)+' s ｜ 波源初相差 = '+phaseLabel(s.phaseTurns)+'（'+phaseDegrees(s.phaseTurns)+'°）'+(Math.abs(Math.abs(s.a)-Math.abs(s.b))>.0001?' ｜ 振幅不等：沒有完全抵銷的駐波節點':'');
+ }else{
+  el('reason').textContent=Math.abs(a)<.001&&Math.abs(b)<.001?'此處兩波位移均為零，合成位移為零。':Math.abs(a+b)<.001?'兩個相反方向位移大小相等，互相抵銷，所以此點合成位移為零。':a*b<0?'兩波在此點的位移方向相反，因此代數相加後會部分抵銷。':a*b>0?'兩波在此點的位移方向相同，合成位移的絕對值增加。':'此點只有其中一波造成非零位移，所以合成位移與該波相同。';
+  el('periodicFacts').textContent='';
+ }
 }
 function tick(now){if(last&&playing&&!document.hidden){const dt=Math.min((now-last)/1000,.06)*s.speed;setTime(s.t+dt);if(s.t>=10){playing=false;renderButtons()}}last=now;requestAnimationFrame(tick)}
 el('play').onclick=()=>{playing=!playing;last=0;renderButtons()};
@@ -175,7 +285,11 @@ el('restart').onclick=()=>{playing=true;selected=XMAX/2;setTime(0);last=0;render
 el('reset').onclick=()=>choose(scenario);
 [['ampA','a'],['ampB','b'],['width','w'],['velocity','v'],['speed','speed']].forEach(([id,k])=>{el(id).addEventListener('input',e=>{s[k]=Number(e.target.value);updateInputs();markChanged()})});
 el('time').addEventListener('input',e=>{playing=false;setTime(Number(e.target.value));renderButtons()});
-['grid','guides','showA','showB','showSum'].forEach(id=>el(id).addEventListener('change',e=>{s[id]=e.target.checked;updateInputs();markChanged()}));
+['grid','guides','showA','showB','showSum','showEnvelope','showNodes'].forEach(id=>el(id).addEventListener('change',e=>{s[id]=e.target.checked;updateInputs();markChanged()}));
+el('lambda').addEventListener('input',e=>{s.lambda=Number(e.target.value);updateInputs();markChanged()});
+function setPhase(value){const n=Number(value);if(!Number.isFinite(n))return;s.phaseTurns=Math.max(0,Math.min(8,Math.round(n*4)/4));updateInputs();markChanged()}
+el('phaseSlider').addEventListener('input',e=>setPhase(e.target.value));
+el('phaseTurns').addEventListener('change',e=>setPhase(e.target.value));
 function choosePoint(e){const rect=canvas.getBoundingClientRect(),x=(e.clientX-rect.left-52)/(rect.width-52-17)*16;selected=Math.max(0,Math.min(16,x));paint()}
 canvas.addEventListener('pointerdown',e=>{canvas.setPointerCapture(e.pointerId);choosePoint(e)});canvas.addEventListener('pointermove',e=>{if(e.buttons)choosePoint(e)});
 function loadSaved(){const list=el('saved');list.innerHTML='<option value="">選擇自訂情境</option>';try{const all=JSON.parse(localStorage.getItem('physics-superposition-v1')||'{}');Object.keys(all).forEach(name=>{let o=document.createElement('option');o.value=name;o.textContent=name;list.appendChild(o)})}catch(e){el('message').textContent='此瀏覽器無法讀取本機儲存。'}}
