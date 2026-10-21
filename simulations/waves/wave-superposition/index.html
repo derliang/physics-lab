@@ -153,7 +153,7 @@ body.periodic-mode .mode-picker.periodic-only{display:flex}
 <div class="explain" aria-live="polite"><div class="values"><div class="value" style="color:var(--a)"><span>波 A 位移</span><b id="ya"></b></div><div class="value" style="color:var(--b)"><span>波 B 位移</span><b id="yb"></b></div><div class="value" style="color:var(--sum)"><span>合成位移</span><b id="ys"></b></div></div><div class="analysis-line"><div class="math" id="formula"></div><div id="reason" class="muted"></div><div class="note" id="coords"></div></div></div>
 <div class="canvaswrap"><canvas id="wave" role="img" aria-label="波A、波B以及合成波隨時間變化的共用座標軸；點擊水平位置查看位移"></canvas></div>
 <div class="note pulse-only">未重疊時，合成波與單一原波重合，圖中優先顯示原波顏色，避免遮蓋；重疊區以金色顯示合成波。隱藏 A、B 可單獨看完整合成波。點選任一水平位置檢查位移相加。</div>
-<div class="note periodic-only">綠色、紫色為完整且規則的正弦波列；只有兩波已相遇的部分才顯示金色合成位移及淡金色重疊區。波的前緣不再畫虛線。固定初相差時，波源會透過啟動時間差產生相位差，確保波列最前端由零位移開始，避免不規則波形。形成過程僅播放一次，進入穩態後持續振動。</div>
+<div class="note periodic-only">兩側波源在同一時刻開始發波、波速相同，兩列波必定同時抵達中央；初相差只改變上下位移，不改變發波時間。反相時，同樣距離的兩波呈相反位移（波峰對波谷）。綠、紫為原波，金色只標示已重疊部分的合成位移。為避免任意初相在有限前緣產生位移跳變，只對非零起始位移的最前端約 3% 波長做極短平滑處理，其餘波形維持正弦波。</div>
 
 </section>
 <aside>
@@ -173,7 +173,7 @@ body.periodic-mode .mode-picker.periodic-only{display:flex}
 <div class="controls"><button id="save" class="secondary">儲存本機</button><button id="share" class="secondary">複製分享網址</button></div><label for="saved">載入已儲存情境</label><select id="saved" style="width:100%;padding:10px;color:white;background:#10263d;border:1px solid #45617d;border-radius:8px"><option value="">選擇自訂情境</option></select><div id="message" aria-live="polite"></div></details>
 <details class="card advancedPanel"><summary>物理模型與課本重點</summary><p>小振幅、線性介質近似下，同一位置的合成位移為 <b>y(x,t) = y₁(x,t) + y₂(x,t)</b>。</p><p>有限寬度脈衝相向傳播，重疊時逐點相加；分開後維持各自波形與行進方向，呈現<strong>波的獨立性</strong>。</p>
 <p>新增的同調週期波具有相同頻率，且 S₁、S₂ 波源的初相差固定。以兩個波源的位置為各自的相位參考點，固定初相差 Δφ = 2π ×（波長倍數）；1λ 與 0λ 等價，5/4λ 與 1/4λ 等價。</p>
-<p>相向傳播的兩列等振幅同調波會形成駐波：兩波源同相或反相，<strong>不代表沿線每一位置、每一時刻的位移都同相或反相</strong>。等振幅時包絡線的零點是節點；振幅不等時一般只有振幅極小位置。</p><p>「形成過程」採用沒有振幅漸變包絡的正弦波列：兩端從零位移啟動，已產生的波列始終是標準正弦波。為了同時符合非零初相差與前緣連續，兩端的啟動時間可錯開：波 B 延遲（初相差的週期比例）× T 開始；波源一旦啟動，頻率相同且相位差固定。1λ 與 0λ 的啟動效果相同。相遇與全域重疊的時間會據此自動調整。穩態觀察則直接從兩波早已覆蓋全域的情境開始。</p><p>金色是同一介質的<strong>位移相加結果，不是另外產生的第三列行進波</strong>；只有兩列波同時抵達才用金色特別標示干涉。</p><p>此處「完全」是指兩脈衝完全重合（峰值位置及波形對齊），並非指任一瞬間局部位移變大或變小。完全破壞性干涉另須等振幅、反向位移。</p><p class="note">使用餘弦平滑脈衝作為教學模型；非課本圖的精確幾何重建。忽略反射、色散、非線性及能量耗散。波的疊加不等同能量相加；兩波完全抵銷的瞬間也不代表能量消失。</p></details>
+<p>相向傳播的兩列等振幅同調波會形成駐波：兩波源同相或反相，<strong>不代表沿線每一位置、每一時刻的位移都同相或反相</strong>。等振幅時包絡線的零點是節點；振幅不等時一般只有振幅極小位置。</p><p>「形成過程」的 S₁、S₂ 都從 t = 0 同時啟動、等速相向傳播，兩個傳播前緣永遠對稱；中央相遇時間是 L/(2v)，完整遍布時間是 L/v，與初相差無關。兩列波源的相位由 y₁=A₁ sin(ωt−kx)、y₂=A₂ sin(ωt−k(L−x)−Δφ) 指定。Δφ = π 時前端一列波峰、另一列波谷，等振幅在中央完全抵銷。任意初相差（例如 1/4λ）時，硬截斷的正弦波列前緣會有不連續位移；本動畫只在前緣約 3%λ 的極短區間平滑相接，已通過的波列保持精確正弦波，兩波仍同步前進。穩態模式直接呈現完整正弦波。</p><p>金色是同一介質的<strong>位移相加結果，不是另外產生的第三列行進波</strong>；只有兩列波同時抵達才用金色特別標示干涉。</p><p>此處「完全」是指兩脈衝完全重合（峰值位置及波形對齊），並非指任一瞬間局部位移變大或變小。完全破壞性干涉另須等振幅、反向位移。</p><p class="note">使用餘弦平滑脈衝作為教學模型；非課本圖的精確幾何重建。忽略反射、色散、非線性及能量耗散。波的疊加不等同能量相加；兩波完全抵銷的瞬間也不代表能量消失。</p></details>
 </aside></main>
 <script>
 (function(){
@@ -185,26 +185,35 @@ const presets=[
 {id:'destructive',name:'破壞性干涉',a:2,b:-1.2,w:2.5,v:2,t:1.55,info:'起始兩脈衝分居左右；按播放後部分重疊，觀察位移互相抵銷。'},
 {id:'full-destructive',name:'完全破壞性干涉',a:2,b:-2,w:2.5,v:2,t:2,info:'起始兩脈衝分居左右；按播放後完全重合時，整段合成位移瞬間為零。'},
 {id:'periodic-inphase',name:'同調且同相',mode:'periodic',a:2,b:2,v:2,lambda:4,phaseTurns:0,info:'兩端波源 S₁ 與 S₂ 的初相相同（Δφ = 0），同頻率週期波相向傳播，形成以中點為波腹的駐波。'},
-{id:'periodic-antiphase',name:'同調且反相',mode:'periodic',a:2,b:2,v:2,lambda:4,phaseTurns:0.5,info:'兩端波源初相差 π（相當於 1/2λ），同頻率週期波相向傳播，形成以中點為波節的駐波。'},
-{id:'periodic-offset',name:'同調且固定相位差',mode:'periodic',a:2,b:2,v:2,lambda:4,phaseTurns:0.25,info:'自訂固定波源初相差（每次 1/4λ），觀察節點、波腹位置隨相位差平移；超過 1λ 會重複相同相位。'}
+{id:'periodic-antiphase',name:'同調且反相',mode:'periodic',a:2,b:2,v:2,lambda:4,phaseTurns:0.5,info:'兩端波源同時啟動、波速相同，初相差 π（1/2λ）：同距離下波峰對波谷，同時抵達中點後完全抵銷。'},
+{id:'periodic-offset',name:'同調且固定相位差',mode:'periodic',a:2,b:2,v:2,lambda:4,phaseTurns:0.25,info:'兩波源同步發波，以 1/4λ 為單位自訂相位差；僅改變相位，不改變兩波抵達中央的時刻。'}
 ];
 const defaults={a:2,b:2,w:2.5,v:2,t:0,speed:1,grid:true,guides:true,showA:true,showB:true,showSum:true,mode:'pulse',lambda:4,phaseTurns:0,showEnvelope:false,showNodes:true,periodicView:'formation',showOverlap:true};
 let s=Object.assign({},defaults,{t:0}),selected=8,playing=false,last=0,scenario='full-constructive',dirty=false;
 const left0=4,right0=12,XMAX=16;
 function pulse(x,c,w,amp){const d=(x-c)/(w/2);return Math.abs(d)<1?amp*.5*(1+Math.cos(Math.PI*d)):0;}
 function pulseCycle(){return (12+s.w/2+1)/s.v;}
-function launchDelay(){
- if(s.periodicView==='steady')return 0;
- // Shifting one wave source's start time makes a clean zero-displacement
- // sinusoidal leading edge while preserving the phase offset in steady state.
- const turns=((s.phaseTurns%1)+1)%1;
- return turns*s.lambda/s.v;
-}
+// Both coherent sources start at t = 0 and propagate at exactly the same speed.
+// Relative phase affects only displacement, never front position or emission time.
 function frontA(){return s.periodicView==='steady'?XMAX:Math.max(0,Math.min(XMAX,s.v*s.t))}
-function frontB(){return s.periodicView==='steady'?0:Math.max(0,Math.min(XMAX,XMAX-s.v*Math.max(0,s.t-launchDelay())))}
+function frontB(){return s.periodicView==='steady'?0:Math.max(0,Math.min(XMAX,XMAX-s.v*s.t))}
 function arrivedA(x){return s.periodicView==='steady'||(s.t>=0&&x<=frontA()+1e-8)}
-function arrivedB(x){return s.periodicView==='steady'||(s.t>=launchDelay()&&x>=frontB()-1e-8)}
+function arrivedB(x){return s.periodicView==='steady'||(s.t>=0&&x>=frontB()-1e-8)}
 function overlapAt(x){return arrivedA(x)&&arrivedB(x)}
+// An arbitrarily phased finite wave train cannot start at a perfectly sharp
+// zero-displacement front without a jump. Smooth ONLY the first 3% of a
+// wavelength when sin(phase) is nonzero; the rest is a pure sinusoid.
+function leadingFactorB(x){
+ if(s.periodicView==='steady')return 1;
+ const phase=2*Math.PI*s.phaseTurns;
+ if(Math.abs(Math.sin(phase))<1e-8)return 1;
+ const distance=Math.max(0,s.v*s.t-(XMAX-x));
+ const r=Math.max(0,Math.min(1,distance/(0.03*s.lambda)));
+ return r*r*(3-2*r);
+}
+function settledAt(x){
+ return overlapAt(x)&&leadingFactorB(x)>=1-1e-8;
+}
 function yA(x){
  if(s.mode==='periodic'){
   if(!arrivedA(x))return 0;
@@ -216,9 +225,9 @@ function yA(x){
 function yB(x){
  if(s.mode==='periodic'){
   if(!arrivedB(x))return 0;
-  const phase=2*Math.PI*(s.v*(s.t-(s.periodicView==='steady'?0:launchDelay()))-(XMAX-x))/s.lambda;
-  const steadyOffset=s.periodicView==='steady'?2*Math.PI*s.phaseTurns:0;
-  return s.b*Math.sin(phase-steadyOffset);
+  const k=2*Math.PI/s.lambda;
+  const phase=k*(s.v*s.t-(XMAX-x))-2*Math.PI*s.phaseTurns;
+  return s.b*leadingFactorB(x)*Math.sin(phase);
  }
  return pulse(x,right0-s.v*s.t,s.w,s.b);
 }
@@ -304,9 +313,9 @@ function paint(){
    ctx.fillStyle='rgba(255,202,104,.075)';
    ctx.fillRect(px(Math.max(0,fb)),T,Math.max(0,px(Math.min(XMAX,fa))-px(Math.max(0,fb))),PH);
   }
-  // No drawn wavefront indicator; wave fronts terminate naturally at zero displacement.
+  // No wavefront guide is drawn. Only the first 3% lambda of an arbitrary-phase edge is smoothed.
   function magnitude(x){
-   const a=arrivedA(x)?s.a:0,b=arrivedB(x)?s.b:0;
+   const a=arrivedA(x)?s.a:0,b=arrivedB(x)?s.b*leadingFactorB(x):0;
    return Math.sqrt(Math.max(0,a*a+b*b+2*a*b*Math.cos(k*(2*x-XMAX)-phi)));
   }
   if(s.showEnvelope&&s.showSum&&hasOverlap){
@@ -324,21 +333,19 @@ function paint(){
    for(let n=-100;n<=100;n++){
     const nx=(XMAX+(phi+(2*n+offset)*Math.PI)/k)/2;
     if(nx<0||nx>XMAX)continue;
-    if(!overlapAt(nx))continue;
+    if(!settledAt(nx))continue;
     ctx.fillStyle='#091a2c';ctx.strokeStyle='#ffca68';ctx.lineWidth=1.6;
     ctx.beginPath();ctx.arc(px(nx),py(0),3.8,0,Math.PI*2);ctx.fill();ctx.stroke();
    }
   }
-  const delay=launchDelay();
-  const touch=(XMAX/s.v+delay)/2;
-  const cover=XMAX/s.v+delay;
+  const touch=XMAX/(2*s.v);
+  const cover=XMAX/s.v;
   let phase;
-  if(!form)phase='穩態觀察：兩列標準正弦波持續反向傳播，形成固定節點與波腹。';
-  else if(s.t<delay-1e-8)phase='① 波 A 已從左端出發，波 B 將延遲 '+(delay-s.t).toFixed(2)+' s 從右端出發，以保持指定初相差。';
-  else if(s.t<touch-1e-8)phase='① 兩列正弦波相向傳播，中央尚未出現疊加。';
-  else if(s.t<Math.min(cover,touch+0.55*s.lambda/s.v))phase='② 波開始相遇：中央出現金色合成曲線。';
-  else if(s.t<cover-1e-8)phase='③ 相向傳播：金色重疊區逐漸擴大。';
-  else phase='④ 完整穩態駐波：兩列原波持續傳播，節點和波腹位置保持固定。';
+  if(!form)phase='穩態觀察：同速、固定初相差的正弦波相向傳播，駐波位置保持固定。';
+  else if(s.t<touch-1e-8)phase='① 兩波源同時啟動、等速相向傳播；中央尚未重疊。';
+  else if(s.t<Math.min(cover,touch+0.55*s.lambda/s.v))phase='② 兩列波同步抵達中央：金色合成曲線開始出現。';
+  else if(s.t<cover-1e-8)phase='③ 兩列波持續相向傳播：重疊區向兩側擴大。';
+  else phase='④ 兩列波已遍布全域：金色合成波持續振動，不會重新開始。';
 
   el('formationStage').textContent=phase+'　中央相遇 '+touch.toFixed(2)+' s；遍布全域 '+cover.toFixed(2)+' s。';
 
