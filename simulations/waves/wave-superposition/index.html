@@ -433,6 +433,12 @@ function paintProbeTime(){
   for(let j=0;j<=Math.max(1,Math.ceil(PW));j++){
    const t=start+(end-start)*j/Math.ceil(PW);
    if(s.periodicView==='formation'&&t>now+1e-9)break;
+   // In the temporal view, gold is introduced only once BOTH waves have reached P,
+   // matching the gold overlap region in the spatial view.
+   if(curve.index===2&&s.periodicView==='formation'&&t<Math.max(selected,XMAX-selected)/s.v-1e-9){
+    if(started){ct.stroke();ct.beginPath();started=false}
+    continue;
+   }
    const val=timeDisplacements(selected,t)[curve.index];
    if(!started){ct.moveTo(xx(t),yy(val));started=true}else ct.lineTo(xx(t),yy(val));
   }
