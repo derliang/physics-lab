@@ -1,62 +1,78 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>雙橫波賽跑｜Physics Lab</title>
-<style>
-*{box-sizing:border-box}body{margin:0;background:#f4f7fc;color:#18304d;font-family:system-ui,-apple-system,"Noto Sans TC","Microsoft JhengHei",sans-serif}header{display:flex;justify-content:space-between;align-items:center;padding:12px 22px;background:#fff;border-bottom:1px solid #dde7f2}a{color:#195ac0;text-decoration:none;font-weight:700}main{max-width:1380px;margin:auto;padding:15px}h1{font-size:23px;margin:0 0 12px}.layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:12px}.stage,.controls,.details{background:white;border:1px solid #dbe5f2;border-radius:14px;overflow:hidden}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;padding:10px}.stat{padding:9px;background:#eff5fc;border-radius:9px;color:#61728a;font-size:12px}.stat strong{display:block;color:#193456;font-size:17px}.canvaswrap{margin:0 10px 10px;background:#f9fcff;border-radius:10px;border:1px solid #dce7f4;overflow:hidden}canvas{display:block;width:100%;height:auto}.legend{display:flex;flex-wrap:wrap;gap:12px;padding:0 15px 12px;font-size:12px;color:#5d7086}.controls{padding:15px}h2{font-size:17px;margin:0 0 12px}label{font-size:13px;font-weight:700;display:block;margin:11px 0 5px}.pair{display:flex;align-items:center;gap:7px}input[type=range]{width:100%;accent-color:#2769ce}input[type=number]{width:76px;padding:8px;border-radius:8px;border:1px solid #c9d5e7}select{width:100%;font:inherit;border:1px solid #c9d5e7;background:white;border-radius:8px;padding:9px;min-height:43px}.buttons{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:13px 0}button{cursor:pointer;min-height:44px;border-radius:9px;border:1px solid #c9d6e8;background:#fff;color:#24476e;font:inherit;font-size:13px;padding:7px}button.primary{background:#2465cb;color:white;border-color:#2465cb}.readout{background:#edf5ff;border-radius:10px;padding:12px;font-size:13px;line-height:1.65}.readout strong{display:block;font-size:17px}.details{padding:12px 17px;margin-top:12px;font-size:13px;line-height:1.7}.details p{margin:5px 0}.small{color:#5c7189;font-size:12px}.save{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}.save input{grid-column:1/-1;border:1px solid #c9d6e8;padding:8px;border-radius:8px;min-width:0}@media(max-width:980px){.layout{grid-template-columns:1fr}.controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 14px}.controls h2,.controls .buttons,.controls .readout,.controls .save{grid-column:1/-1}}@media(max-width:560px){.stats{grid-template-columns:repeat(2,1fr)}.controls{display:block}h1{font-size:20px}header{padding:10px}}
-</style></head><body>
-<header><b>🌊 Physics Lab｜雙橫波賽跑</b><a href="../../../">← Physics Lab 首頁</a></header><main><h1>兩列橫波賽跑：波峰與波谷何時抵達 P？</h1>
-<div class="layout"><section class="stage"><div class="stats"><div class="stat">S₁ → P<strong id="r1">3.00 λ</strong></div><div class="stat">S₂ → P<strong id="r2">3.50 λ</strong></div><div class="stat">波程差<strong id="deltaView">0.50 λ</strong></div><div class="stat">抵達時間差<strong id="timeDiff">0.50 T</strong></div></div>
-<div class="canvaswrap"><canvas id="canvas" width="1000" height="590" aria-label="兩條水平賽道中沿正向傳播的兩列橫波，終點都是 P"></canvas></div>
-<div class="legend"><span style="color:#1474c3">━━ S₁ 的橫波</span><span style="color:#d47725">━━ S₂ 的橫波</span><span>紅色虛線：共同終點 P</span><span>亮色圓點：各波 t=0 的前端標記</span></div></section>
-<aside class="controls"><h2>賽跑設定</h2>
-<div><label for="delta">波程差 Δr / λ</label><div class="pair"><input type="range" id="delta" min="0" max="3" step=".01" value=".5"><input type="number" id="deltaNum" min="0" max="3" step=".01" value=".5"></div><div class="small">0～3 λ，自由調整，0.01 λ 精度</div></div>
-<div><label for="phase1">S₁ 起始發出的波形</label><select id="phase1"><option value="crest">波峰先出發</option><option value="trough">波谷先出發</option></select></div>
-<div><label for="phase2">S₂ 起始發出的波形</label><select id="phase2"><option value="crest">波峰先出發</option><option value="trough">波谷先出發</option></select></div>
-<div><label for="preset">教學情境</label><select id="preset"><option value="0.5">波程差 0.5λ</option><option value="0">波程差 0</option><option value="1">波程差 1λ</option><option value="1.5">波程差 1.5λ</option><option value="2">波程差 2λ</option><option value="custom">自訂波程差</option></select></div>
-<div><label for="speed">播放速度 <span id="speedText">1.0×</span></label><input id="speed" type="range" min=".1" max="3" step=".1" value="1"></div>
-<div class="buttons"><button id="play" class="primary">▶ 播放</button><button id="reset">↻ 重播</button><button id="zero">t = 0</button><button id="back">◀ 單格</button><button id="forward">單格 ▶</button><button id="default">預設值</button><button id="arrive">跳至 S₂ 抵達</button><button id="share">分享網址</button></div>
-<div class="readout"><strong id="result"></strong><div id="explain"></div><div id="live"></div><div id="sum"></div></div>
-<div class="save"><input id="caseName" placeholder="自訂情境名稱"><button id="save">儲存情境</button><button id="load">讀取情境</button></div></aside></div>
-<div class="details"><b>本模擬的教學方式</b><p>S₁、S₂ 從各自起跑線同時開始發出連續橫波，向右行進，終點同為 P。兩條路徑長度不同，但波長、速度相同。請觀察較短路徑的波先抵達 P 後，等到較長路徑的前端抵達時，較短路徑的波在 P 已處於什麼振動狀態。</p><p><b>物理條件：</b>理想同頻率、等振幅、速度相同的線性橫波；可各自設定起始波峰或波谷。畫面中上下起伏表示介質的位移，不代表水往前跑；亮點只是追蹤一個相位標記。起跑至兩波抵達前為暫態；長期腹／節判斷依穩態相位差。非整數與半整數波程差通常為部分干涉，不強制判腹／節。此為一維示意，兩賽道的水平長度共同採等比例尺。</p><p class="small">單格步進 = T/60。可用網址重現起始設定，也可在本機保存情境。</p></div></main>
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>雙波源波程差與干涉｜Physics Lab</title><style>
+*{box-sizing:border-box}body{margin:0;background:#f3f7fc;color:#193452;font:14px system-ui,"Noto Sans TC","Microsoft JhengHei",sans-serif}header{display:flex;justify-content:space-between;align-items:center;background:white;padding:12px 20px;border-bottom:1px solid #dce6f2}a{color:#225fc5;text-decoration:none;font-weight:bold}main{max-width:1480px;margin:auto;padding:13px}h1{margin:0 0 10px;font-size:22px}.layout{display:grid;grid-template-columns:minmax(0,1fr) 312px;gap:12px}.panel{background:white;border:1px solid #dce6f2;border-radius:13px;overflow:hidden}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:10px}.metric{padding:8px;background:#eef5fc;border-radius:8px;color:#5e7189;font-size:12px}.metric b{display:block;font-size:17px;color:#173b65}.stage{margin:0 10px;border:1px solid #dce6f2;border-radius:10px;overflow:hidden}canvas{width:100%;height:auto;display:block;touch-action:none}.legend{display:flex;gap:13px;flex-wrap:wrap;padding:9px 13px;font-size:12px;color:#536881}.ctrl{padding:14px}.ctrl h2{font-size:16px;margin:0 0 10px}.ctrl label{display:block;font-size:13px;font-weight:bold;margin:10px 0 4px}input[type=range]{width:100%;accent-color:#2169c8}input[type=number],input[type=text],select{font:inherit;min-height:42px;background:white;border:1px solid #c6d5e6;border-radius:8px;padding:7px;width:100%}button{font:inherit;color:#244b7a;border:1px solid #c5d5e7;background:white;border-radius:8px;min-height:44px;cursor:pointer;padding:7px}button.primary{background:#246bd2;border-color:#246bd2;color:white}.buttons{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:11px}.buttons.two{grid-template-columns:1fr 1fr}.reading{background:#edf5ff;border-radius:9px;padding:11px;margin-top:13px;line-height:1.7}.reading strong{display:block;font-size:16px}.tiny{color:#5b738f;font-size:12px}.timeplots{border-top:1px solid #dae5f3;padding:8px 10px 12px}.timeplots h3{font-size:14px;margin:4px 2px}.details{margin-top:12px;padding:12px 16px;line-height:1.65}.details p{margin:5px 0}@media(max-width:980px){.layout{grid-template-columns:1fr}.ctrl{display:grid;grid-template-columns:1fr 1fr;gap:2px 13px}.ctrl h2,.ctrl .buttons,.ctrl .reading,.ctrl .save{grid-column:1/-1}}@media(max-width:580px){.ctrl{display:block}.metrics{grid-template-columns:1fr 1fr}h1{font-size:19px}header{padding:10px}}
+</style></head><body><header><b>🌊 Physics Lab｜雙波源橫波干涉</b><a href="../../../">← Physics Lab 首頁</a></header><main><h1>沿兩條波程前進的橫波：拖曳 P、吸附腹點與節點</h1><div class="layout"><section class="panel">
+<div class="metrics"><div class="metric">波程 S₁P<b id="r1"></b></div><div class="metric">波程 S₂P<b id="r2"></b></div><div class="metric">波程差 |Δr|<b id="diff"></b></div><div class="metric">抵達時間差<b id="delay"></b></div></div>
+<div class="stage"><canvas id="scene" width="1000" height="585" aria-label="可拖曳 P 點的三角形雙波源橫波模擬"></canvas></div>
+<div class="legend"><span style="color:#1676c9">━━ S₁ 波（藍色）</span><span style="color:#cf762b">━━ S₂ 波（橘色）</span><span>波形沿斜向波程平移，線條上下起伏為橫波位移示意</span><span>● 起始波峰／波谷追蹤</span></div>
+<div class="timeplots"><h3>在 P 點的位移比較（橫軸：時間 t / T，三圖同尺度）</h3><canvas id="traces" width="1000" height="246" aria-label="S1 S2 與合成波在P點隨時間的位移圖"></canvas></div>
+</section><aside class="panel ctrl"><h2>參數與教學操作</h2>
+<div><label for="phase1">S₁ 首先發出</label><select id="phase1"><option value="crest">波峰</option><option value="trough">波谷</option></select></div>
+<div><label for="phase2">S₂ 首先發出</label><select id="phase2"><option value="crest">波峰</option><option value="trough">波谷</option></select></div>
+<div><label for="target">吸附條件（可選；P 仍可自由拖曳）</label><select id="target"><option value="free">自由拖曳</option><option value="antinode">最近腹點（同相抵達）</option><option value="node">最近節點（反相抵達）</option></select></div>
+<div class="buttons two"><button id="snapA">吸附最近腹點</button><button id="snapN">吸附最近節點</button></div>
+<div><label for="exact">指定波程差 |Δr| / λ（幾何定位）</label><input type="number" id="exact" min="0" max="4.1" step=".5" value=".5"><button style="width:100%;margin-top:5px" id="setExact">定位到指定波程差</button></div>
+<div><label for="preset">預設示範</label><select id="preset"><option value="0.5">0.5 λ：反相</option><option value="0">0 λ：同相</option><option value="1">1 λ：同相</option><option value="1.5">1.5 λ：反相</option><option value="2">2 λ：同相</option><option value="custom">自訂位置</option></select></div>
+<div><label for="speed">播放速度 <span id="speedLabel">1.0×</span></label><input type="range" id="speed" min=".1" max="3" step=".1" value="1"></div>
+<div class="buttons"><button id="play" class="primary">▶ 播放</button><button id="restart">↻ 重播</button><button id="zero">t = 0</button><button id="back">◀ 單格</button><button id="next">單格 ▶</button><button id="arrive">跳至較遠波抵達</button><button id="default">恢復預設</button><button id="share">複製分享網址</button><button id="grid">格線：開</button></div>
+<div class="reading"><strong id="result"></strong><div id="explain"></div><div id="live"></div><div id="ysum"></div></div>
+<div class="save"><label for="name">自訂情境</label><input type="text" id="name" placeholder="情境名稱"><div class="buttons two"><button id="save">儲存情境</button><button id="load">讀取情境</button></div></div>
+</aside></div>
+<section class="panel details"><b>模型、視覺與限制</b><p>兩個波源位於同一平面，波程為 S₁P、S₂P 的真實直線距離。正弦橫波沿各自路徑朝 P 平移；波長保持不變，移動 P 只改變可容納的波數及傳播延遲，不會拉伸波形。P 可自由拖曳；吸附功能透過實際幾何移動 P，並非只改顯示數字。</p><p>每條波在 t=0 首先發出波峰或波谷，標記隨波前移動。波到達 P 後仍持續通過，P 點用亮點顯示兩波當下位移，合成圖顯示 y₁+y₂。假設同頻率、相同波速與到達 P 的振幅皆 A，線性疊加；S₁ 與 S₂ 可各自切換波峰／波谷（因此「腹點／節點」要考慮初始相位差）。波尚未到達時為暫態；穩定後才可依波程差分類。橫波是沿 S₁P 與 S₂P 的教學示意，非完整三維水流模擬。</p><p class="tiny">固定波長 λ = 80 圖示單位；兩波源間距 330 單位，|Δr| 不可能超過約 4.125λ。每格 T/60；不顯示中垂線。畫面上的起始相位標記不是水體質點的移動。</p></section></main>
 <script>
-(()=>{'use strict';const $=id=>document.getElementById(id),c=$('canvas'),g=c.getContext('2d');let d=.5,p1=0,p2=0,t=0,speed=1,playing=false,last=0;const right=890,pxPerLam=112,len1=3,topY=168,lowY=398,A=55;const getLen=()=>len1+d;const fmt=n=>Number(n).toFixed(2);const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
-function stroke(x1,y1,x2,y2,color,width=1,dash=[]){g.save();g.strokeStyle=color;g.lineWidth=width;g.setLineDash(dash);g.beginPath();g.moveTo(x1,y1);g.lineTo(x2,y2);g.stroke();g.restore()}
-function txt(s,x,y,color='#345775',size=17,bold=false){g.fillStyle=color;g.font=(bold?'bold ':'')+size+'px system-ui';g.fillText(s,x,y)}
-function circ(x,y,r,fill){g.fillStyle=fill;g.beginPath();g.arc(x,y,r,0,Math.PI*2);g.fill()}
-function path(y,len,phase,color,name){const start=right-len*pxPerLam,front=Math.min(right,start+t*pxPerLam),arrived=t>=len;
-g.fillStyle=color+'0d';g.fillRect(start,y-83,right-start,166);
-stroke(start,y,right,y,'#b8cce1',1,[5,6]);stroke(start,y-86,start,y+86,color,2.5,[5,4]);
-txt(name+'　起點',Math.max(12,start-28),y-96,color,17,true);txt(len.toFixed(2)+' λ',start+(right-start)*.52-20,y+103,color,15,true);
-g.save();g.beginPath();g.rect(start,y-80,right-start,160);g.clip();g.strokeStyle=color;g.lineWidth=3.3;g.beginPath();
-let started=false;for(let x=start;x<=front;x+=1.2){const local=(x-start)/pxPerLam;const displacement=Math.cos(2*Math.PI*(t-local)+phase)*A;const yy=y-displacement;if(!started){g.moveTo(x,yy);started=true}else g.lineTo(x,yy)}if(started)g.stroke();g.restore();
-circ(start,y,6,color);
-const firstX=start+t*pxPerLam;if(firstX<=right){const firstY=y-A*Math.cos(phase);circ(firstX,firstY,7,'#fff');circ(firstX,firstY,4.8,color)}
-if(arrived){const z=Math.cos(2*Math.PI*(t-len)+phase);circ(right,y-z*A,6,color)}
-txt(arrived?'已抵達 P':'前端距 P '+fmt(len-t)+' λ',start+10,y+125,color,15);
+(()=>{'use strict';const $=id=>document.getElementById(id),C=$('scene'),g=C.getContext('2d'),Q=$('traces'),q=Q.getContext('2d'),S1={x:135,y:116},S2={x:135,y:446},lam=80,v=80,A=19;let P={x:720,y:228},phase1=0,phase2=0,t=0,speed=1,playing=false,last=0,grid=true,drag=false;
+const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y),R=()=>[dist(S1,P),dist(S2,P)],difference=p=>Math.abs(dist(S1,p)-dist(S2,p)),fmt=n=>n.toFixed(2),clamp=(n,a,b)=>Math.min(b,Math.max(a,n));
+function line(x,y,X,Y,col,w=1,d=[]){g.save();g.strokeStyle=col;g.lineWidth=w;g.setLineDash(d);g.beginPath();g.moveTo(x,y);g.lineTo(X,Y);g.stroke();g.restore()}
+function text(s,x,y,color='#264660',sz=16){g.fillStyle=color;g.font='bold '+sz+'px system-ui';g.fillText(s,x,y)}
+function dot(x,y,color,r=6){g.beginPath();g.arc(x,y,r,0,2*Math.PI);g.fillStyle=color;g.fill();g.lineWidth=2;g.strokeStyle='white';g.stroke()}
+function wave(src,color,phase,label){let r=dist(src,P),dx=(P.x-src.x)/r,dy=(P.y-src.y)/r,nx=-dy,ny=dx,front=t*v;
+line(src.x,src.y,P.x,P.y,color,1.4,[6,6]);
+g.save();g.beginPath();g.moveTo(src.x,src.y);for(let s=0;s<=Math.min(r,front);s+=1.5){const u=Math.cos(2*Math.PI*(t-s/lam)+phase)*A;g.lineTo(src.x+dx*s+nx*u,src.y+dy*s+ny*u)}g.strokeStyle=color;g.lineWidth=3.5;g.lineJoin='round';g.stroke();g.restore();
+if(front<=r){const u=A*Math.cos(phase);dot(src.x+dx*front+nx*u,src.y+dy*front+ny*u,color,6);text('起始'+(phase?'波谷':'波峰'),src.x+dx*front+nx*u+7,src.y+dy*front+ny*u-11,color,12)}
+if(front>=r){const u=A*Math.cos(2*Math.PI*(t-r/lam)+phase);dot(P.x+nx*u,P.y+ny*u,color,5)}
+dot(src.x,src.y,color,8);text(label,src.x-24,src.y-18,color,18);text(fmt(r/lam)+' λ',src.x+(P.x-src.x)*.48,src.y+(P.y-src.y)*.48-18,color,15);
 }
-function classify(){const phaseDiff=2*Math.PI*d+p1-p2;const mag=2*Math.abs(Math.cos(phaseDiff/2));let title=mag>1.999999?'腹點｜完全建設性干涉':mag<.000001?'節點｜完全破壞性干涉':'部分干涉';$('result').textContent=title;$('sum').textContent='穩態合成振幅 = '+fmt(mag)+' A';
-const s1=Math.cos(2*Math.PI*d+p1),s2=Math.cos(p2);function state(v){return v>.99999?'波峰':v<-.99999?'波谷':(v>=0?'正位移':'負位移')+' '+fmt(v)+' A'}
-$('explain').textContent='S₂ 起始波形抵達 P 時，S₁ 在 P：'+state(s1)+'；S₂：'+state(s2)+'。';
-$('live').textContent=t<len1?'目前：兩列波前都尚未抵達 P。':t<len1+d?'目前：S₁ 已抵達，S₂ 仍在前進。':'目前：兩列波都已抵達 P，開始穩定疊加。';
-$('r1').textContent='3.00 λ';$('r2').textContent=fmt(len1+d)+' λ';$('deltaView').textContent=fmt(d)+' λ';$('timeDiff').textContent=fmt(d)+' T';
-}
-function draw(){g.clearRect(0,0,1000,590);g.fillStyle='#f8fbff';g.fillRect(0,0,1000,590);
-for(let x=40;x<1000;x+=pxPerLam)stroke(x,10,x,580,'#e6eef9');stroke(right,37,right,552,'#b63d67',2,[8,6]);txt('共同終點 P',right-64,32,'#b63d67',18,true);
-txt('兩條賽道皆向右傳播 →',26,32,'#557188',15);
-path(topY,len1,p1,'#1575c8','S₁');path(lowY,getLen(),p2,'#d67a24','S₂');
-stroke(20,290,982,290,'#dce5f1');txt('時間 t = '+fmt(t)+' T',25,573,'#183a60',18,true);
-classify()}
-function apply(v){if(!Number.isFinite(v))return;d=clamp(Math.round(v*100)/100,0,3);$('delta').value=d;$('deltaNum').value=d;$('preset').value=[0,.5,1,1.5,2].includes(d)?String(d):'custom';draw()}
-function pause(){playing=false;$('play').textContent='▶ 播放'}
-$('play').onclick=()=>{playing=!playing;$('play').textContent=playing?'Ⅱ 暫停':'▶ 播放'};$('reset').onclick=()=>{pause();t=0;draw()};$('zero').onclick=()=>{t=0;draw()};
-$('forward').onclick=()=>{pause();t=Math.min(11,t+1/60);draw()};$('back').onclick=()=>{pause();t=Math.max(0,t-1/60);draw()};
-$('arrive').onclick=()=>{pause();t=getLen();draw()};$('default').onclick=()=>{pause();t=0;speed=1;$('speed').value=1;$('speedText').textContent='1.0×';$('phase1').value='crest';$('phase2').value='crest';p1=p2=0;apply(.5)};
-$('delta').oninput=e=>apply(+e.target.value);$('deltaNum').onchange=e=>apply(+e.target.value);$('preset').onchange=e=>{if(e.target.value!=='custom')apply(+e.target.value)};
-$('phase1').onchange=e=>{p1=e.target.value==='trough'?Math.PI:0;draw()};$('phase2').onchange=e=>{p2=e.target.value==='trough'?Math.PI:0;draw()};
-$('speed').oninput=e=>{speed=+e.target.value;$('speedText').textContent=speed.toFixed(1)+'×'};
-$('save').onclick=()=>{try{const name=$('caseName').value.trim()||'我的情境';localStorage.setItem('physics-lab:two-lane-wave',JSON.stringify({name,d,p1,p2,speed}));alert('已儲存 '+name)}catch(e){alert('無法使用本機儲存')}}; 
-$('load').onclick=()=>{try{const x=JSON.parse(localStorage.getItem('physics-lab:two-lane-wave')||'null');if(!x){alert('尚無儲存情境');return}pause();t=0;apply(Number(x.d));p1=x.p1===Math.PI?Math.PI:0;p2=x.p2===Math.PI?Math.PI:0;$('phase1').value=p1?'trough':'crest';$('phase2').value=p2?'trough':'crest';speed=clamp(Number(x.speed)||1,.1,3);$('speed').value=speed;$('speedText').textContent=speed.toFixed(1)+'×';$('caseName').value=x.name||'';draw()}catch(e){alert('無效情境')}}; 
-$('share').onclick=async()=>{const u=new URL(location.href);u.searchParams.set('v','2');u.searchParams.set('d',d);u.searchParams.set('p1',p1===Math.PI?'trough':'crest');u.searchParams.set('p2',p2===Math.PI?'trough':'crest');u.searchParams.set('speed',speed);try{await navigator.clipboard.writeText(u.href);alert('網址已複製')}catch(e){prompt('複製網址',u.href)}};
-try{const q=new URLSearchParams(location.search);if(q.get('v')==='2'){const nd=Number(q.get('d')),ns=Number(q.get('speed'));if(q.has('d')&&Number.isFinite(nd)&&nd>=0&&nd<=3)d=nd;if(q.has('speed')&&Number.isFinite(ns)&&ns>=.1&&ns<=3)speed=ns;p1=q.get('p1')==='trough'?Math.PI:0;p2=q.get('p2')==='trough'?Math.PI:0}}catch(e){}
-$('phase1').value=p1?'trough':'crest';$('phase2').value=p2?'trough':'crest';$('speed').value=speed;$('speedText').textContent=speed.toFixed(1)+'×';apply(d);
-function tick(now){if(playing&&last){t=Math.min(11,t+Math.min((now-last)/1000,.08)*speed);if(t>=11)pause();draw()}last=now;requestAnimationFrame(tick)}requestAnimationFrame(tick);
+function signature(){const [r1,r2]=R(),d=Math.abs(r2-r1)/lam;const co=Math.cos(Math.PI*(r2-r1)/lam+(phase1-phase2)/2);const mag=2*Math.abs(co);let name=mag<1e-6?'節點｜完全破壞性干涉':Math.abs(mag-2)<1e-6?'腹點｜完全建設性干涉':'部分干涉';return {r1,r2,d,mag,name}}
+function disp(r,phase,time){if(time<r/lam)return 0;return Math.cos(2*Math.PI*(time-r/lam)+phase)}
+function state(y,arrived){if(!arrived)return '尚未抵達';if(y>.9999)return '波峰';if(y<-.9999)return '波谷';return (y>=0?'正':'負')+'位移 '+fmt(y)+' A'}
+function render(){const {r1,r2,d,mag,name}=signature();g.clearRect(0,0,1000,585);g.fillStyle='#f9fcff';g.fillRect(0,0,1000,585);
+if(grid){for(let x=20;x<1000;x+=lam)line(x,0,x,585,'#e6edf7');for(let y=20;y<585;y+=lam)line(0,y,1000,y,'#e6edf7')}
+text('拖曳紅色 P 點；兩列橫波向 P 行進 ↗',18,27,'#46617d',16);wave(S1,'#1578c9',phase1,'S₁');wave(S2,'#d17c25',phase2,'S₂');dot(P.x,P.y,'#c13e65',11);text('P（拖曳）',P.x+15,P.y-15,'#b62a56',17);
+const y1=disp(r1,phase1,t),y2=disp(r2,phase2,t);
+$('r1').textContent=fmt(r1/lam)+' λ';$('r2').textContent=fmt(r2/lam)+' λ';$('diff').textContent=fmt(d)+' λ';$('delay').textContent=fmt(d)+' T';$('result').textContent=name;
+const far=r1>r2?1:2,tf=Math.max(r1,r2)/lam;const nearAt=far===2?Math.cos(2*Math.PI*(tf-r1/lam)+phase1):Math.cos(2*Math.PI*(tf-r2/lam)+phase2);const farPhase=far===2?phase2:phase1;
+$('explain').textContent='較遠的 S'+far+' 首個標記抵達 P 時：另一波為 '+state(nearAt,true)+'；較遠波為 '+(farPhase?'波谷':'波峰')+'。';
+$('live').textContent='現在 t = '+fmt(t)+' T：S₁ '+state(y1,t>=r1/lam)+'；S₂ '+state(y2,t>=r2/lam);
+$('ysum').textContent='P 點瞬時位移：'+fmt(y1)+' A + '+fmt(y2)+' A = '+fmt(y1+y2)+' A；穩態合成振幅 '+fmt(mag)+' A';
+renderTraces(r1,r2)}
+function renderTraces(r1,r2){q.clearRect(0,0,1000,246);q.fillStyle='#fbfdff';q.fillRect(0,0,1000,246);let maxt=Math.max(11,r1/lam+3,r2/lam+3),left=116,right=980,ww=right-left;
+const colors=['#1676c9','#d17c25','#159576'];['S₁ 在 P','S₂ 在 P','合成波'].forEach((label,j)=>{const yc=43+76*j;q.strokeStyle='#d7e1f0';q.lineWidth=1;q.beginPath();q.moveTo(left,yc);q.lineTo(right,yc);q.stroke();q.fillStyle=colors[j];q.font='bold 17px system-ui';q.fillText(label,8,yc+5);q.beginPath();for(let i=0;i<=720;i++){const tt=i/720*maxt,a=disp(r1,phase1,tt),b=disp(r2,phase2,tt),val=j===0?a:j===1?b:a+b;const xx=left+i/720*ww,yy=yc-val*24;if(i===0)q.moveTo(xx,yy);else q.lineTo(xx,yy)}q.strokeStyle=colors[j];q.lineWidth=2.7;q.stroke();q.strokeStyle='#c13e65';q.setLineDash([5,4]);const xnow=left+clamp(t/maxt,0,1)*ww;q.beginPath();q.moveTo(xnow,yc-30);q.lineTo(xnow,yc+30);q.stroke();q.setLineDash([])});
+q.font='13px system-ui';q.fillStyle='#536983';q.fillText('時間 t/T →',885,239);q.fillText('0',left-4,239);q.fillText(maxt.toFixed(1),right-30,239)}
+// Projection of P to nearest constant |S₂P−S₁P| using constrained local gradient iteration.
+// For a target at a physically unreachable level, choose the closest reachable location inside the canvas.
+function project(target){const goal=target*lam,sign=Math.sign(dist(S2,P)-dist(S1,P))||1;let z={...P};for(let k=0;k<90;k++){const a=dist(S1,z),b=dist(S2,z);if(a<1||b<1)break;const val=sign*(b-a)-goal;if(Math.abs(val)<.005)break;const gx=sign*((z.x-S2.x)/b-(z.x-S1.x)/a),gy=sign*((z.y-S2.y)/b-(z.y-S1.y)/a),m=gx*gx+gy*gy;if(m<1e-8)break;let step=clamp(val/m,-300,300);z.x=clamp(z.x-step*gx,75,950);z.y=clamp(z.y-step*gy,42,555)}return z}
+function choices(kind){const {d}=signature();const offset=phase1===phase2?0:.5;const candidates=[];for(let k=0;k<=8;k++){const u=kind==='antinode'?k+offset:k+.5-offset;if(u>=0&&u<=(S2.y-S1.y)/lam-0.001)candidates.push(u)}return candidates.sort((a,b)=>Math.abs(a-d)-Math.abs(b-d))[0]}
+function snap(kind){const target=choices(kind);if(target===undefined)return;P=project(target);$('target').value=kind;$('preset').value='custom';render()}
+function setDifference(x){if(!Number.isFinite(x)||x<0||x>4.12){alert('波程差須在 0～4.12 λ');return}P=project(x);$('preset').value=[0,.5,1,1.5,2].includes(x)?String(x):'custom';render()}
+function updatePhase(){phase1=$('phase1').value==='trough'?Math.PI:0;phase2=$('phase2').value==='trough'?Math.PI:0;render()}
+$('phase1').onchange=updatePhase;$('phase2').onchange=updatePhase;
+$('snapA').onclick=()=>snap('antinode');$('snapN').onclick=()=>snap('node');
+$('target').onchange=e=>{if(e.target.value!=='free')snap(e.target.value)};
+$('setExact').onclick=()=>setDifference(Number($('exact').value));
+$('preset').onchange=e=>{if(e.target.value!=='custom')setDifference(Number(e.target.value))};
+function pos(e){const rect=C.getBoundingClientRect();return{x:(e.clientX-rect.left)*C.width/rect.width,y:(e.clientY-rect.top)*C.height/rect.height}}
+C.onpointerdown=e=>{const pt=pos(e);if(dist(pt,P)<45){drag=true;C.setPointerCapture(e.pointerId);playing=false;$('play').textContent='▶ 播放'}};
+C.onpointermove=e=>{if(!drag)return;const pt=pos(e);P={x:clamp(pt.x,55,960),y:clamp(pt.y,35,560)};if($('target').value!=='free'){const kind=$('target').value,target=choices(kind);if(target!==undefined)P=project(target)}$('preset').value='custom';render()};
+C.onpointerup=()=>drag=false;C.onpointercancel=()=>drag=false;
+function pause(){playing=false;$('play').textContent='▶ 播放'}$('play').onclick=()=>{playing=!playing;$('play').textContent=playing?'Ⅱ 暫停':'▶ 播放'};
+$('restart').onclick=()=>{pause();t=0;render()};$('zero').onclick=()=>{t=0;render()};$('back').onclick=()=>{pause();t=Math.max(0,t-1/60);render()};$('next').onclick=()=>{pause();t=Math.min(14,t+1/60);render()};$('arrive').onclick=()=>{pause();t=Math.max(...R())/lam;render()};
+$('speed').oninput=e=>{speed=Number(e.target.value);$('speedLabel').textContent=speed.toFixed(1)+'×'};
+$('grid').onclick=()=>{grid=!grid;$('grid').textContent='格線：'+(grid?'開':'關');render()};
+$('default').onclick=()=>{pause();P={x:720,y:228};phase1=phase2=0;t=0;speed=1;$('phase1').value=$('phase2').value='crest';$('speed').value=1;$('speedLabel').textContent='1.0×';$('target').value='free';setDifference(.5)};
+$('save').onclick=()=>{try{const n=$('name').value.trim()||'我的情境';localStorage.setItem('physics-lab:crest-interference',JSON.stringify({n,P,phase1,phase2,speed,grid}));alert('已儲存：'+n)}catch(e){alert('本機儲存不可用')}};
+$('load').onclick=()=>{try{const v=JSON.parse(localStorage.getItem('physics-lab:crest-interference')||'null');if(!v){alert('尚無情境');return}if(!Number.isFinite(v.P.x)||!Number.isFinite(v.P.y))throw Error();pause();P={x:clamp(v.P.x,55,960),y:clamp(v.P.y,35,560)};phase1=v.phase1===Math.PI?Math.PI:0;phase2=v.phase2===Math.PI?Math.PI:0;speed=clamp(v.speed||1,.1,3);grid=!!v.grid;$('phase1').value=phase1?'trough':'crest';$('phase2').value=phase2?'trough':'crest';$('speed').value=speed;$('speedLabel').textContent=speed.toFixed(1)+'×';$('name').value=v.n||'';$('target').value='free';t=0;render()}catch(e){alert('情境資料無效')}};
+$('share').onclick=async()=>{const u=new URL(location.href);u.searchParams.set('v','3');u.searchParams.set('x',P.x.toFixed(2));u.searchParams.set('y',P.y.toFixed(2));u.searchParams.set('p1',phase1?'trough':'crest');u.searchParams.set('p2',phase2?'trough':'crest');u.searchParams.set('speed',speed);try{await navigator.clipboard.writeText(u.href);alert('網址已複製')}catch(e){prompt('請複製網址',u.href)}};
+try{const a=new URLSearchParams(location.search);if(a.get('v')==='3'){const x=Number(a.get('x')),y=Number(a.get('y')),s=Number(a.get('speed'));if(a.has('x')&&a.has('y')&&Number.isFinite(x)&&Number.isFinite(y)&&x>=55&&x<=960&&y>=35&&y<=560)P={x,y};if(a.has('speed')&&Number.isFinite(s)&&s>=.1&&s<=3)speed=s;phase1=a.get('p1')==='trough'?Math.PI:0;phase2=a.get('p2')==='trough'?Math.PI:0}}catch(e){}
+$('phase1').value=phase1?'trough':'crest';$('phase2').value=phase2?'trough':'crest';$('speed').value=speed;$('speedLabel').textContent=speed.toFixed(1)+'×';setDifference(.5);render();
+function tick(now){if(playing&&last){t=Math.min(14,t+Math.min((now-last)/1000,.08)*speed);if(t>=14)pause();render()}last=now;requestAnimationFrame(tick)}requestAnimationFrame(tick);
 })();
 </script></body></html>
