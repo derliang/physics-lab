@@ -67,7 +67,7 @@ C.onpointerdown=e=>{const pt=pos(e);if(dist(pt,P)<45){drag=true;C.setPointerCapt
 C.onpointermove=e=>{if(!drag)return;const pt=pos(e);P={x:clamp(pt.x,55,960),y:clamp(pt.y,35,560)};if($('target').value!=='free'){const kind=$('target').value,target=choices(kind);if(target!==undefined)P=project(target)}$('preset').value='custom';render()};
 C.onpointerup=()=>drag=false;C.onpointercancel=()=>drag=false;
 function pause(){playing=false;$('play').textContent='▶ 播放'}$('play').onclick=()=>{playing=!playing;$('play').textContent=playing?'Ⅱ 暫停':'▶ 播放'};
-$('restart').onclick=()=>{pause();t=0;render()};$('zero').onclick=()=>{t=0;render()};$('back').onclick=()=>{pause();t=Math.max(0,t-1/60);render()};$('next').onclick=()=>{pause();t=Math.min(14,t+1/60);render()};$('arrive').onclick=()=>{pause();t=Math.max(...R())/lam;render()};
+$('restart').onclick=()=>{pause();t=0;render()};$('zero').onclick=()=>{t=0;render()};$('back').onclick=()=>{pause();t=Math.max(0,t-1/60);render()};$('next').onclick=()=>{pause();t+=1/60;render()};$('arrive').onclick=()=>{pause();t=Math.max(...R())/lam;render()};
 $('speed').oninput=e=>{speed=Number(e.target.value);$('speedLabel').textContent=speed.toFixed(1)+'×'};
 $('grid').onclick=()=>{grid=!grid;$('grid').textContent='格線：'+(grid?'開':'關');render()};
 $('default').onclick=()=>{pause();P={x:720,y:228};phase1=phase2=0;t=0;speed=1;$('phase1').value=$('phase2').value='crest';$('speed').value=1;$('speedLabel').textContent='1.0×';$('target').value='free';setDifference(.5)};
