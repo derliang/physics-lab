@@ -16,18 +16,22 @@
 <div class="reading"><strong id="result"></strong><div id="explain"></div><div id="live"></div><div id="ysum"></div></div>
 <div class="save"><label for="name">自訂情境</label><input type="text" id="name" placeholder="情境名稱"><div class="buttons two"><button id="save">儲存情境</button><button id="load">讀取情境</button></div></div>
 </aside></div>
-<section class="panel details"><b>模型、視覺與限制</b><p>兩個波源位於同一平面，波程為 S₁P、S₂P 的真實直線距離。正弦橫波沿各自路徑朝 P 平移；波長保持不變，移動 P 只改變可容納的波數及傳播延遲，不會拉伸波形。P 可自由拖曳；吸附功能透過實際幾何移動 P，並非只改顯示數字。</p><p>每條波在 t=0 首先發出波峰或波谷，標記隨波形一起平移；只畫首個標記後方的波形，最初的標記前方不延伸其他波形。當較遠路徑的首個標記抵達 P 時自動停格，短路徑的首個標記已通過 P，兩波在 P 的相位由沿路徑的波形及旁邊三個位移標記判讀。假設同頻率、相同波速與到達 P 的振幅皆 A，線性疊加；S₁ 與 S₂ 可各自切換波峰／波谷（因此「腹點／節點」要考慮初始相位差）。波尚未到達時為暫態；穩定後才可依波程差分類。橫波是沿 S₁P 與 S₂P 的教學示意，非完整三維水流模擬。</p><p class="tiny">固定波長 λ = 80 圖示單位；兩波源間距 330 單位，|Δr| 不可能超過約 4.125λ。動畫為波前事件播放（自動停在較遠首波峰／波谷抵達 P），不是無限循環播放；每格 T/60；不顯示中垂線。畫面上的起始相位標記不是水體質點的移動。</p></section></main>
+<section class="panel details"><b>模型、視覺與限制</b><p>兩個波源位於同一平面，波程為 S₁P、S₂P 的真實直線距離。正弦橫波沿各自路徑朝 P 平移；波長保持不變，移動 P 只改變可容納的波數及傳播延遲，不會拉伸波形。P 可自由拖曳；吸附功能透過實際幾何移動 P，並非只改顯示數字。</p><p>每條波在 t=0 首先發出波峰或波谷，標記隨波形一起平移；只畫首個標記後方的波形，最初的標記前方不延伸其他波形。當較遠路徑的首個標記抵達 P 時，兩條傳播波形停在精確抵達的狀態，旁側的三個 P 點位移標記仍可繼續振動；短路徑的首個標記已通過 P，兩波在 P 的相位由沿路徑的波形及旁邊三個位移標記判讀。假設同頻率、相同波速與到達 P 的振幅皆 A，線性疊加；S₁ 與 S₂ 可各自切換波峰／波谷（因此「腹點／節點」要考慮初始相位差）。波尚未到達時為暫態；穩定後才可依波程差分類。橫波是沿 S₁P 與 S₂P 的教學示意，非完整三維水流模擬。</p><p class="tiny">固定波長 λ = 80 圖示單位；兩波源間距 330 單位，|Δr| 不可能超過約 4.125λ。動畫波形停在較遠首波峰／波谷抵達 P 的瞬間，之後 P 點合成振動可以繼續播放；每格 T/60；不顯示中垂線。畫面上的起始相位標記不是水體質點的移動。</p></section></main>
 <script>
-(()=>{'use strict';const $=id=>document.getElementById(id),C=$('scene'),g=C.getContext('2d'),Q=$('traces'),q=Q.getContext('2d'),S1={x:135,y:116},S2={x:135,y:446},lam=80,v=80,A=19;let P={x:720,y:228},phase1=0,phase2=0,t=0,speed=1,playing=false,last=0,grid=true,drag=false;
+(()=>{'use strict';const $=id=>document.getElementById(id),C=$('scene'),g=C.getContext('2d'),Q=$('traces'),q=Q.getContext('2d'),S1={x:135,y:116},S2={x:135,y:446},lam=80,v=80,A=19;let P={x:720,y:228},phase1=0,phase2=0,t=0,speed=1,playing=false,last=0,grid=true,drag=false;const frozenTime=()=>Math.min(t,Math.max(...R())/lam);
 const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y),R=()=>[dist(S1,P),dist(S2,P)],difference=p=>Math.abs(dist(S1,p)-dist(S2,p)),fmt=n=>n.toFixed(2),clamp=(n,a,b)=>Math.min(b,Math.max(a,n));
 function line(x,y,X,Y,col,w=1,d=[]){g.save();g.strokeStyle=col;g.lineWidth=w;g.setLineDash(d);g.beginPath();g.moveTo(x,y);g.lineTo(X,Y);g.stroke();g.restore()}
 function text(s,x,y,color='#264660',sz=16){g.fillStyle=color;g.font='bold '+sz+'px system-ui';g.fillText(s,x,y)}
 function dot(x,y,color,r=6){g.beginPath();g.arc(x,y,r,0,2*Math.PI);g.fillStyle=color;g.fill();g.lineWidth=2;g.strokeStyle='white';g.stroke()}
-function wave(src,color,phase,label){const r=dist(src,P),dx=(P.x-src.x)/r,dy=(P.y-src.y)/r,nx=-dy,ny=dx,front=t*v;
+function wave(src,color,phase,label){const r=dist(src,P),dx=(P.x-src.x)/r,dy=(P.y-src.y)/r,front=frozenTime()*v;
+// 兩條直線代表真正的水平方向波程；橫波的位移均沿畫面同一鉛直方向。
 line(src.x,src.y,P.x,P.y,color,1.4,[6,6]);
-const edge=front; // 只繪出最初發出的相位前緣之前的波形，不畫前緣之後的任何波形
-g.save();g.beginPath();let drawn=false;for(let s=0;s<=edge;s+=1.3){const u=Math.cos(2*Math.PI*(t-s/lam)+phase)*A;const xx=src.x+dx*s+nx*u,yy=src.y+dy*s+ny*u;if(!drawn){g.moveTo(xx,yy);drawn=true}else g.lineTo(xx,yy)}g.strokeStyle=color;g.lineWidth=3.5;g.lineJoin='round';g.stroke();g.restore();
-if(front<=r+300){const u=A*Math.cos(phase);dot(src.x+dx*front+nx*u,src.y+dy*front+ny*u,color,6);if(front<=r+250)text('首個'+(phase?'波谷':'波峰'),src.x+dx*front+nx*u+7,src.y+dy*front+ny*u-10,color,12)}
+const pointAt=(d)=>({x:src.x+dx*d,y:src.y+dy*d-A*Math.cos(2*Math.PI*(frozenTime()-d/lam)+phase)});
+g.save();g.beginPath();const edge=Math.max(0,front);let started=false;
+for(let d=0;d<edge;d+=1){const a=pointAt(d);if(!started){g.moveTo(a.x,a.y);started=true}else g.lineTo(a.x,a.y)}
+const end=pointAt(edge);if(!started)g.moveTo(end.x,end.y);else g.lineTo(end.x,end.y);
+g.strokeStyle=color;g.lineWidth=3.5;g.lineJoin='round';g.stroke();g.restore();
+if(front<=r+300){const u=A*Math.cos(phase);const x=src.x+dx*front,y=src.y+dy*front-u;dot(x,y,color,6);if(front<=r+250)text('首個'+(phase?'波谷':'波峰'),x+7,y-10,color,12)}
 dot(src.x,src.y,color,8);text(label,src.x-24,src.y-18,color,18);text(fmt(r/lam)+' λ',src.x+(P.x-src.x)*.48,src.y+(P.y-src.y)*.48-18,color,15);
 }
 function signature(){const [r1,r2]=R(),d=Math.abs(r2-r1)/lam;const co=Math.cos(Math.PI*(r2-r1)/lam+(phase1-phase2)/2);const mag=2*Math.abs(co);let name=mag<1e-6?'節點｜完全破壞性干涉':Math.abs(mag-2)<1e-6?'腹點｜完全建設性干涉':'部分干涉';return {r1,r2,d,mag,name}}
@@ -35,7 +39,7 @@ function disp(r,phase,time){if(time<r/lam)return 0;return Math.cos(2*Math.PI*(ti
 function state(y,arrived){if(!arrived)return '尚未抵達';if(y>.9999)return '波峰';if(y<-.9999)return '波谷';return (y>=0?'正':'負')+'位移 '+fmt(y)+' A'}
 function render(){const {r1,r2,d,mag,name}=signature();g.clearRect(0,0,1000,585);g.fillStyle='#f9fcff';g.fillRect(0,0,1000,585);
 if(grid){for(let x=20;x<1000;x+=lam)line(x,0,x,585,'#e6edf7');for(let y=20;y<585;y+=lam)line(0,y,1000,y,'#e6edf7')}
-text('追蹤首個波峰／波谷；較遠波前緣到 P 時自動停格',18,27,'#46617d',16);wave(S1,'#1578c9',phase1,'S₁');wave(S2,'#d17c25',phase2,'S₂');dot(P.x,P.y,'#c13e65',9);text('P（拖曳）',P.x+15,P.y-22,'#b62a56',17);if(t>=Math.max(...R())/lam-1e-8){const [ra,rb]=R(),ya=Math.cos(2*Math.PI*(t-ra/lam)+phase1),yb=Math.cos(2*Math.PI*(t-rb/lam)+phase2);text('S₁：'+state(ya,true)+'   S₂：'+state(yb,true),Math.min(630,P.x+18),Math.min(575,P.y+47),'#b62a56',17);}
+text('追蹤首個波峰／波谷；較遠波前緣到 P 時波形停格、合成位移繼續振動',18,27,'#46617d',16);wave(S1,'#1578c9',phase1,'S₁');wave(S2,'#d17c25',phase2,'S₂');dot(P.x,P.y,'#c13e65',9);text('P（拖曳）',P.x+15,P.y-22,'#b62a56',17);if(frozenTime()>=Math.max(...R())/lam-1e-8){line(P.x,P.y-60,P.x,P.y+60,'#c13e65',2,[3,4]);const [ra,rb]=R();const ya=Math.cos(2*Math.PI*(frozenTime()-ra/lam)+phase1),yb=Math.cos(2*Math.PI*(frozenTime()-rb/lam)+phase2);dot(P.x,P.y-A*ya,'#1578c9',7);dot(P.x,P.y-A*yb,'#d17c25',5)}if(t>=Math.max(...R())/lam-1e-8){const [ra,rb]=R(),ya=Math.cos(2*Math.PI*(t-ra/lam)+phase1),yb=Math.cos(2*Math.PI*(t-rb/lam)+phase2);text('S₁：'+state(ya,true)+'   S₂：'+state(yb,true),Math.min(630,P.x+18),Math.min(575,P.y+47),'#b62a56',17);}
 const y1=disp(r1,phase1,t),y2=disp(r2,phase2,t);
 $('r1').textContent=fmt(r1/lam)+' λ';$('r2').textContent=fmt(r2/lam)+' λ';$('diff').textContent=fmt(d)+' λ';$('delay').textContent=fmt(d)+' T';$('result').textContent=name;
 const far=r1>r2?1:2,tf=Math.max(r1,r2)/lam;const nearAt=far===2?Math.cos(2*Math.PI*(tf-r1/lam)+phase1):Math.cos(2*Math.PI*(tf-r2/lam)+phase2);const farPhase=far===2?phase2:phase1;
@@ -76,6 +80,6 @@ $('load').onclick=()=>{try{const v=JSON.parse(localStorage.getItem('physics-lab:
 $('share').onclick=async()=>{const u=new URL(location.href);u.searchParams.set('v','3');u.searchParams.set('x',P.x.toFixed(2));u.searchParams.set('y',P.y.toFixed(2));u.searchParams.set('p1',phase1?'trough':'crest');u.searchParams.set('p2',phase2?'trough':'crest');u.searchParams.set('speed',speed);try{await navigator.clipboard.writeText(u.href);alert('網址已複製')}catch(e){prompt('請複製網址',u.href)}};
 try{const a=new URLSearchParams(location.search);if(a.get('v')==='3'){const x=Number(a.get('x')),y=Number(a.get('y')),s=Number(a.get('speed'));if(a.has('x')&&a.has('y')&&Number.isFinite(x)&&Number.isFinite(y)&&x>=55&&x<=960&&y>=35&&y<=560)P={x,y};if(a.has('speed')&&Number.isFinite(s)&&s>=.1&&s<=3)speed=s;phase1=a.get('p1')==='trough'?Math.PI:0;phase2=a.get('p2')==='trough'?Math.PI:0}}catch(e){}
 $('phase1').value=phase1?'trough':'crest';$('phase2').value=phase2?'trough':'crest';$('speed').value=speed;$('speedLabel').textContent=speed.toFixed(1)+'×';if(new URLSearchParams(location.search).get('v')!=='3')setDifference(.5);else render();
-function tick(now){if(playing&&last){const limit=Math.max(...R())/lam;t=Math.min(limit,t+Math.min((now-last)/1000,.08)*speed);if(t>=limit-1e-10){t=limit;pause()}render()}last=now;requestAnimationFrame(tick)}requestAnimationFrame(tick);
+function tick(now){if(playing&&last){t+=Math.min((now-last)/1000,.08)*speed;render()}last=now;requestAnimationFrame(tick)}requestAnimationFrame(tick);
 })();
 </script></body></html>
