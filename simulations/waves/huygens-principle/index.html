@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#081a2a">
-<title>惠更斯原理 V2.8｜單狹縫與障礙物獨立切換｜Physics Lab</title>
+<title>惠更斯原理 V2.9｜狹縫分布子波源與折射接觸因果｜Physics Lab</title>
 <style>
 :root{color-scheme:dark;font-family:system-ui,-apple-system,'Noto Sans TC','Microsoft JhengHei',sans-serif;color:#eaf4ff;background:#081827;--panel:#10283e;--border:#34536c;--muted:#adc7db;--front:#69caff;--secondary:#ffc76a;--envelope:#76f2ba;--reflection:#caacff}
 *{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button,select{background:#183c58;color:#eaf4ff;border:1px solid #4c708b;border-radius:9px;padding:9px 12px;cursor:pointer}button{min-height:43px}button:hover{background:#245778}button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #ffdc73;outline-offset:2px}button.active,button.primary{background:#1668ad;border-color:#7acaff;color:#fff}button:disabled,input:disabled{opacity:.35;cursor:not-allowed}input[type=range]{width:100%;min-height:30px;accent-color:#59b7ff}input[type=checkbox]{accent-color:#55d8af;width:18px;height:18px}a{color:#aedaff;text-decoration:none}
@@ -71,7 +71,7 @@
 <div id="diffractionOptions" class="group" hidden><div class="groupheading">繞射講義對照</div>
  <div id="diffractionKindRow" class="check"><label for="diffractionKind">障礙物情境　</label><select id="diffractionKind" aria-label="障礙物繞射情境"><option value="block">有限障礙物（上下兩側）</option><option value="edge">單邊障礙物（講義圖 b）</option></select></div>
  <div id="diffractionPresets" class="diffraction-presets" aria-label="狹縫寬度與波長比快選"><button type="button" data-diff-ratio="12">d/λ = 12</button><button type="button" data-diff-ratio="6">d/λ = 6</button><button type="button" data-diff-ratio="1">d/λ = 1</button></div>
- <p id="diffractionSlitHint" class="info">單狹縫：綠色為出射波前，黃色為代表子波。狹縫變窄或波長增大時，波前向圓弧形變化。</p><p id="diffractionObstacleHint" class="info" hidden>障礙物：可比較有限障礙物的上下兩側繞射，或單邊障礙物尖端向陰影區的繞射。</p></div>
+ <p id="diffractionSlitHint" class="info">單狹縫：綠色為出射波前，黃色為代表子波。狹縫內均勻分布黃色子波源（數量依 d/λ 自動更新），各點向前發出的圓形子波共同形成綠色包絡波前。</p><p id="diffractionObstacleHint" class="info" hidden>障礙物：可比較有限障礙物的上下兩側繞射，或單邊障礙物尖端向陰影區的繞射。</p></div>
  <div class="ctrl"><label id="obstacleLabel" for="obstacle">障礙物高度</label><input id="obstacle" type="range" min="20" max="340" step="5" value="130"><output id="obstacleOut">130 格</output></div>
 <div class="ctrl"><label for="slit">單縫寬 a</label><input id="slit" type="range" min="15" max="105" step="5" value="35"><output id="slitOut">35 格</output></div>
 <div class="ctrl"><label for="gap">雙縫中心距 d</label><input id="gap" type="range" min="60" max="200" step="5" value="115"><output id="gapOut">115 格</output></div>
@@ -117,7 +117,7 @@ function updateUI(p){
 for(const key of keySliders){setText(key+'Out',Number($(key).value).toFixed(key==='rate'?1:0)+(key==='rate'?'×':key==='sources'?'':' '+sliders[key]))}
 setText('fOut',p.f.toFixed(2)+' Hz');setText('lambda2Out',p.lambda2.toFixed(1)+' 格');
 const {gen,phase}=generation(p);
-const labels={plane:['波長 λ₁',p.lambda+' 格','波速 v₁',p.v1+' 格/s','頻率 f',p.f.toFixed(2)+' Hz','目前波前','第 '+(gen+1)+' 代'],circle:['波長 λ₁',p.lambda+' 格','波速 v₁',p.v1+' 格/s','頻率 f',p.f.toFixed(2)+' Hz','目前波前','第 '+(gen+1)+' 代'],reflection:['入射角 θ₁',p.angle+'°','反射角 θr',p.angle+'°','波速 v',p.v1+' 格/s','波前代數','第 '+(gen+1)+' 代'],refraction:['入射角 θ₁',p.angle+'°','折射角 θ₂',p.critical?'全反射條件':(p.refract*180/Math.PI).toFixed(1)+'°','波長 λ₂',p.lambda2.toFixed(1)+' 格','頻率 f',p.f.toFixed(2)+' Hz'],slitDiffraction:['狹縫寬度 d',p.obstacle+' 格','波長 λ',p.lambda+' 格','尺寸比 d/λ',(p.obstacle/p.lambda).toFixed(2),'波前代數','第 '+(gen+1)+' 代'],obstacle:[diffractionKind==='edge'?'遮蔽高度 h':'障礙物高度 d',p.obstacle+' 格','波長 λ',p.lambda+' 格',diffractionKind==='edge'?'波速 v':'尺寸比 d/λ',diffractionKind==='edge'?p.v1+' 格/s':(p.obstacle/p.lambda).toFixed(2),'波前代數','第 '+(gen+1)+' 代'],double:['單縫寬 a',p.slit+' 格','雙縫中心距 d',p.gap+' 格','波長 λ',p.lambda+' 格','尺寸比 a/λ',(p.slit/p.lambda).toFixed(2)]};
+const labels={plane:['波長 λ₁',p.lambda+' 格','波速 v₁',p.v1+' 格/s','頻率 f',p.f.toFixed(2)+' Hz','目前波前','第 '+(gen+1)+' 代'],circle:['波長 λ₁',p.lambda+' 格','波速 v₁',p.v1+' 格/s','頻率 f',p.f.toFixed(2)+' Hz','目前波前','第 '+(gen+1)+' 代'],reflection:['入射角 θ₁',p.angle+'°','反射角 θr',p.angle+'°','波速 v',p.v1+' 格/s','波前代數','第 '+(gen+1)+' 代'],refraction:['入射角 θ₁',p.angle+'°','折射角 θ₂',p.critical?'全反射條件':(p.refract*180/Math.PI).toFixed(1)+'°','波長 λ₂',p.lambda2.toFixed(1)+' 格','頻率 f',p.f.toFixed(2)+' Hz'],slitDiffraction:['狹縫寬度 d',p.obstacle+' 格','波長 λ',p.lambda+' 格','尺寸比 d/λ',(p.obstacle/p.lambda).toFixed(2),'狹縫波源數',slitSourceCount(p)+' 個'],obstacle:[diffractionKind==='edge'?'遮蔽高度 h':'障礙物高度 d',p.obstacle+' 格','波長 λ',p.lambda+' 格',diffractionKind==='edge'?'波速 v':'尺寸比 d/λ',diffractionKind==='edge'?p.v1+' 格/s':(p.obstacle/p.lambda).toFixed(2),'波前代數','第 '+(gen+1)+' 代'],double:['單縫寬 a',p.slit+' 格','雙縫中心距 d',p.gap+' 格','波長 λ',p.lambda+' 格','尺寸比 a/λ',(p.slit/p.lambda).toFixed(2)]};
 const a=labels[mode];for(let i=0;i<4;i++){setText('metric'+(i+1)+'label',a[2*i]);setText('metric'+(i+1),a[2*i+1])}
 setText('stageBadge','第 '+(gen+1)+(cycleCount()?' / '+cycleCount():'')+' 代 · '+(phase*100).toFixed(0)+'%');setText('clockBadge','t = '+t.toFixed(2)+' s');setText('pct',Math.round(phase*100)+'%');$('progress').value=Math.round(phase*1000);
 const isDiffraction=mode==='slitDiffraction'||mode==='obstacle';
@@ -132,8 +132,8 @@ document.querySelectorAll('[data-diff-ratio]').forEach(b=>b.classList.toggle('ac
 $('v2').disabled=mode!=='refraction';$('angle').disabled=!['reflection','refraction'].includes(mode);$('obstacle').disabled=!isDiffraction;$('slit').disabled=mode!=='double';$('gap').disabled=mode!=='double';$('brightness').disabled=mode!=='double';$('whole').disabled=!['plane','circle'].includes(mode);$('history').disabled=!['plane','circle'].includes(mode);$('sources').disabled=isDiffraction;
 $('reflectedLegend').hidden=mode!=='reflection';
 setText('ratioLabel',mode==='slitDiffraction'?'狹縫寬度 / λ':mode==='obstacle'?(diffractionKind==='edge'?'障礙物尖端':'障礙物高度 / λ'):mode==='double'?'單縫寬 / λ':mode==='refraction'?'折射波長比 λ₂/λ₁':'波前傳遞');setText('ratioOut',mode==='slitDiffraction'?(p.obstacle/p.lambda).toFixed(2):mode==='obstacle'?(diffractionKind==='edge'?'單一邊緣':(p.obstacle/p.lambda).toFixed(2)):mode==='double'?(p.slit/p.lambda).toFixed(2):mode==='refraction'?(p.lambda2/p.lambda).toFixed(2):'—');
-const lesson={plane:'直線波前逐代向右形成：完成第 8 代後從左邊重新開始，持續展示舊波前、子波與新波前的關係。',circle:'第 1 代從圓心的點波源發出逐漸擴張的圓形波（半徑 r = v₁t）；第 2、3 代再由上一代圓周上的點發出子波、形成新包絡線，完成後回到圓心。',reflection:`入射角 = 反射角 = ${p.angle}°。入射波前碰到介面的位置才開始產生子波；反射波前由同一列有限長、等長且平行的入射波前鏡射形成。`,refraction:p.critical?'此組合超過折射臨界角：本幾何模型改顯示全反射示意，沒有折射傳播波。':`頻率不變（${p.f.toFixed(2)} Hz）；v₁ = ${p.v1}、v₂ = ${p.v2} 格/s；λ₁ = ${p.lambda}、λ₂ = ${p.lambda2.toFixed(1)} 格。折射線相對法線${p.v2<p.v1?'偏向':p.v2>p.v1?'偏離':'不偏折'}。`,slitDiffraction:`狹縫寬度 d/λ = ${(p.obstacle/p.lambda).toFixed(2)}。d≫λ 時透射波前大部分近直線，邊緣彎曲；d≈λ 時傳出波前接近半圓形。綠色線條是精簡後的傳播波前，非所有子波的軌跡。`,obstacle:diffractionKind==='edge'?`單邊障礙物（講義圖 b）：平面波由左向右，障礙物遮擋下方區域；通過上方開放區的波前近似直線，靠近尖端後向下方幾何陰影區彎曲。虛線為原本直進波的陰影分界。`:`障礙物高度 d/λ = ${(p.obstacle/p.lambda).toFixed(2)}。原有有限障礙物模式保留；波前在上下兩端向幾何陰影區彎曲，精簡為不重疊的代表波前。`,double:`兩狹縫等效為相干次波源；路徑差 Δr = r₁−r₂。相長時 |Δr| = mλ，相消時 |Δr| = (m+½)λ（理想同相近似）。`};
-const warns={plane:'舊波前先固定於本代起始位置，再由每個黃色點發出子波；綠色新波前必須位於傳播方向前方，下一代從前一代新波前繼續發出子波。',circle:'第 1 代是單一圓心點波源形成的圓形子波，其圓周就是第一代波前（不重複繪製重合圓）。第 2、3 代才由舊波前各點產生子波與外側新包絡線。',reflection:'等長平面波前與波峰間距由同一組幾何定義；波前剛碰到介面時，反射段會從接觸點逐漸形成，因此靠近界面時只顯示正在形成的部分。黃色子波源必須等實際入射波前到達對應的介面位置才啟動。此模型不含反射吸收及波束邊緣繞射。',refraction:'司乃耳定律 sinθ₁/sinθ₂ = v₁/v₂ = λ₁/λ₂；交界處子波半徑以當地波速計算。若達全反射，動畫顯示幾何反射，不模擬倏逝波。',slitDiffraction:'以狹縫出射的惠更斯波前包絡作定性示意；曲率依 d/λ 連續近似，非繞射積分求得的精確相位或強度分布。障礙物對照另有獨立按鈕。',obstacle:diffractionKind==='edge'?'單邊障礙物以開放波前的惠更斯前向包絡建立直線加四分之一圓，強調波向陰影區傳播的因果；只強調尖端的一個代表子波，非精確菲涅耳積分、振幅、能流或衍射條紋。':'有限障礙物上下邊緣以少量局部次波及幾何波前示意；不求解水波完整邊界條件或陰影區的精確振幅。',double:'灰階亮暗是理想同相次波疊加的相對時間平均強弱，不是瞬時波峰或波谷。狹縫寬度以簡化 sinc 包絡表示，不是完整菲涅耳積分。'};
+const lesson={plane:'直線波前逐代向右形成：完成第 8 代後從左邊重新開始，持續展示舊波前、子波與新波前的關係。',circle:'第 1 代從圓心的點波源發出逐漸擴張的圓形波（半徑 r = v₁t）；第 2、3 代再由上一代圓周上的點發出子波、形成新包絡線，完成後回到圓心。',reflection:`入射角 = 反射角 = ${p.angle}°。入射波前碰到介面的位置才開始產生子波；反射波前由同一列有限長、等長且平行的入射波前鏡射形成。`,refraction:p.critical?'此組合超過折射臨界角：本幾何模型改顯示全反射示意，沒有折射傳播波。':`入射波前必須先抵達界面上的位置，當地才發出折射子波（半徑 r=v₂Δt）；新折射波前從這些子波的切點逐段形成。頻率不變（${p.f.toFixed(2)} Hz），折射角符合 sinθ₂=(v₂/v₁)sinθ₁。`,slitDiffraction:`狹縫寬度 d/λ = ${(p.obstacle/p.lambda).toFixed(2)}，沿整個開口均勻取樣 ${slitSourceCount(p)} 個黃色子波源（間距不超過 λ/4）。綠線是這些圓形子波的前向包絡：寬縫的直線部分較長，窄縫相對更像向外擴張的圓弧。數量只是連續波前的視覺取樣，繞射程度取決於 d/λ。`,obstacle:diffractionKind==='edge'?`單邊障礙物（講義圖 b）：平面波由左向右，障礙物遮擋下方區域；通過上方開放區的波前近似直線，靠近尖端後向下方幾何陰影區彎曲。虛線為原本直進波的陰影分界。`:`障礙物高度 d/λ = ${(p.obstacle/p.lambda).toFixed(2)}。原有有限障礙物模式保留；波前在上下兩端向幾何陰影區彎曲，精簡為不重疊的代表波前。`,double:`兩狹縫等效為相干次波源；路徑差 Δr = r₁−r₂。相長時 |Δr| = mλ，相消時 |Δr| = (m+½)λ（理想同相近似）。`};
+const warns={plane:'舊波前先固定於本代起始位置，再由每個黃色點發出子波；綠色新波前必須位於傳播方向前方，下一代從前一代新波前繼續發出子波。',circle:'第 1 代是單一圓心點波源形成的圓形子波，其圓周就是第一代波前（不重複繪製重合圓）。第 2、3 代才由舊波前各點產生子波與外側新包絡線。',reflection:'等長平面波前與波峰間距由同一組幾何定義；波前剛碰到介面時，反射段會從接觸點逐漸形成，因此靠近界面時只顯示正在形成的部分。黃色子波源必須等實際入射波前到達對應的介面位置才啟動。此模型不含反射吸收及波束邊緣繞射。',refraction:'依各個入射等相位波前在界面實際接觸時間啟動當地圓形子波，再用每個子波的切點描繪新折射波前；有限界面取樣是視覺近似，並非振幅與完整邊界條件解。司乃耳定律 sinθ₁/sinθ₂ = v₁/v₂；全反射時只保留原介質反射，不模擬倏逝波。',slitDiffraction:'沿狹縫全寬布置等間距次波源，按子波半徑 r=v₁Δt 求前向幾何包絡（每個高度取最前面的圓弧交點）；並非以 d/λ 直接指定圓弧形狀。波源數量是數值取樣密度，不是造成繞射的物理原因。本幾何包絡不求解波振幅、相消干涉或完整菲涅耳繞射。障礙物模式獨立保留。',obstacle:diffractionKind==='edge'?'單邊障礙物以開放波前的惠更斯前向包絡建立直線加四分之一圓，強調波向陰影區傳播的因果；只強調尖端的一個代表子波，非精確菲涅耳積分、振幅、能流或衍射條紋。':'有限障礙物上下邊緣以少量局部次波及幾何波前示意；不求解水波完整邊界條件或陰影區的精確振幅。',double:'灰階亮暗是理想同相次波疊加的相對時間平均強弱，不是瞬時波峰或波谷。狹縫寬度以簡化 sinc 包絡表示，不是完整菲涅耳積分。'};
 setText('lesson',lesson[mode]);setText('explain',lesson[mode]);setText('caution',warns[mode]);setText('legendHint',mode==='double'?'藍色波前由左傳入；兩個狹縫上的黃色次波源形成圓形子波。勾選灰階明暗可觀察相干疊加的強弱。':mode==='reflection'?'藍色入射波前、紫色反射波前；實線為波峰、虛線為波谷，顯示開關可獨立控制。':isDiffraction?'藍色：入射波前；綠色：出射波前；黃色：代表子波。波峰實線、波谷虛線可獨立切換。':'實線波峰／虛線波谷，相距 λ/2。黃色圓弧是各點發出的子波，可獨立切換。');
 }
 function lin(x,y,xx,yy,color='#69caff',w=2,dash=[]){ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(xx,yy);ctx.lineWidth=w;ctx.strokeStyle=color;ctx.setLineDash(dash);ctx.stroke();ctx.setLineDash([])}
@@ -279,7 +279,7 @@ function linePhase(p,which){
  const c=Math.cos(p.rad),ss=Math.sin(p.rad),rr=p.v2/p.v1,c2=Math.cos(p.refract);
  const left=which==='incident',right=which==='refraction';
  const xlo=left?10:right?wall:20,xhi=left?wall:right?W:wall;
- const ya=90,yb=H-25;
+ const ya=(mode==='refraction'&&left)?refractionEffectiveTop(p):90,yb=(mode==='refraction'&&left)?refractionContactBottom:H-25;
  const factor=(x,y)=>left ? c*(x-x0)+ss*(y-cy)
    : right ? c*(wall-x0)+ss*(y-cy)+(c2/rr)*(x-wall)
    : c*(wall-x0)+ss*(y-cy)-c*(x-wall);
@@ -412,11 +412,94 @@ function drawReflection(p){
  lin(wall-148,cy,wall+145,cy,'#8f9fb2',1.35,[6,6]);
  caption('法線',wall+72,cy-12);drawMovingRays(p,'reflection');
 }
+// Causal Huygens refraction: a secondary source at (wall,y) begins only
+// when that specific INCIDENT phase front physically reaches the interface.
+// The right-going green wavefront is constructed from the tangent points of
+// those expanding circles. It is never drawn as a pre-existing infinite line.
+const refractionContactBottom=H-25;
+// The finite incoming front starts entirely in medium 1. At steep angles
+// trim the upper beam end so none of its points have hit the boundary at t=0.
+function refractionEffectiveTop(p){
+ const s=Math.sin(p.rad),c=Math.cos(p.rad);
+ if(s<1e-8)return 45;
+ const yFirst=cy+(p.lambda-c*(wall-x0))/s;
+ return Math.min(refractionContactBottom-30,Math.max(45,yFirst));
+}
+function refractionContactTime(p,y,n,offset){
+ return (Math.cos(p.rad)*(wall-x0)+Math.sin(p.rad)*(y-cy)+(n+offset)*p.lambda)/p.v1;
+}
+function drawCausalRefractionWavelets(p){
+ if(!on('wavelets')&&!on('points'))return;
+ const minY=refractionEffectiveTop(p),maxY=refractionContactBottom;
+ const count=Math.max(2,p.sources);
+ ctx.save();ctx.beginPath();ctx.rect(wall,35,W-wall,H-50);ctx.clip();
+ for(const phase of visiblePhases()){
+  for(let j=0;j<count;j++){
+   const y=minY+(maxY-minY)*j/(count-1);
+   const base=refractionContactTime(p,y,0,phase.offset);
+   const n=Math.floor((t-base)/p.T+1e-9);
+   if(n<0)continue;
+   const age=t-refractionContactTime(p,y,n,phase.offset);
+   if(age<-1e-7||age>=p.T+1e-7)continue;
+   const radius=p.v2*Math.max(0,age);
+   // Right half-plane only; nothing exists before the interface contact.
+   if(on('wavelets')&&radius>.3)ring(wall,y,radius,'rgba(255,198,97,.48)',1.55,phase.dash,-Math.PI/2,Math.PI/2);
+   if(on('points'))dot(wall,y,'#ffd074',3.3);
+  }
+ }
+ ctx.restore();
+}
+function drawCausalRefractedFronts(p){
+ if(p.critical)return;
+ const minY=refractionEffectiveTop(p),maxY=refractionContactBottom;
+ const sin2=Math.sin(p.refract),cos2=Math.cos(p.refract),speed2=p.v2;
+ const factor=(x,y)=>Math.cos(p.rad)*(wall-x0)+Math.sin(p.rad)*(y-cy)+(cos2*p.v1/speed2)*(x-wall);
+ const values=[factor(wall,35),factor(wall,H-15),factor(W,35),factor(W,H-15)];
+ const lo=Math.min(...values),hi=Math.max(...values);
+ ctx.save();ctx.beginPath();ctx.rect(wall+0.3,35,W-wall-0.3,H-50);ctx.clip();
+ if(!on('envelope'))ctx.globalAlpha=.48;
+ for(const phase of visiblePhases()){
+  const start=Math.max(0,Math.ceil((p.v1*t-hi)/p.lambda-phase.offset));
+  const end=Math.floor((p.v1*t-lo)/p.lambda-phase.offset);
+  for(let n=start;n<=end;n++){
+   const base=refractionContactTime(p,minY,n,phase.offset);
+   const final=refractionContactTime(p,maxY,n,phase.offset);
+   // At least one point must have been contacted; a future front cannot exist.
+   if(t<=Math.min(base,final)+1e-7)continue;
+   ctx.beginPath();let started=false,points=0;
+   // Ordered interface points: a newly contacted point immediately begins
+   // producing a circle; its tangent point becomes part of the envelope.
+   const segments=160;
+   for(let j=0;j<=segments;j++){
+    const y0=minY+(maxY-minY)*j/segments;
+    const age=t-refractionContactTime(p,y0,n,phase.offset);
+    if(age<=1e-7){started=false;continue}
+    const x=wall+speed2*age*cos2;
+    const y=y0+speed2*age*sin2;
+    if(!started){ctx.moveTo(x,y);started=true}else ctx.lineTo(x,y);
+    points++;
+   }
+   if(points>=2){ctx.lineWidth=phase.width;ctx.strokeStyle='#80f0b3';ctx.setLineDash(phase.dash);ctx.stroke();ctx.setLineDash([])}
+  }
+ }
+ ctx.restore();
+}
 function drawRefraction(p){
- barrier(p,'refraction');linePhase(p,'incident');linePhase(p,'refraction');
- interfaceWavelets(p,p.critical?'left':'right');lin(wall-144,cy,wall+145,cy,'#9cb1bc',1.35,[6,6]);
+ // Incoming incident front is visibly extended to y=45..H-25.
+ linePhase(p,'incident');
+ if(p.critical){
+  // Total internal reflection stays on the incident side; no green refracted front.
+  linePhase(p,'reflection');
+  interfaceWavelets(p,'left');
+ }else{
+  drawCausalRefractionWavelets(p);
+  drawCausalRefractedFronts(p);
+ }
+ barrier(p,'refraction');
+ lin(wall-144,cy,wall+145,cy,'#9cb1bc',1.35,[6,6]);
  caption('法線',wall+65,cy-11);drawMovingRays(p,'refraction');caption('界面',wall+15,89,'#f4e09b');
 }
+
 // Only the currently visible diffraction wavefronts are drawn. Never limit
 // the count to a fixed number of generations: at high frequencies the
 // viewport may contain many more than six crests.
@@ -478,66 +561,112 @@ function drawSingleEdgeDiffraction(p){
  if(age>=0&&on('points'))dot(wall,edgeY,'#ffd279',4);
  caption('障礙物尖端',wall-111,edgeY-15,'#dce4ef');
 }
-// 繞射講義版：傳播波前與瞬時次波分開，避免完整圓形子波掩蓋包絡線。
-// d/λ 是教學比較用的控制量，非精確的菲涅耳場數值解。
+// In a finite slit every point on the opening is a secondary source.
+// N is a VISUAL sampling count (spacing <= lambda/4), not the physical
+// cause of diffraction; the physical comparison is the opening/λ ratio.
+function slitSourceCount(p){return Math.max(2,Math.ceil(p.obstacle/(p.lambda/4))+1)}
+function slitSecondarySources(p){
+ const count=slitSourceCount(p),top=cy-p.obstacle/2;
+ const spacing=p.obstacle/(count-1);
+ return {count,top,bottom:top+p.obstacle,spacing,
+  positions:Array.from({length:count},(_,i)=>top+i*spacing)};
+}
+// Forward boundary of the union of all equal-radius secondary wavelets.
+// At height y, the rightmost arc has x=wall+sqrt(r²-(y-sourceY)²).
+// For equally spaced source positions, the closest source gives the maximum.
+// Draw separate parts for r < spacing/2 to avoid fictitious joining lines.
+function drawSlitEnvelope(sources,r,phase){
+ const lo=Math.max(83,sources.top-r),hi=Math.min(H-20,sources.bottom+r);
+ if(lo>=hi)return;
+ const step=2.0;
+ ctx.beginPath();let open=false;
+ for(let y=lo;y<=hi+1e-6;y+=step){
+  const yy=Math.min(y,hi);
+  const index=Math.max(0,Math.min(sources.count-1,Math.round((yy-sources.top)/sources.spacing)));
+  const dy=yy-sources.positions[index];
+  const radicand=r*r-dy*dy;
+  if(radicand<0){open=false;continue;}
+  const x=wall+Math.sqrt(radicand);
+  if(!open)ctx.moveTo(x,yy);else ctx.lineTo(x,yy);
+  open=true;
+ }
+ // Include lower endpoint even when step cannot land exactly on it.
+ const nearest=Math.max(0,Math.min(sources.count-1,Math.round((hi-sources.top)/sources.spacing)));
+ const dy=hi-sources.positions[nearest];
+ if(r*r>=dy*dy){const x=wall+Math.sqrt(Math.max(0,r*r-dy*dy));if(open)ctx.lineTo(x,hi);else ctx.moveTo(x,hi)}
+ ctx.strokeStyle='#76f2ba';ctx.lineWidth=phase.width;ctx.setLineDash(phase.dash);ctx.stroke();ctx.setLineDash([]);
+}
+function drawDistributedSlitDiffraction(p){
+ const sources=slitSecondarySources(p),arrival=(wall-x0)/p.v1,age=t-arrival;
+ ctx.save();ctx.beginPath();ctx.rect(wall+1,83,W-wall-5,H-103);ctx.clip();
+ if(age>=0){
+  if(!on('envelope'))ctx.globalAlpha=.38;
+  const reach=Math.hypot(W-wall,H);
+  for(const phase of visiblePhases()){
+   const lead=p.v1*age,lim=visibleDiffractionIndices(lead,p.lambda,phase.offset,0,reach);
+   for(let n=lim.start;n<=lim.end;n++){
+    const radius=lead-(n+phase.offset)*p.lambda;
+    if(radius>.35)drawSlitEnvelope(sources,radius,phase);
+   }
+  }
+  ctx.globalAlpha=1;
+  // Show the most recent generation of wavelets from sources across the
+  // WHOLE aperture. Forward-facing arc sectors reduce visual overlap.
+  if(on('wavelets'))for(const phase of visiblePhases()){
+   const since=age-phase.offset*p.T;
+   if(since<0)continue;
+   const radius=(since%p.T)*p.v1;
+   if(radius<=.5)continue;
+   const sector=Math.min(Math.PI/2,Math.max(.24,Math.atan2(sources.spacing*.85,radius)));
+   ctx.globalAlpha=Math.max(.18,.55-0.008*sources.count);
+   for(const yy of sources.positions){
+    ring(wall,yy,radius,'#ffd074',1.1,phase.dash,-sector,sector);
+   }
+   ctx.globalAlpha=1;
+  }
+ }
+ ctx.restore();
+ // Opaque barrier sides and colored sources visibly occupy the entire gap.
+ lin(wall,0,wall,sources.top,'#9da9b5',11);
+ lin(wall,sources.bottom,wall,H,'#9da9b5',11);
+ if(age>=0 && on('points'))for(const yy of sources.positions)dot(wall,yy,'#ffd279',sources.count>19?2.8:3.6);
+}
+// Existing obstacle and single-edge modes are intentionally untouched.
+// In slit mode the green fronts now come from the distributed wavelet
+// envelope rather than an arbitrary straightFraction curve.
 function diffractionFronts(p,kind){
+ if(kind==='slit'){drawDistributedSlitDiffraction(p);return;}
  if(kind==='edge'){drawSingleEdgeDiffraction(p);return;}
  const half=p.obstacle/2,top=cy-half,bottom=cy+half;
  const arrival=(wall-x0)/p.v1,age=t-arrival;
- const opening=kind==='slit',ratio=p.obstacle/p.lambda;
- // 寬縫保留長直線段；窄縫趨於一個等效點波源的半圓包絡。
- const straightFraction=opening?Math.max(0,Math.min(1,(ratio-1)/(ratio+.8))):0;
- const flatHalf=opening?half*straightFraction:0;
- if(!opening){ctx.fillStyle='rgba(43,64,84,.20)';ctx.fillRect(wall+6,top,W-wall-6,p.obstacle)}
+ ctx.fillStyle='rgba(43,64,84,.20)';ctx.fillRect(wall+6,top,W-wall-6,p.obstacle);
  ctx.save();ctx.beginPath();ctx.rect(wall+1,83,W-wall-5,H-103);ctx.clip();
  if(age>=0){
-  const lead=p.v1*age, maxRadius=Math.hypot(W-wall,H);
+  const lead=p.v1*age,maxRadius=Math.hypot(W-wall,H);
   if(!on('envelope'))ctx.globalAlpha=.38;
   for(const phase of visiblePhases()){
    const lim=visibleDiffractionIndices(lead,p.lambda,phase.offset,0,maxRadius);
-    // 不限制波前代數；只繪製目前畫面內仍可能看見的波前。
-    for(let n=lim.start;n<=lim.end;n++){
+   for(let n=lim.start;n<=lim.end;n++){
     const r=lead-(n+phase.offset)*p.lambda;
     if(r<.35)continue;
     const right=wall+r;
-    if(opening){
-     if(flatHalf>.4)waveLine(right,cy-flatHalf,right,cy+flatHalf,'#76f2ba',phase);
-     // 連續出射波前：直線波段兩端接向外彎的四分之一圓。
-     waveArc(wall,cy-flatHalf,r,'#76f2ba',phase,-Math.PI/2,0);
-     waveArc(wall,cy+flatHalf,r,'#76f2ba',phase,0,Math.PI/2);
-    }else{
-     // 障礙物後方沒有穿透波；上下的通過區保持平面波，僅邊緣彎入陰影。
-     waveLine(right,83,right,top,'#76f2ba',phase);
-     waveLine(right,bottom,right,H-20,'#76f2ba',phase);
-     // Shadow-side edge arcs stop at the central bisector: no crossing or invented extra fronts.
-     const edgeAngle=Math.asin(Math.min(1,half/r));
-     waveArc(wall,top,r,'#76f2ba',phase,0,edgeAngle);
-     waveArc(wall,bottom,r,'#76f2ba',phase,-edgeAngle,0);
-    }
+    waveLine(right,83,right,top,'#76f2ba',phase);
+    waveLine(right,bottom,right,H-20,'#76f2ba',phase);
+    const edgeAngle=Math.asin(Math.min(1,half/r));
+    waveArc(wall,top,r,'#76f2ba',phase,0,edgeAngle);
+    waveArc(wall,bottom,r,'#76f2ba',phase,-edgeAngle,0);
    }
   }
  }
  ctx.globalAlpha=1;
- // 黃色局部子波只在最近一個週期內展示，且只畫前向局部半圓。
- // 不再將完整圓環重複畫在已成形的綠色波前上。
  if(age>0 && on('wavelets')){
   const r=Math.min((age%p.T)*p.v1,p.lambda*.40,32);
-  if(r>.5){
-   const centers=opening?(ratio<=1.5?[cy]:[top,bottom]):[top,bottom];
-   for(const y of centers)ring(wall,y,r,'rgba(255,209,113,.43)',1.3,[],-Math.PI/2,Math.PI/2);
-  }
+  if(r>.5)for(const y of [top,bottom])ring(wall,y,r,'rgba(255,209,113,.43)',1.3,[],-Math.PI/2,Math.PI/2);
  }
  ctx.restore();
- if(opening){
-  lin(wall,0,wall,top,'#9da9b5',11);lin(wall,bottom,wall,H,'#9da9b5',11);
-  if(on('points')){
-   if(ratio<=1.5)dot(wall,cy,'#ffd279',4);else{dot(wall,top,'#ffd279',4);dot(wall,bottom,'#ffd279',4)}
-  }
- }else{
-  lin(wall,top,wall,bottom,'#9da9b5',11);
-  if(on('points')){dot(wall,top,'#ffd279',4);dot(wall,bottom,'#ffd279',4)}
-  caption('障礙物',wall-90,top+17,'#dce4ef');
- }
+ lin(wall,top,wall,bottom,'#9da9b5',11);
+ if(on('points')){dot(wall,top,'#ffd279',4);dot(wall,bottom,'#ffd279',4)}
+ caption('障礙物',wall-90,top+17,'#dce4ef');
 }
 function obstacleRings(p){diffractionFronts(p,mode==='slitDiffraction'?'slit':diffractionKind)}
 let fringeCacheKey='',fringeCanvas=document.createElement('canvas');fringeCanvas.width=420;fringeCanvas.height=235;let fc=fringeCanvas.getContext('2d');
