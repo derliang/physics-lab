@@ -48,4 +48,4 @@ build_catalog.py 原本已具備 schema、分類及入口檢查；補上缺少 m
 - 語法檢查在提交前進行；GitHub Actions 與公開頁面結果須於提交後另按本次 SHA 驗證。實機操作未測項目如實註記。
 
 ## 版權資訊增補（2026-10-24）
-使用者明確授權的版權任務，僅新增：`LICENSE.md`、README「著作權與使用授權」小節、首頁既有頁尾內單一版權句、`index.html` 與 `scripts/build_catalog.py` 檔頭註解、`AGENTS.md` 版權維護規範。未改動畫、分類、目錄邏輯、部署流程與任何網址；未改 `simulations/` 內容。驗證：`build_catalog.py` 本機執行通過（產生 8 筆目錄；`simulations.json` 為 Actions 部署時產生的產物，本機測試輸出已還原、不提交）；首頁桌機／手機寬度無橫向捲動。
+使用者明確授權的版權任務，僅新增：`LICENSE.md`、README「著作權與使用授權」小節、首頁既有頁尾內單一版權句、`index.html` 與 `scripts/build_catalog.py` 檔頭註解、`AGENTS.md` 版權維護規範。未改動畫功能、分類、目錄邏輯、部署流程與任何網址；`simulations/` 各動畫頁僅於 `<html>` 前加入 HTML 檔頭註解（使用者另行同意），無任何畫面或邏輯變動。驗證：`build_catalog.py` 本機執行通過（產生 8 筆目錄；`simulations.json` 為 Actions 部署時產生的產物，本機測試輸出已還原、不提交）；首頁桌機／手機寬度無橫向捲動。
