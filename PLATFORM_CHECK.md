@@ -46,3 +46,6 @@ build_catalog.py 原本已具備 schema、分類及入口檢查；補上缺少 m
 - 卡片採原生 `<a href="動畫路徑">` 包住圖示、標題、簡介、狀態及開啟提示；對鍵盤與觸控保有原生連結功能。
 - 未來動畫使用路徑識別碼衍生的穩定配色與單字圖示作安全備援，不回退成全分類共用 emoji；保留既有 manifest 四欄 schema、搜尋、分類與目錄。
 - 語法檢查在提交前進行；GitHub Actions 與公開頁面結果須於提交後另按本次 SHA 驗證。實機操作未測項目如實註記。
+
+## 版權資訊增補（2026-10-24）
+使用者明確授權的版權任務，僅新增：`LICENSE.md`、README「著作權與使用授權」小節、首頁既有頁尾內單一版權句、`index.html` 與 `scripts/build_catalog.py` 檔頭註解、`AGENTS.md` 版權維護規範。未改動畫、分類、目錄邏輯、部署流程與任何網址；未改 `simulations/` 內容。驗證：`build_catalog.py` 本機執行通過（產生 8 筆目錄；`simulations.json` 為 Actions 部署時產生的產物，本機測試輸出已還原、不提交）；首頁桌機／手機寬度無橫向捲動。

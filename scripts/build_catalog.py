@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# Copyright (c) 2026 derliang. All rights reserved.
+# Non-commercial use only. See LICENSE.md.
+# Contact: derliang@gmail.com
 """Build Physics Lab catalog from isolated simulation manifests."""
 import json
 import re
