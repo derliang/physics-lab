@@ -4,9 +4,11 @@
 
 - 首頁：https://derliang.github.io/physics-lab/
 - 專案規範：[PROJECT_SPEC.md](PROJECT_SPEC.md)
-- 上架指南：[PUBLISHING.md](PUBLISHING.md)
+- 上架規範 v2：[PUBLISHING.md](PUBLISHING.md)（範本在 [docs/templates/](docs/templates/)）
+- 設計規範：[docs/design/DESIGN.md](docs/design/DESIGN.md)
+- 協作入口（AI 開工必讀）：[AGENTS.md](AGENTS.md)
 
-動畫開發對話只准新增 `simulations/<category>/<slug>/` 下的新動畫資料夾，不准改動平台架構。網站目錄透過 GitHub Actions 自動掃描動畫的 `manifest.json` 並產生。
+動畫開發對話只准新增 `simulations/<category>/<slug>/` 下的新動畫資料夾，不准改動平台架構。上架只交資料：首頁、主題頁與動畫介紹頁（`info.html`）都由 GitHub Actions 執行 `scripts/build_catalog.py` 檢查各動畫的 `manifest.json`、`icon.svg` 後自動產生；檢查不通過就不會部署。
 
 首次啟用 GitHub Pages：到 Settings → Pages → Build and deployment → Source 選擇 **GitHub Actions**；之後對 main 分支 push 即觸發自動部署。
 
