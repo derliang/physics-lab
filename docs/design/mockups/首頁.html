@@ -62,7 +62,8 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(-
 .search:focus{border-color:var(--accent)}
 .search-toggle{display:none;width:44px;height:44px;place-items:center;padding:0;background:var(--surface);border:1px solid var(--field);border-radius:var(--radius-pill);cursor:pointer}
 .about-link{display:inline-flex;align-items:center;min-height:44px;padding:0 4px;font-size:14px;color:var(--ink-2);text-decoration:none}
-.about-link:hover{color:var(--accent)}
+.about-link:hover,.about-link[aria-current="page"]{color:var(--accent)}
+.about-link[aria-current="page"]{font-weight:700}
 
 /* ── 主題頁籤 ── */
 .topics{background:var(--surface);border-bottom:1px solid var(--rule)}
@@ -136,6 +137,7 @@ a.topic:hover{color:var(--accent)}
 .site-footer .wrap{display:flex;flex-direction:column;gap:10px}
 .footer-line{display:flex;justify-content:space-between;gap:6px 16px;flex-wrap:wrap;padding-top:18px;border-top:1px solid var(--rule);font-size:13px;color:var(--sub)}
 .footer-line .brand-latin{font-size:15px;color:var(--ink)}
+.footer-link{display:inline-flex;align-items:center;min-height:44px;margin-block:-12px}
 .copyright-note{font-size:12px;line-height:1.7;color:var(--sub)}
 .copyright-note a{color:inherit;text-decoration:underline;display:inline-block;padding:4px 0}
 
@@ -158,10 +160,11 @@ a.topic:hover{color:var(--accent)}
 .cta-inline .btn,.aside-card .btn{width:100%;min-height:52px;font-size:16px}
 .cta-hint{font-size:12px;color:var(--sub);text-align:center}
 .info-section{display:flex;flex-direction:column;gap:12px}
-.info-section h2{position:relative;margin:0;padding-bottom:10px;border-bottom:1px solid var(--rule);font-size:21px;font-weight:700}
-.info-section h2::after{content:"";position:absolute;left:0;bottom:-1px;width:48px;height:2px;background:var(--accent)}
+.info-section :is(h2,h3){position:relative;margin:0;padding-bottom:10px;border-bottom:1px solid var(--rule);font-size:21px;font-weight:700}
+.info-section :is(h2,h3)::after{content:"";position:absolute;left:0;bottom:-1px;width:48px;height:2px;background:var(--accent)}
 .info-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px}
-.info-pair h2{font-size:18px}
+.info-pair :is(h2,h3){font-size:18px}
+.info-note{margin:0;font-size:14px;line-height:1.7;color:var(--sub)}
 .info-pair p{margin:0;font-size:14.5px;line-height:1.8;color:var(--ink-2)}
 .highlights{margin:0;padding:0;list-style:none;counter-reset:hl}
 .highlights li{display:flex;gap:16px;padding:12px 0;border-bottom:1px solid var(--rule-soft);font-size:15px;line-height:1.75;counter-increment:hl}
@@ -189,7 +192,7 @@ a.topic:hover{color:var(--accent)}
   .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
   .info-layout{grid-template-columns:1fr;gap:28px;padding-top:28px}
   .cta-inline{display:flex}
-  .aside-card .btn,.aside-card .plate{display:none}
+  .aside-card:not(.is-contact) .btn,.aside-card .plate{display:none}
 }
 @media (max-width:719px){
   .topics .wrap{gap:8px;padding:10px var(--gutter);overflow-x:auto;scrollbar-width:none}
@@ -242,7 +245,7 @@ a.topic:hover{color:var(--accent)}
       <input class="search" id="search" name="q" type="search" placeholder="搜尋動畫，例如：駐波" autocomplete="off">
     </form>
     <button class="search-toggle" type="button" aria-label="搜尋動畫" aria-expanded="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg></button>
-    <a class="about-link" href="https://github.com/derliang/physics-lab/blob/main/README.md" target="_blank" rel="noopener">關於本站</a>
+    <a class="about-link" href="about.html">關於本站</a>
   </div>
 </div></header>
 <nav class="topics" aria-label="物理主題"><div class="wrap"><a class="topic" href="#" aria-current="page"><span class="topic-name">全部</span><span class="topic-meta">8 支</span></a><span class="topic is-empty" aria-disabled="true"><span class="topic-name">力學</span><span class="topic-meta"></span></span><span class="topic is-empty" aria-disabled="true"><span class="topic-name">熱學</span><span class="topic-meta"></span></span><a class="topic" href="#"><span class="topic-name">波動</span><span class="topic-meta">8 支</span></a><span class="topic is-empty" aria-disabled="true"><span class="topic-name">電磁學</span><span class="topic-meta"></span></span><span class="topic is-empty" aria-disabled="true"><span class="topic-name">光學</span><span class="topic-meta"></span></span><span class="topic is-empty" aria-disabled="true"><span class="topic-name">近代物理</span><span class="topic-meta"></span></span><span class="topic is-empty" aria-disabled="true"><span class="topic-name">實驗與數據</span><span class="topic-meta"></span></span></div></nav>
@@ -269,7 +272,7 @@ a.topic:hover{color:var(--accent)}
 <div class="cards"><a class="card" href="介紹頁.html"><div class="plate" data-tint="ochre" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" fill="none"><path d="M14 8a12 12 0 0 1 0 24M14 40a12 12 0 0 1 0 24M14 2a18 18 0 0 1 0 36M14 34a18 18 0 0 1 0 36" stroke="#6f8fc4" stroke-width="2.2"/><path d="M14 20L58 36M14 52L58 36" stroke="#a65f00" stroke-width="2" stroke-dasharray="3 3"/><circle cx="14" cy="20" r="4" fill="#1f3a68"/><circle cx="14" cy="52" r="4" fill="#1f3a68"/><circle cx="58" cy="36" r="5" fill="#fffdf8" stroke="#a65f00" stroke-width="2.6"/></svg></div><div class="card-body"><h3>波峰抵達與水波干涉</h3><span class="card-sub">雙波源橫波干涉</span><p class="card-desc">追蹤同時發出的兩個波峰抵達 P 點的時間差；自由調整波程差，探索腹點、節點與部分干涉。</p><span class="card-kw">波峰・波程差・水波干涉</span><span class="card-more" aria-hidden="true">閱讀介紹 →</span></div></a><a class="card" href="介紹頁.html"><div class="plate" data-tint="teal" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" fill="none"><path d="M29 8V29M29 43V64" stroke="#1f3a68" stroke-width="5"/><path d="M8 18H20M8 30H20M8 42H20M8 54H20" stroke="#6f8fc4" stroke-width="3"/><path d="M33 36C46 36 55 29 61 18M33 36C48 36 57 36 66 36M33 36C46 36 55 43 61 54" stroke="#2f9c90" stroke-width="3"/><circle cx="29" cy="36" r="4" fill="#ec9730"/></svg></div><div class="card-body"><h3>波的繞射與干涉</h3><p class="card-desc">比較直線波與圓形波源，調整狹縫、雙縫間距與障礙物尺寸，觀察繞射、干涉和觀測屏強度。</p><span class="card-kw">波動・繞射・干涉</span><span class="card-more" aria-hidden="true">閱讀介紹 →</span></div></a><a class="card" href="介紹頁.html"><div class="plate" data-tint="plum" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" fill="none"><path d="M16 9V63" stroke="#8a6ad6" stroke-width="4"/><path d="M16 24A12 12 0 0 1 28 36M16 13A23 23 0 0 1 39 36M16 48A12 12 0 0 0 28 36M16 59A23 23 0 0 0 39 36" stroke="#6f8fc4" stroke-width="2.6"/><path d="M51 10V62" stroke="#a65f00" stroke-width="4" stroke-dasharray="8 5"/><circle cx="16" cy="36" r="4.5" fill="#ec9730"/></svg></div><div class="card-body"><h3>惠更斯原理</h3><p class="card-desc">以惠更斯原理演示直線波前、圓形波前、反射、折射、單狹縫繞射、障礙物繞射與雙狹縫干涉；可調波長、兩介質波速、障礙物和狹縫尺寸，支援連續、分段及逐格播放。</p><span class="card-kw">惠更斯原理・波前・次波</span><span class="card-more" aria-hidden="true">閱讀介紹 →</span></div></a><a class="card" href="介紹頁.html"><div class="plate" data-tint="teal" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" fill="none"><rect x="5" y="9" width="62" height="54" rx="6" stroke="#1f3a68" stroke-width="2.4"/><g stroke-width="2"><circle cx="26" cy="36" r="8" stroke="#2f9c90"/><circle cx="26" cy="36" r="16" stroke="#2f9c90"/><circle cx="46" cy="36" r="8" stroke="#8a6ad6"/><circle cx="46" cy="36" r="16" stroke="#8a6ad6"/></g><circle cx="26" cy="36" r="3" fill="#2f9c90"/><circle cx="46" cy="36" r="3" fill="#8a6ad6"/></svg></div><div class="card-body"><h3>水波干涉</h3><span class="card-sub">精確疊加實驗室</span><p class="card-desc">從雙點波源逐漸發波開始，觀察波峰、波谷、完全建設性與破壞性干涉；即時比較波程差、波長、腹線與節線、P 點位移、時序剖面及柔和亮暗紋。</p><span class="card-kw">水波干涉・波的疊加・波程差</span><span class="card-more" aria-hidden="true">閱讀介紹 →</span></div></a><a class="card" href="介紹頁.html"><div class="plate" data-tint="plum" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" fill="none"><rect x="6" y="36" width="60" height="28" fill="#6f8fc4" fill-opacity=".22"/><path d="M6 36H66" stroke="#1f3a68" stroke-width="2"/><path d="M36 10V62" stroke="#1f3a68" stroke-width="2" stroke-dasharray="3 3" opacity=".6"/><path d="M14 10L36 36L45 64" stroke="#8a6ad6" stroke-width="3" stroke-linecap="round"/><path d="M36 22a14 14 0 0 0 -9 3.6M36 50a14 14 0 0 0 4.4 -0.7" stroke="#a65f00" stroke-width="2"/></svg></div><div class="card-body"><h3>司乃耳定律</h3><span class="card-sub">惠更斯原理幾何證明</span><p class="card-desc">以水波、光波及 A、B、C、D 波前幾何作圖，逐步證明司乃耳定律；同步呈現惠更斯子波、直角三角形、正弦比值與完整約分，支援折射率／波速調整及全反射。</p><span class="card-kw">司乃耳定律・Snell・惠更斯原理</span><span class="card-more" aria-hidden="true">閱讀介紹 →</span></div></a><a class="card" href="介紹頁.html"><div class="plate" data-tint="ochre" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" fill="none"><path d="M7 36H65" stroke="#8a8170" stroke-width="2" stroke-dasharray="3 5"/><path d="M7 36Q17 9 27 36T47 36T67 36" stroke="#ec9730" stroke-width="4"/><path d="M7 36Q17 63 27 36T47 36T67 36" stroke="#8a6ad6" stroke-width="3.5"/><circle cx="7" cy="36" r="3.5" fill="#a65f00"/><circle cx="27" cy="36" r="3.5" fill="#a65f00"/><circle cx="47" cy="36" r="3.5" fill="#a65f00"/></svg></div><div class="card-body"><h3>行進波與駐波</h3><span class="card-sub">雙波源疊加實驗室</span><p class="card-desc">兩列反向行進波可分別調整振幅、頻率與波長，以瞬時位移疊加呈現理想駐波、振幅不同、頻率不同及波長不同的合成波，並提供合成波峰追蹤。</p><span class="card-kw">駐波・行進波・合成波</span><span class="card-more" aria-hidden="true">閱讀介紹 →</span></div></a><a class="card" href="介紹頁.html"><div class="plate" data-tint="navy" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" fill="none"><path d="M6 20H66M6 52H66" stroke="#1f3a68" stroke-width="3"/><path d="M6 20V52" stroke="#1f3a68" stroke-width="5"/><path d="M6 36Q20 22 34 36T62 36" stroke="#ec9730" stroke-width="3"/><path d="M6 36Q20 50 34 36T62 36" stroke="#ec9730" stroke-width="3" stroke-dasharray="4 3"/><circle cx="6" cy="36" r="3.5" fill="#1f3a68"/><circle cx="34" cy="36" r="3.5" fill="#1f3a68"/></svg></div><div class="card-body"><h3>駐波共振</h3><span class="card-sub">弦與管的諧音實驗室</span><p class="card-desc">互動比較兩端固定、一端固定一端自由、兩端開放的駐波；調整階數、弦長、張力與線密度，視覺化波節波腹、波長、波速及頻率的規律。</p><span class="card-kw">駐波・共振・兩端固定</span><span class="card-more" aria-hidden="true">閱讀介紹 →</span></div></a><a class="card" href="介紹頁.html"><div class="plate" data-tint="rose" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" fill="none"><path d="M7 27Q19 5 31 27T55 27T67 27" stroke="#2f9c90" stroke-width="3" stroke-linecap="round"/><path d="M7 47Q19 69 31 47T55 47T67 47" stroke="#8a6ad6" stroke-width="3" stroke-linecap="round"/><g stroke="#ec9730" stroke-width="2.5"><path d="M7 36H67" stroke-dasharray="4 4"/><path d="M36 12v48" stroke-dasharray="3 3"/><path d="M31 32l5 5 5-5M31 42l5-5 5 5" stroke-linecap="round"/></g></svg></div><div class="card-body"><h3>波的疊加原理</h3><span class="card-sub">互動位移分解</span><p class="card-desc">四種建設性／破壞性干涉脈衝快選；點選合成波任一位置，逐點顯示兩波位移及代數和。另有同調週期波情境，可觀察 P 點相位差、合成振幅與駐波節點。</p><span class="card-kw">波的疊加・建設性干涉・完全建設性干涉</span><span class="card-more" aria-hidden="true">閱讀介紹 →</span></div></a></div></section>
 </main>
 <footer class="site-footer"><div class="wrap">
-  <div class="footer-line"><span><span class="brand-latin">Physics Lab</span>　互動物理實驗室</span><span>為物理教學與自主探索而設計 · GitHub Pages</span></div>
+  <div class="footer-line"><span><span class="brand-latin">Physics Lab</span>　互動物理實驗室</span><span>為物理教學與自主探索而設計 · GitHub Pages · <a class="footer-link" href="about.html">關於本站</a></span></div>
   <div class="copyright-note"><small>© 2026 derliang｜保留所有權利｜限非營利使用｜<a href="https://github.com/derliang/physics-lab/blob/main/LICENSE.md" target="_blank" rel="noopener">授權說明</a></small></div>
 </div></footer>
 </body>

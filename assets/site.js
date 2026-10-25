@@ -288,5 +288,6 @@ Authorization inquiries: derliang@gmail.com
     const page = document.body.dataset.page;
     if (page === 'home') initHome();
     if (page === 'info') initInfo();
+    if (page === 'about') setupSearchToggle();
   });
 })();
