@@ -65,3 +65,10 @@ build_catalog.py 原本已具備 schema、分類及入口檢查；補上缺少 m
 - Chrome 本機（`http.server`）以 iframe 固定寬度 390／768／1024／1280 檢查首頁、`#mechanics`（空主題，回到全部）、`?q=駐波` 搜尋、介紹頁、已下架與格式錯誤的介紹頁：皆無橫向溢出；卡片欄數依序 1／2／3／4；可點元素高度皆 ≥44px；6 個空主題頁籤為不可點的灰字；鍵盤 Tab 可聚焦整張卡片並以 Enter 開啟介紹頁；主控台無錯誤；已下架動畫原網址仍回應 200。
 - 同日依使用者指示將配色改為明亮科技風、取消深色模式、空主題不顯示「籌備中」，改版後重跑上列檢查並截圖目視確認。
 - 未驗證：iPad Safari 與手機實機、GitHub Actions 部署與公開站點（須於提交後依 commit SHA 查核再補記）。
+
+### 合併與部署後實際驗證（2026-10-25）
+- [PR #1](https://github.com/derliang/physics-lab/pull/1) 以 merge commit 合併；`origin/main` = `a01592dd0e7b2efb31b501788cf8c4a355019355`，包含改版提交 `c09b5479370d4ef63ba7157a7d77aa082ce360e9`。
+- [Pages workflow run 40175981687](https://github.com/derliang/physics-lab/actions/runs/40175981687)：event push、head_sha 與上述 main SHA 一致，conclusion success；Checkout、Validate and generate catalog、Setup Pages、Upload static site、Deploy Pages 均 success。
+- 公開站點（加查詢參數避開快取）：首頁、`info.html`、`assets/site.css`、`assets/site.js`、`simulations.json` 皆 200；`simulations.json` 為 8 筆 v2 目錄（含 icon、cover 欄位），不含 2 支 hidden；10 支動畫原網址與 icon.svg 皆 200。
+- 真實瀏覽器（Chrome）重新整理公開首頁：明亮科技風版型、8 張卡片、6 個空主題頁籤不可點、圖示無破圖、頁尾版權句保留；駐波共振介紹頁麵包屑「首頁›波動›駐波共振」、5 條觀察重點、「開始實驗」指向原動畫網址；已下架的 ripple-tank-lab 介紹頁顯示「找不到這支動畫」；主控台無錯誤。
+- 仍未驗證：iPad Safari 與手機實機操作。
