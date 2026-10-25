@@ -59,4 +59,5 @@
 3. **上架規範 v2**：[`PUBLISHING.md`](PUBLISHING.md) v2 取代舊版（封存於 `docs/archive/PUBLISHING_v1.md`）。上架只交資料（manifest v2、icon.svg、TEST_REPORT.md、選用 cover.webp），平台頁面為固定版型，上架不得修改。
 4. **第九節圖示**：專屬圖示改由各動畫資料夾的 `icon.svg` 提供，首頁不再寫死；第九節其餘要求不變。
 5. **下架**：改以 manifest `status: hidden` 表示，取代 `build_catalog.py` 的 `HIDDEN_FROM_CATALOG` 名單；被下架動畫的原網址仍可開啟。
-6. **權限邊界**：第二、三節的上架權限不變，仍僅限指定動畫資料夾。本次為使用者明確授權的一次性平台改版，連同 10 支既有動畫的 manifest 升級、icon.svg 與測試紀錄補記；不構成未來上架對話修改平台的授權。
+6. **關於本站**：平台頁 `about.html`（第二節所稱 about），內容為網站目的與對象、使用方式與建議裝置、著作權授權與聯絡；刊頭與頁尾連到此頁，不直接連 GitHub。不接受動畫上架。
+7. **權限邊界**：第二、三節的上架權限不變，仍僅限指定動畫資料夾。本次為使用者明確授權的一次性平台改版，連同 10 支既有動畫的 manifest 升級、icon.svg 與測試紀錄補記；不構成未來上架對話修改平台的授權。
