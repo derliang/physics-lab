@@ -29,3 +29,6 @@
 ## 發布核驗狀態
 - GitHub Pages 部署結果需於 commit push 後對照本次 SHA 查核。
 - 正式公開網頁與首頁目錄可見性需部署後另行查驗。
+
+## 上下架紀錄
+- 2026-10-25 平台改版（上架規範 v2）：manifest 升級為 v2、新增 `icon.svg`；動畫 `index.html` 未修改。status published。
