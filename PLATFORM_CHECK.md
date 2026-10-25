@@ -72,3 +72,11 @@ build_catalog.py 原本已具備 schema、分類及入口檢查；補上缺少 m
 - 公開站點（加查詢參數避開快取）：首頁、`info.html`、`assets/site.css`、`assets/site.js`、`simulations.json` 皆 200；`simulations.json` 為 8 筆 v2 目錄（含 icon、cover 欄位），不含 2 支 hidden；10 支動畫原網址與 icon.svg 皆 200。
 - 真實瀏覽器（Chrome）重新整理公開首頁：明亮科技風版型、8 張卡片、6 個空主題頁籤不可點、圖示無破圖、頁尾版權句保留；駐波共振介紹頁麵包屑「首頁›波動›駐波共振」、5 條觀察重點、「開始實驗」指向原動畫網址；已下架的 ripple-tank-lab 介紹頁顯示「找不到這支動畫」；主控台無錯誤。
 - 仍未驗證：iPad Safari 與手機實機操作。
+
+## 2026-10-25 新增「關於本站」頁
+- 使用者授權的平台修改：新增 `about.html`，刊頭與頁尾「關於本站」改連此頁（不再連 GitHub README）；`DESIGN.md`、`PUBLISHING.md`、`PROJECT_SPEC.md` 同步補記。
+- 提交前：本機 Chrome 390／768／1024／1280 無橫向溢出，可點元素 ≥44px（行內文字連結除外），`test_build_catalog.py` 12 項通過。
+- [PR #2](https://github.com/derliang/physics-lab/pull/2) 合併：`origin/main` = `1a71fda615b472363789282107adc966bb77b73d`，包含 `2bbd128fabc0667fa3c50c5d6cea403bbe166e12`。
+- [Pages workflow run 40177562924](https://github.com/derliang/physics-lab/actions/runs/40177562924)：head_sha 與 main SHA 一致，conclusion success，各步驟皆 success。
+- 公開站點：`about.html`、`index.html`、`info.html` 皆 200，三頁各有 2 個指向 `about.html` 的連結（刊頭、頁尾），不再有 README 連結；目錄仍為 8 筆。Chrome 從公開首頁點刊頭「關於本站」進入 `about.html`：標題、麵包屑「首頁›關於本站」、四個區段、目前頁標示、寄信連結 `mailto:derliang@gmail.com`、LICENSE.md 連結與頁尾版權句皆正確，主控台無錯誤。此次 Chrome 截圖逾時，視覺以提交前的本機截圖為準。
+- 仍未驗證：iPad Safari 與手機實機操作。
