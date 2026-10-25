@@ -2,10 +2,22 @@
 
 開始前讀取 `PROJECT_SPEC.md`、`PUBLISHING.md` 與遠端最新 main。
 
+## 上架規範 v2（2026-10-25 使用者核准，優先適用）
+- **上架只交資料，不交設計。** 新增或修訂動畫只交該資料夾內的 `index.html`、`manifest.json`（v2）、`icon.svg`、`TEST_REPORT.md`，選用 `cover.webp`；欄位、圖示、截圖規格與流程全部見 [`PUBLISHING.md`](PUBLISHING.md) v2，範本在 [`docs/templates/`](docs/templates/)。
+- 首頁、主題頁、介紹頁（`index.html`、`info.html`、`assets/`）是固定版型，由 manifest 自動產生；上架對話一律不得修改，也不得為單一動畫客製外觀。
+- 上架前必須在本機執行 `python scripts/build_catalog.py` 並通過；失敗時修正動畫資料夾，不得修改產生器。
+- 下架／恢復只改該動畫 manifest 的 `status`（`hidden`／`published`）並在 `TEST_REPORT.md` 記錄，須有使用者明確指示。
+- 舊版 v1 指南已封存於 `docs/archive/`，不得依舊版上架。
+
+## 設計規範（改平台頁面前必讀）
+- 平台的設計規範在 [`docs/design/DESIGN.md`](docs/design/DESIGN.md)，定案模擬頁在 `docs/design/mockups/`。首頁、主題頁、介紹頁的版面、元件、樣式以它為準。
+- 只有使用者明確要求平台改版時才可修改；先更新 DESIGN.md 並取得使用者確認，再改程式。新樣式用 `assets/site.css` 的 tokens，不寫死色碼與間距。
+- 使用 Claude 時，平台改版用 `設計` 技能（`/設計`）出設計稿，定案後把規範與模擬頁更新回 `docs/design/`。
+
 - 主動回報已完成事項與下一步；有影響成果的不確定事項就詢問使用者。
 - 使用者說「把動畫 push 到 GitHub／上架」即授權將該指定動畫直接提交 main；不必重問同一推送授權。
 - 動畫上架只能新增或經使用者指定更新 `simulations/<category>/<slug>/` 內的動畫、manifest 與必要資源。禁止順便修改首頁、分類、目錄產生器、部署流程、規範或其他動畫。
-- 首頁以 `PROJECT_SPEC.md` 第七節的附件設計為基準。動畫清單由 Actions 自動產生，禁止手動編輯首頁動畫陣列或 simulations.json。
+- 首頁以 `docs/design/DESIGN.md`（2026-10-25 起取代 `PROJECT_SPEC.md` 第七節的附件設計基準）為準。動畫清單由 Actions 自動產生，禁止手動編輯 simulations.json。
 - 沒有取得原動畫時先詢問，不得把新建版本冒充既有 V3。未部署／未驗證時不得聲稱完成。
 - 禁止 force push；提交前核對最新 main 與允許路徑。遠端變更時重新讀取並保留他人內容。
 - 檢查結果落地文件；動畫上架紀錄放在該動畫資料夾，平台修訂放在平台文件。提交後對照 SHA 驗證 Actions 與公開站點，並回報實際證據。
@@ -16,6 +28,7 @@
 
 ## 首頁動畫卡片識別與整卡連結（2026-10-19）
 首頁動畫卡片應遵守 `PROJECT_SPEC.md` 第九節：不同動畫使用專屬可辨識圖示，整卡是可鍵盤及觸控操作的原生連結，標題、簡介、狀態與篩選功能保留。圖示由平台首頁負責，動畫上架授權不包含修改首頁。
+（2026-10-25 起：專屬圖示改由各動畫資料夾的 `icon.svg` 提供，上架對話依 `PUBLISHING.md` 第 4 節製作；首頁不再寫死圖示，上架仍不得修改首頁。）
 
 ## 版權維護規範（2026-10-24 使用者明確授權的「版權任務」）
 - 根目錄 `LICENSE.md` 為授權依據；首頁頁尾（既有 `<footer>` 內）有單一低調版權句；`index.html`、`scripts/build_catalog.py` 檔頭有版權註解。授權政策：聖功女中師生免費、**所有使用者限非營利**、其他學校須寄信 derliang@gmail.com 並取得作者 Email 明確同意。

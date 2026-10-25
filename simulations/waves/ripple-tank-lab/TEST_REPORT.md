@@ -9,3 +9,7 @@
 
 ## 2026-10-19 原版復原
 原始水波槽動畫意外被試作版取代；此次恢復覆蓋前原始入口及 manifest，原版 blob SHA：2c222027a9e95368a4c8ad6b64563340f7c8b5b7。新版另存於 `../ripple-wave-superposition/`，兩者分別列入目錄，原始網址維持不變。驗證部署與公開頁面另核對。
+
+## 上下架紀錄
+- 2026-10-21 從首頁目錄下架（使用者指示，見 `CATALOG_VISIBILITY.md`），原網址仍可開啟。
+- 2026-10-25 平台改版（上架規範 v2）：manifest 升級為 v2、新增 `icon.svg`；動畫 `index.html` 未修改。status hidden。

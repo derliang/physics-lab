@@ -123,3 +123,6 @@
 - **通過**：JavaScript 語法檢查。
 - **未驗證**：真實瀏覽器及觸控實機操作。
 - 動畫修改 SHA：`2dcfd2dedb75bf6d6b3f933f3f88556943781ada`；紀錄提交後重新查詢最終 SHA 的部署。
+
+## 上下架紀錄
+- 2026-10-25 平台改版（上架規範 v2）：manifest 升級為 v2、新增 `icon.svg`；動畫 `index.html` 未修改。status published。
