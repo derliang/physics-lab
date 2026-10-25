@@ -1,0 +1,100 @@
+<!doctype html>
+<!--
+Copyright (c) 2026 derliang. All rights reserved.
+Non-commercial use only. See LICENSE.md.
+Authorization inquiries: derliang@gmail.com
+-->
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="關於 Physics Lab：網站目的、使用方式、建議裝置與授權說明。">
+<title>關於本站｜Physics Lab</title>
+<!-- 版型規範：docs/design/DESIGN.md。平台頁面，上架動畫不得修改本檔。 -->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+<script src="assets/site.js" defer></script>
+</head>
+<body data-page="about">
+<div class="topbar"></div>
+<header class="masthead"><div class="wrap">
+  <a class="brand" href="index.html"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="brand-grad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2357ff"/><stop offset="1" stop-color="#00b4d8"/></linearGradient></defs><rect x="1" y="1" width="30" height="30" rx="9" fill="url(#brand-grad)"/><path d="M6 16c2.5-6.5 5-6.5 7.5 0s5 6.5 7.5 0c1.2-3 2.6-4.2 5-3.4" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg><span class="brand-latin">Physics Lab</span><span class="brand-sep" aria-hidden="true"></span><span class="brand-zh">互動物理實驗室</span></a>
+  <div class="tools">
+    <form class="search-form" role="search" action="index.html" method="get">
+      <label class="sr-only" for="search">搜尋動畫</label>
+      <input class="search" id="search" name="q" type="search" placeholder="搜尋動畫，例如：駐波" autocomplete="off">
+    </form>
+    <button class="search-toggle" type="button" aria-label="搜尋動畫" aria-expanded="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg></button>
+    <a class="about-link" href="about.html" aria-current="page">關於本站</a>
+  </div>
+</div></header>
+<nav class="breadcrumb" aria-label="目前位置"><ol class="wrap"><li><a href="index.html">首頁</a></li><li aria-hidden="true">›</li><li aria-current="page">關於本站</li></ol></nav>
+
+<main class="wrap"><div class="info-layout">
+  <article class="info-main">
+    <div class="info-head">
+      <span class="eyebrow">ABOUT</span>
+      <h1>關於 Physics Lab</h1>
+      <p class="lede">Physics Lab 是一套高中物理互動模擬動畫。學生可以親手調整參數、觀察現象的變化，從看得見的過程理解物理原理；每一支動畫都為 iPad 橫向投影與課堂即時操作而設計。</p>
+    </div>
+
+    <section class="info-section">
+      <h2>網站目的與使用對象</h2>
+      <div class="info-pair">
+        <section class="info-section"><h3>老師</h3><p>在課堂上投影示範，一邊調整參數一邊講解；動畫與主要控制項盡量放在同一個畫面，不必捲動就能看到變化。</p></section>
+        <section class="info-section"><h3>學生</h3><p>課後自主探索：照著介紹頁的觀察重點自己操作，比較不同條件的結果，再對照物理模型與公式。</p></section>
+      </div>
+    </section>
+
+    <section class="info-section">
+      <h2>使用方式</h2>
+      <ol class="highlights">
+        <li>在首頁選擇物理主題，或用上方搜尋輸入關鍵字，例如「駐波」「干涉」。</li>
+        <li>點選動畫卡片進入介紹頁，先看觀察重點、操作方式與物理模型的適用範圍。</li>
+        <li>按「開始實驗」開啟動畫，依觀察重點調整參數，搭配播放、暫停與單格步進仔細觀察。</li>
+      </ol>
+    </section>
+
+    <section class="info-section">
+      <h2>建議裝置</h2>
+      <dl class="meta">
+        <dt>課堂投影</dt><dd>iPad 橫向（首選）或桌機</dd>
+        <dt>手機</dt><dd>可以瀏覽與操作，建議轉為橫向</dd>
+        <dt>瀏覽器</dt><dd>Safari、Chrome、Edge、Firefox 的近期版本</dd>
+      </dl>
+    </section>
+
+    <section class="info-section" id="license">
+      <h2>著作權與授權</h2>
+      <ol class="highlights">
+        <li>© 2026 derliang，保留所有權利。</li>
+        <li>聖功女中師生可免費於非營利教育用途使用；所有使用者均限非營利使用。</li>
+        <li>其他學校或機構使用前，請先寄信申請，並取得作者 Email 回覆同意。</li>
+        <li>程式碼的重製、修改、散布、再發布及商業使用，均須另行取得授權。</li>
+      </ol>
+      <p class="info-note">完整條款以 <a href="https://github.com/derliang/physics-lab/blob/main/LICENSE.md" target="_blank" rel="noopener">LICENSE.md</a> 為準。</p>
+    </section>
+  </article>
+
+  <aside class="info-aside" aria-label="聯絡資訊">
+    <div class="aside-card is-contact">
+      <span class="eyebrow">CONTACT</span>
+      <p class="info-note">授權申請、使用問題或錯誤回報，歡迎來信。</p>
+      <a class="btn" href="mailto:derliang@gmail.com">寄信給作者</a>
+      <dl class="meta">
+        <dt>作者</dt><dd>derliang</dd>
+        <dt>Email</dt><dd>derliang@gmail.com</dd>
+      </dl>
+    </div>
+    <nav class="related" aria-label="繼續瀏覽">
+      <a class="back-link" href="index.html">← 回到首頁瀏覽動畫</a>
+    </nav>
+  </aside>
+</div></main>
+
+<footer class="site-footer"><div class="wrap">
+  <div class="footer-line"><span><span class="brand-latin">Physics Lab</span>　互動物理實驗室</span><span>為物理教學與自主探索而設計 · GitHub Pages · <a class="footer-link" href="about.html">關於本站</a></span></div>
+  <div class="copyright-note"><small>© 2026 derliang｜保留所有權利｜限非營利使用｜<a href="https://github.com/derliang/physics-lab/blob/main/LICENSE.md" target="_blank" rel="noopener">授權說明</a></small></div>
+</div></footer>
+</body>
+</html>

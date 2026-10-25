@@ -11,7 +11,7 @@
 
 | 情境 | 可以新增或修改 | 一律不可修改 |
 |---|---|---|
-| 上架新動畫 | 新的 `simulations/<category>/<slug>/` 資料夾內的檔案 | `index.html`、`info.html`、`assets/`、`scripts/`、`.github/`、`docs/`、所有規範文件、`simulations.json`、其他動畫 |
+| 上架新動畫 | 新的 `simulations/<category>/<slug>/` 資料夾內的檔案 | `index.html`、`info.html`、`about.html`、`assets/`、`scripts/`、`.github/`、`docs/`、所有規範文件、`simulations.json`、其他動畫 |
 | 修訂指定動畫 | 該動畫資料夾內的檔案 | 同上 |
 | 下架／恢復指定動畫 | 該動畫 `manifest.json` 的 `status`，以及同資料夾 `TEST_REPORT.md` 的紀錄 | 同上，且不得刪除動畫檔案 |
 
