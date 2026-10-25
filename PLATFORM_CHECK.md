@@ -49,3 +49,19 @@ build_catalog.py 原本已具備 schema、分類及入口檢查；補上缺少 m
 
 ## 版權資訊增補（2026-10-24）
 使用者明確授權的版權任務，僅新增：`LICENSE.md`、README「著作權與使用授權」小節、首頁既有頁尾內單一版權句、`index.html` 與 `scripts/build_catalog.py` 檔頭註解、`AGENTS.md` 版權維護規範。未改動畫功能、分類、目錄邏輯、部署流程與任何網址；`simulations/` 各動畫頁僅於 `<html>` 前加入 HTML 檔頭註解（使用者另行同意），無任何畫面或邏輯變動。驗證：`build_catalog.py` 本機執行通過（產生 8 筆目錄；`simulations.json` 為 Actions 部署時產生的產物，本機測試輸出已還原、不提交）；首頁桌機／手機寬度無橫向捲動。
+
+## 2026-10-25 平台改版：1a 期刊封面式首頁與上架規範 v2
+使用者明確授權的一次性平台改版（分支 `platform-v2`）。
+
+### 變更
+- 新增 `assets/site.css`、`assets/site.js`、`info.html`；`index.html` 改為 1a 期刊封面式，移除寫死的動畫圖示，版權檔頭與頁尾版權句保留。
+- `scripts/build_catalog.py` 升級為 manifest v2 檢查（欄位字數、icon.svg 元素／屬性／色票／線寬／重複、cover.webp 尺寸、範本殘留文字），下架改看 `status`；新增 `scripts/test_build_catalog.py`。
+- 10 支動畫：manifest 升級 v2（介紹文字由 AI 讀動畫內容起草，經使用者審閱）、新增 `icon.svg`（6 個由舊首頁搬出並改用色票、4 個新畫）、`TEST_REPORT` 補上下架紀錄；`diffraction-interference` 補建 TEST_REPORT.md（三級驗收標「未驗證」）。各動畫 `index.html` 未修改，網址不變。
+- 文件：`PUBLISHING.md` v2（v1 封存於 `docs/archive/`）、`docs/design/DESIGN.md` 與模擬頁、`docs/templates/`、`AGENTS.md`、`PROJECT_SPEC.md` 第十一節、`CATALOG_VISIBILITY.md`、`README.md`、`CLAUDE.md`。`.github/workflows/deploy.yml` 未修改。
+
+### 提交前已完成的驗證
+- `python scripts/test_build_catalog.py`：12 項全數通過（合格案例、13 種 manifest 違規、10 種 icon 違規、檔案缺漏、資料夾規則、cover、範本殘留、現有 repo 實際通過）。
+- `python scripts/build_catalog.py`：產生 8 筆目錄（2 支 `hidden` 已檢查但不列出）；本機輸出的 `simulations.json` 已還原，不提交。
+- Chrome 本機（`http.server`）以 iframe 固定寬度 390／768／1024／1280 檢查首頁、`#mechanics`（空主題，回到全部）、`?q=駐波` 搜尋、介紹頁、已下架與格式錯誤的介紹頁：皆無橫向溢出；卡片欄數依序 1／2／3／4；可點元素高度皆 ≥44px；6 個空主題頁籤為不可點的灰字；鍵盤 Tab 可聚焦整張卡片並以 Enter 開啟介紹頁；主控台無錯誤；已下架動畫原網址仍回應 200。
+- 同日依使用者指示將配色改為明亮科技風、取消深色模式、空主題不顯示「籌備中」，改版後重跑上列檢查並截圖目視確認。
+- 未驗證：iPad Safari 與手機實機、GitHub Actions 部署與公開站點（須於提交後依 commit SHA 查核再補記）。

@@ -194,3 +194,6 @@
 - 本次瀏覽器測試直接載入本機 HTML，非 GitHub Pages 實際網路載入；iPad Safari 實機觸控、教室投影及長時間 FPS／記憶體未測，不得列為通過。
 - 全反射沿用舊分支的反射波前與界面子波演算法，**未將本次新折射切點時序模型套用全反射**。
 - 本次 GitHub Pages 部署必須另以本次 commit 的 GitHub Actions push run 與公開頁面來源比對，不能僅憑原始碼 Commit 成功就宣稱部署成功。
+
+## 上下架紀錄
+- 2026-10-25 平台改版（上架規範 v2）：manifest 升級為 v2、新增 `icon.svg`；動畫 `index.html` 未修改。status published。

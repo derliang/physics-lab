@@ -15,3 +15,7 @@
 
 ## 測試
 在四個假資料目錄上執行產生器，新動畫與一般動畫出現在 `simulations.json`，兩個被隱藏者不在清單；但舊動畫 index.html 均存在。
+
+## 2026-10-25 機制改為 manifest status（上架規範 v2）
+- `HIDDEN_FROM_CATALOG` 名單已移除。上述兩支動畫的 `manifest.json` 改為 `"status": "hidden"`，下架狀態不變，原網址仍可直接開啟；兩支的 `TEST_REPORT.md` 已補記上下架紀錄。
+- 往後下架／恢復一律依 [`PUBLISHING.md`](PUBLISHING.md) 第 8 節：只改該動畫的 `status` 並記錄，不修改平台程式。下架的動畫仍須通過 manifest 與 icon.svg 檢查。

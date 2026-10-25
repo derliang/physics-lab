@@ -30,3 +30,6 @@ iPad Safari 實機、30 分鐘長時間效能、正式網址實際操作及 CDN 
 - 內嵌 JavaScript 語法解析通過；五個 `data-mode` 按鈕不再出現在頁面 DOM。
 - 保留原有已在 V1.8 檢查的物理數值與操作測試紀錄；本次未另行重新執行 iPad Safari 實機及長時間效能測試。
 - 目錄隱藏清單、兩個已下架舊動畫程式及 GitHub Pages URL 均不變。
+
+## 上下架紀錄
+- 2026-10-25 平台改版（上架規範 v2）：manifest 升級為 v2、新增 `icon.svg`；動畫 `index.html` 未修改。status published。

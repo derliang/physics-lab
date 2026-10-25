@@ -1,0 +1,19 @@
+{
+  "manifestVersion": 2,
+  "title": "【請填：2～20 字的動畫名稱，不含「｜」】",
+  "subtitle": "【選填：2～20 字的副標；不需要就刪掉這一行】",
+  "category": "【請填：mechanics／thermal／waves／electromagnetism／optics／modern／experiments，須與資料夾相同】",
+  "description": "【請填：30～120 字，學生在這支動畫能做什麼、看到什麼】",
+  "keywords": ["【請填：關鍵字一】", "【請填：關鍵字二】", "【請填：關鍵字三】"],
+  "highlights": [
+    "【請填：觀察重點一，15～60 字，以動詞開頭】",
+    "【請填：觀察重點二，15～60 字，以動詞開頭】",
+    "【請填：觀察重點三，15～60 字，以動詞開頭】"
+  ],
+  "howto": "【請填：30～150 字，依實際介面寫操作順序與控制項名稱】",
+  "model": "【請填：30～200 字，物理模型、主要關係式、適用條件、近似與限制】",
+  "devices": ["ipad-landscape", "desktop"],
+  "tint": "navy",
+  "status": "published",
+  "updated": "2026-01-01"
+}
