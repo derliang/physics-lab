@@ -273,6 +273,12 @@ function guideFamilies(a){
   for(let m=1;m<=maxOrder;m++){
     const deltaA=m*a.lambda;
     if(deltaA<a.sep-1e-6){ for(const sign of [-1,1]) families.push(hyperbolaFamily(a,'anti',m,deltaA,sign)); }
+    else if(Math.abs(deltaA-a.sep)<=a.lambda*1e-8){
+      // |PS₂−PS₁|=d 時雙曲線退化為波源外側的兩條射線，內側不是此階腹線。
+      // 同相為最高階腹線；反相時為節線；其他初相位差沒有完全干涉極值。
+      const kind=Math.abs(a.phase)<1e-8?'anti':Math.abs(a.phase-180)<1e-8?'node':null;
+      if(kind) for(const sign of [-1,1])families.push(axialLimitFamily(a,kind,m,sign));
+    }
     const deltaN=(m-0.5)*a.lambda;
     if(deltaN<a.sep-1e-6){ for(const sign of [-1,1]) families.push(hyperbolaFamily(a,'node',m,deltaN,sign)); }
   }
@@ -289,6 +295,14 @@ function hyperbolaFamily(a,kind,order,delta,sign){
   const spacing=Math.max(0.5, a.lambda*0.34);
   const snaps=samplePolyline(pts, spacing);
   return {kind,order,name:(kind==='anti'?'A':'N')+order,title:`第${order}${kind==='anti'?'腹':'節'}線 ${kind==='anti'?'A':'N'}${order}`,branch:sign,target:delta,points:pts,snapPoints:snaps};
+}
+function axialLimitFamily(a,kind,order,sign){
+  const half=a.sep/2,edge=W/(2*UNIT);
+  if(half>=edge-1e-8)return null;
+  const points=Array.from({length:33},(_,i)=>({x:sign*(half+(edge-half)*i/32),y:sourceY}));
+  return {kind,order,name:(kind==='anti'?'A':'N')+order,
+    title:`第${order}${kind==='anti'?'腹':'節'}線（軸向極限）`,
+    branch:sign,target:a.sep,axisRay:true,points,snapPoints:points};
 }
 function sourceLineMarkers(a){
   const marks=[]; const half=a.sep/2;
@@ -387,11 +401,12 @@ function drawCurveNames(ctx,a,families){
    const candidates=[];
    for(const pt of f.points||[]){
      const q=px(pt);
-     if(q.x<width/2+7||q.x>W-width/2-7||q.y<48||q.y>285)continue;
+     if((f.axisRay?(q.x<8||q.x>W-8):(q.x<width/2+7||q.x>W-width/2-7))||q.y<48||(!f.axisRay&&q.y>285))continue;
      // 名稱框直接以波程差曲線上的點為中心，短垂直指示線連到該曲線。
      for(const under of [false,true]){
-       const xx=q.x-width/2, yy=under?q.y+9:q.y-29;
-       if(yy<45||yy+height>295)continue;
+       const xx=f.axisRay?Math.max(8,Math.min(W-width-8,q.x-width/2)):q.x-width/2;
+       const yy=f.axisRay?(under?q.y+36:q.y-54):(under?q.y+9:q.y-29);
+       if(yy<45||yy+height>(f.axisRay?H-16:295))continue;
        const rect={x:xx,y:yy,w:width,h:height};
        const overlaps=occupied.some(r=>xx<r.x+r.w+6&&xx+width+6>r.x&&yy<r.y+r.h+5&&yy+height+5>r.y);
        if(overlaps)continue;
@@ -404,8 +419,10 @@ function drawCurveNames(ctx,a,families){
      // 線非常密集時仍保留標籤，優先放到可見曲線附近，避免丟掉線名。
      let fallback=null;
      for(const pt of f.points||[]){const q=px(pt);if(q.x>width/2+7&&q.x<W-width/2-7&&q.y>45&&q.y<290){const sc=Math.abs(q.y-prefer);if(!fallback||sc<fallback.score)fallback={q,score:sc};}}
+     if(!fallback&&f.axisRay)fallback={q:px(f.points[16])};
      if(!fallback){ctx.restore();continue;}
-     const q=fallback.q;choice={q,rect:{x:q.x-width/2,y:Math.max(45,q.y-29),w:width,h:height},under:false};
+     const q=fallback.q,xx=f.axisRay?Math.max(8,Math.min(W-width-8,q.x-width/2)):q.x-width/2;
+     choice={q,rect:{x:xx,y:f.axisRay?q.y-54:Math.max(45,q.y-29),w:width,h:height},under:false};
    }
    occupied.push(choice.rect);
    const {q,rect,under}=choice;
