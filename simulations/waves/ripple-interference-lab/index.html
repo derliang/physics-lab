@@ -281,6 +281,12 @@ function guideFamilies(a){
     }
     const deltaN=(m-0.5)*a.lambda;
     if(deltaN<a.sep-1e-6){ for(const sign of [-1,1]) families.push(hyperbolaFamily(a,'node',m,deltaN,sign)); }
+    else if(Math.abs(deltaN-a.sep)<=a.lambda*1e-8){
+      // |PS₂−PS₁|=d=(m−1/2)λ 亦是退化極限，不能漏掉波源外側的節線。
+      // 同相：兩條第 m 節線；反相：相同幾何位置轉成腹線。
+      const kind=Math.abs(a.phase)<1e-8?'node':Math.abs(a.phase-180)<1e-8?'anti':null;
+      if(kind)for(const sign of [-1,1])families.push(axialLimitFamily(a,kind,m,sign));
+    }
   }
   return families.filter(Boolean);
 }
@@ -300,8 +306,12 @@ function axialLimitFamily(a,kind,order,sign){
   const half=a.sep/2,edge=W/(2*UNIT);
   if(half>=edge-1e-8)return null;
   const points=Array.from({length:33},(_,i)=>({x:sign*(half+(edge-half)*i/32),y:sourceY}));
-  return {kind,order,name:(kind==='anti'?'A':'N')+order,
-    title:`第${order}${kind==='anti'?'腹':'節'}線（軸向極限）`,
+  // 以該射線上的實際相位分類命名，避免反相波源左右兩側的階數誤標。
+  const classification=status(points[16],a);
+  if(classification.type!==(kind==='anti'?'腹點':'節點'))return null;
+  const labelOrder=Number(classification.symbol.slice(1));
+  return {kind,order:labelOrder,name:(kind==='anti'?'A':'N')+labelOrder,
+    title:`第${labelOrder}${kind==='anti'?'腹':'節'}線（軸向極限）`,
     branch:sign,target:a.sep,axisRay:true,points,snapPoints:points};
 }
 function sourceLineMarkers(a){
