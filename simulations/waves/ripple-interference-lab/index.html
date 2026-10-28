@@ -266,65 +266,69 @@ function samplePolyline(points, spacing){
   }
   return out;
 }
+// 腹線、節線、亮暗紋及選點分類全部共用：q=(PS₂−PS₁)/λ−Δφ/360。
 function guideFamilies(a){
-  const families=[];
-  families.push({kind:'anti', order:0, name:'A₀', title:'中央腹線 A₀', branch:0, target:0, points:Array.from({length:121},(_,i)=>({x:0,y:-6+i*0.1}))});
-  const maxOrder=Math.max(1,Math.floor((a.sep-0.001)/a.lambda)+2);
-  for(let m=1;m<=maxOrder;m++){
-    const deltaA=m*a.lambda;
-    if(deltaA<a.sep-1e-6){ for(const sign of [-1,1]) families.push(hyperbolaFamily(a,'anti',m,deltaA,sign)); }
-    else if(Math.abs(deltaA-a.sep)<=a.lambda*1e-8){
-      // |PS₂−PS₁|=d 時雙曲線退化為波源外側的兩條射線，內側不是此階腹線。
-      // 同相為最高階腹線；反相時為節線；其他初相位差沒有完全干涉極值。
-      const kind=Math.abs(a.phase)<1e-8?'anti':Math.abs(a.phase-180)<1e-8?'node':null;
-      if(kind) for(const sign of [-1,1])families.push(axialLimitFamily(a,kind,m,sign));
-    }
-    const deltaN=(m-0.5)*a.lambda;
-    if(deltaN<a.sep-1e-6){ for(const sign of [-1,1]) families.push(hyperbolaFamily(a,'node',m,deltaN,sign)); }
-    else if(Math.abs(deltaN-a.sep)<=a.lambda*1e-8){
-      // |PS₂−PS₁|=d=(m−1/2)λ 亦是退化極限，不能漏掉波源外側的節線。
-      // 同相：兩條第 m 節線；反相：相同幾何位置轉成腹線。
-      const kind=Math.abs(a.phase)<1e-8?'node':Math.abs(a.phase-180)<1e-8?'anti':null;
-      if(kind)for(const sign of [-1,1])families.push(axialLimitFamily(a,kind,m,sign));
+  const families=[],phase=a.phase/360,maxIndex=Math.ceil(a.sep/a.lambda)+3;
+  for(const kind of ['anti','node']){
+    const offset=kind==='node'?.5:0;
+    for(let n=-maxIndex;n<=maxIndex;n++){
+      const signedTarget=(n+offset+phase)*a.lambda;
+      if(Math.abs(signedTarget)>a.sep+a.lambda*1e-8)continue;
+      const sign=signedTarget>0?-1:1; // r₂−r₁ 為正時，在 S₁ 的左側。
+      let family;
+      if(Math.abs(signedTarget)<=a.lambda*1e-9){
+        const points=Array.from({length:121},(_,i)=>({x:0,y:-6+i*.1}));
+        family={points,snapPoints:samplePolyline(points,Math.max(.5,a.lambda*.34)),branch:0,target:0};
+      }else if(Math.abs(Math.abs(signedTarget)-a.sep)<=a.lambda*1e-8){
+        family=axialLimitFamily(a,kind,sign);
+      }else{
+        family=hyperbolaFamily(a,Math.abs(signedTarget),sign);
+      }
+      if(!family)continue;
+      // 階數和名稱從真正的相位判讀取得，避免不同相位下沿用同相階數。
+      const probe=family.points[Math.floor(family.points.length/2)],st=status(probe,a);
+      if(st.type!==(kind==='anti'?'腹點':'節點'))continue;
+      const order=Number(st.symbol.slice(1));
+      Object.assign(family,{kind,order,name:st.symbol,
+        title:order===0?'中央腹線':`第${order}${kind==='anti'?'腹':'節'}線`,
+        signedTarget});
+      families.push(family);
     }
   }
-  return families.filter(Boolean);
+  return families;
 }
-function hyperbolaFamily(a,kind,order,delta,sign){
-  const c=a.sep/2, aa=delta/2, b2=c*c-aa*aa; if(!(b2>1e-6)) return null;
-  const pts=[], stepY=0.12, maxY=6.2;
-  for(let yp=-maxY; yp<=maxY; yp+=stepY){
-    const x=sign*aa*Math.sqrt(1 + (yp*yp)/b2), y=sourceY+yp;
-    if(!Number.isFinite(x)||x<-10.9||x>10.9||y<-6.2||y>6.2) continue;
-    pts.push({x,y});
+function hyperbolaFamily(a,delta,sign){
+  const c=a.sep/2,aa=delta/2,b2=c*c-aa*aa;
+  if(!(b2>0))return null;
+  const points=[];
+  for(let yp=-6.2;yp<=6.2;yp+=.06){
+    const x=sign*aa*Math.sqrt(1+yp*yp/b2),y=sourceY+yp;
+    if(Number.isFinite(x)&&x>=-11.25&&x<=11.25&&y>=-6.2&&y<=6.2)points.push({x,y});
   }
-  const spacing=Math.max(0.5, a.lambda*0.34);
-  const snaps=samplePolyline(pts, spacing);
-  return {kind,order,name:(kind==='anti'?'A':'N')+order,title:`第${order}${kind==='anti'?'腹':'節'}線 ${kind==='anti'?'A':'N'}${order}`,branch:sign,target:delta,points:pts,snapPoints:snaps};
+  if(points.length<2)return null;
+  // 在交軸附近插入精確點，確保曲線位置與源連線上的標記一致。
+  points.push({x:sign*aa,y:sourceY});
+  points.sort((p,q)=>p.y-q.y);
+  return {branch:sign,target:delta,points,snapPoints:samplePolyline(points,Math.max(.5,a.lambda*.34))};
 }
-function axialLimitFamily(a,kind,order,sign){
+function axialLimitFamily(a,kind,sign){
   const half=a.sep/2,edge=W/(2*UNIT);
   if(half>=edge-1e-8)return null;
-  const points=Array.from({length:33},(_,i)=>({x:sign*(half+(edge-half)*i/32),y:sourceY}));
-  // 以該射線上的實際相位分類命名，避免反相波源左右兩側的階數誤標。
-  const classification=status(points[16],a);
-  if(classification.type!==(kind==='anti'?'腹點':'節點'))return null;
-  const labelOrder=Number(classification.symbol.slice(1));
-  return {kind,order:labelOrder,name:(kind==='anti'?'A':'N')+labelOrder,
-    title:`第${labelOrder}${kind==='anti'?'腹':'節'}線（軸向極限）`,
-    branch:sign,target:a.sep,axisRay:true,points,snapPoints:points};
+  const points=Array.from({length:65},(_,i)=>({x:sign*(half+(edge-half)*i/64),y:sourceY}));
+  return {branch:sign,target:a.sep,axisRay:true,points,snapPoints:points};
 }
 function sourceLineMarkers(a){
-  const marks=[]; const half=a.sep/2;
-  marks.push({kind:'anti',name:'A₀',short:'A₀',x:0,y:sourceY,target:0});
-  for(let m=1;;m++){
-    const xa=m*a.lambda/2;
-    if(xa<half-1e-6){ marks.push({kind:'anti',name:'A'+m,short:'A'+m,x:xa,y:sourceY,target:m*a.lambda}); marks.push({kind:'anti',name:'A'+m,short:'A'+m,x:-xa,y:sourceY,target:m*a.lambda}); }
-    const xn=(m-0.5)*a.lambda/2;
-    if(xn<half-1e-6){ marks.push({kind:'node',name:'N'+m,short:'N'+m,x:xn,y:sourceY,target:(m-0.5)*a.lambda}); marks.push({kind:'node',name:'N'+m,short:'N'+m,x:-xn,y:sourceY,target:(m-0.5)*a.lambda}); }
-    if(!(xa<half-1e-6 || xn<half-1e-6)) break;
+  // 從同一批相位正確的解析曲線取與 S₁S₂ 的交點，不另用同相位置公式。
+  const marks=[];
+  for(const f of guideFamilies(a)){
+    if(f.axisRay)continue;
+    const x=f.branch===0?0:-f.signedTarget/2;
+    if(Math.abs(x)>=a.sep/2-1e-8)continue;
+    const st=status({x,y:sourceY},a);
+    if(st.type!==(f.kind==='anti'?'腹點':'節點'))continue;
+    marks.push({kind:f.kind,name:st.symbol,short:st.symbol,x,y:sourceY,target:Math.abs(f.signedTarget)});
   }
-  return marks.sort((a,b)=>a.x-b.x);
+  return marks.sort((p,q)=>p.x-q.x);
 }
 function ringSeries(a,si){
   const travel=a.freq*a.lambda*time, phi=a.phase/360, shift=si?phi*a.lambda:0, out=[];
